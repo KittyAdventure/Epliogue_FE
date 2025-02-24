@@ -1,7 +1,23 @@
 {
-  "posts": [
-    { "id": "1", "title": "a title", "views": 100 },
-    { "id": "2", "title": "another title", "views": 200 }
+  "books": [
+    {
+      "title": "채식주의자",
+      "author": "한강",
+      "description": "평범한 여성 영해가 ... (중략) ... 완전히 뒤흔들 것입니다.",
+      "image": "https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788936434595.jpg"
+    },
+    {
+      "title": "급류",
+      "author": "작가2",
+      "description": "책2 설명 ...",
+      "image": "https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788937473401.jpg"
+    },
+    {
+      "title": "행동하지 않는 자, 인생은 바뀌지 않는다",
+      "author": "작가3",
+      "description": "책3 설명 ...",
+      "image": "https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9791139716146.jpg"
+    }
   ],
   "comments": [
     { "id": "1", "text": "a comment about post 1", "postId": "1" },
