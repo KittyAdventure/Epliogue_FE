@@ -1,5 +1,5 @@
 import React from 'react';
-import BookListSection from '../components/main/BookListSection';
+import BookListSection from '../components/main/BooklistSection';
 import GatheringSection from '../components/main/GatheringSection';
 import ReviewSection from '../components/main/ReviewSection';
 
