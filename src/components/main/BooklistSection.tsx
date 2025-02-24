@@ -12,6 +12,7 @@ interface Book {
 
 const BookListSection: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
     fetch('http://localhost:5000/books')
@@ -29,9 +30,10 @@ const BookListSection: React.FC = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 2,
     slidesToScroll: 1,
     arrows: true,
+    afterChange: (index: number) => setCurrentIndex(index),
   };
 
   if (books.length === 0) {
@@ -39,27 +41,37 @@ const BookListSection: React.FC = () => {
   }
 
   return (
-    <section>
-      <div>
+    <div className="section-wrap max-w-6xl mx-auto flex items-center gap-16">
+      {/* 왼쪽 텍스트 영역 */}
+      <div className="w-1/3">
+        <h2 className="text-4xl font-bold mb-6">인기 책 리스트</h2>
         <div>
-          <h2>인기 책 리스트</h2>
-          <div>
-            <h3>{books[0].title}</h3>
-            <p>{books[0].author}</p>
-            <div>{books[0].description}</div>
-          </div>
-        </div>
-        <div>
-          <Slider {...settings}>
-            {books.map((book, index) => (
-              <div key={index}>
-                <img src={book.image} alt={book.title} />
-              </div>
-            ))}
-          </Slider>
+          <h3 className="text-xl font-semibold">{books[currentIndex].title}</h3>
+          <p className="text-gray-600">{books[currentIndex].author}</p>
+          <p className="mt-4 text-sm leading-relaxed text-gray-700">
+            {books[currentIndex].description}
+          </p>
         </div>
       </div>
-    </section>
+
+      {/* 오른쪽 슬라이드 영역 */}
+      <div className="w-2/3">
+        <Slider {...settings}>
+          {books.map((book, index) => (
+            <div key={index} className="image-container px-2">
+              <div className="relative w-full pb-[150%]">
+                {/* 2:3 비율을 유지 */}
+                <img
+                  className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                  src={book.image}
+                  alt={book.title}
+                />
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </div>
+    </div>
   );
 };
 

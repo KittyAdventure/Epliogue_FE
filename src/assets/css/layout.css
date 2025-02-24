@@ -13,6 +13,21 @@
   max-width: 1440px;
   margin: 0 auto;
 }
+.section-wrap {
+  max-width: 1820px;
+  margin: 0 auto;
+  padding: 60px 30px;
+}
+.image-container {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.slick-list {
+  margin-right: -20px;
+}
+.slick-slide {
+  padding-right: 20px;
+}
 
 /* Header */
 .header {
