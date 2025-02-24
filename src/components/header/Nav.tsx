@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { navData } from "../constants/navData";
+import { navData } from '../../constants/navData';
 
 // Part of Header
 const Nav = (): React.JSX.Element => {

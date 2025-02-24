@@ -1,6 +1,6 @@
-import Logo from "./Logo"
-import Nav from "./Nav"
-import Menu from "./Menu"
+import Logo from './Logo';
+import Menu from './Menu';
+import Nav from './Nav';
 
 // Header contains Nav, Logo, Menu
 const Header = (): React.JSX.Element => {
@@ -13,5 +13,5 @@ const Header = (): React.JSX.Element => {
       </div>
     </header>
   );
-}
-export default Header
+};
+export default Header;
