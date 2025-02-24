@@ -82,12 +82,12 @@ video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
-  font: inherit;
+  /* font-size: 100%; */
+  /* font: inherit; */
+  line-height: 1.5;
   vertical-align: baseline;
   color: #222;
   letter-spacing: -0.5px;
-  font-family: "roc-grotesk", sans-serif;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -122,7 +122,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
+  content: '';
   content: none;
 }
 table {
