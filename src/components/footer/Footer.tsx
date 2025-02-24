@@ -1,10 +1,10 @@
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/images/logobw.png';
 
 // Footer contains: Logo, SnS
 const Footer = (): React.JSX.Element => {
   return (
     <footer className="footer">
-      <div className="ftr-wrap">
+      <div className="ftr-wrap flex-sb">
         <div className="ftr-left">
           <img src={logo} alt="에필로그 로고" className="ftr-logo" />
           <ul className="ftr-info">
