@@ -1,11 +1,4 @@
 /* 공통 */
-
-.hdr-logo {
-  height: 80px;
-}
-.ftr-logo {
-  height: 120px;
-}
 .hdr-wrap,
 .ftr-wrap {
   display: flex;
@@ -52,15 +45,4 @@
 }
 
 /* Footer */
-.footer {
-  height: 250px;
-  background-color: #333;
-}
-.footer li,
-.footer span,
-.footer p {
-  color: #fff;
-}
-.ftr-left {
-  display: flex;
-}
+/* Tailwind 적용 */
