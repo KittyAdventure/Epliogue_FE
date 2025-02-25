@@ -1,14 +1,12 @@
-import { Link } from 'react-router-dom';
-
 // Part of Header
 const Menu = (): React.JSX.Element => {
   return (
     <ul className="hdr-menu">
       <li>
-        <Link to={'/search'}>SearchIcon</Link>
+        <i className="fas fa-search"></i>
       </li>
       <li>
-        <Link to={'/login'}>LoginIcon</Link>
+        <i className="fas fa-user"></i>
       </li>
     </ul>
   );
