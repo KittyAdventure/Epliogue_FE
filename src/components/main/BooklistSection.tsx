@@ -28,7 +28,7 @@ const BookListSection: React.FC = () => {
 
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
@@ -42,7 +42,7 @@ const BookListSection: React.FC = () => {
   }
 
   return (
-    <div className="section-wrap max-w-6xl mx-auto flex items-center gap-16">
+    <div className="section-wrap max-w-6xl mx-auto flex">
       {/* 왼쪽 텍스트 영역 */}
       <div className="w-1/3">
         <h2 className="text-4xl font-bold mb-6">인기 책 리스트</h2>
