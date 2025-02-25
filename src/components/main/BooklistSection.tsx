@@ -33,6 +33,7 @@ const BookListSection: React.FC = () => {
     slidesToShow: 2,
     slidesToScroll: 1,
     arrows: true,
+    adaptiveHeight: true, // 아래 여백
     afterChange: (index: number) => setCurrentIndex(index),
   };
 
