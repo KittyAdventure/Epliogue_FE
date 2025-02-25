@@ -88,6 +88,7 @@ video {
   vertical-align: baseline;
   color: #222;
   letter-spacing: -0.5px;
+  font-family: 'Noto Sans KR', serif;
 }
 /* HTML5 display-role reset for older browsers */
 article,
