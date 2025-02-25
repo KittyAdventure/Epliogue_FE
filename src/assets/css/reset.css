@@ -85,7 +85,7 @@ video {
   box-sizing: border-box;
   line-height: 1.5;
   vertical-align: baseline;
-  color: #222;
+  /* color: #222; */
   letter-spacing: -0.5px;
   font-family: 'Noto Sans KR', serif;
 }
