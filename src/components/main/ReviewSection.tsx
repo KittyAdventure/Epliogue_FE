@@ -45,7 +45,7 @@ const ReviewSection: React.FC = () => {
   return (
     <div className="section-wrap overflow-hidden">
       <div>
-        <h2 className="text-4xl font-bold mb-11 text-center">리뷰</h2>
+        <h2 className="text-4xl font-bold mb-11">리뷰</h2>
       </div>
 
       <div>
@@ -60,9 +60,9 @@ const ReviewSection: React.FC = () => {
                     alt={`${review.booktit} 리뷰`}
                     className="w-11 h-11 rounded-full"
                   />
-                  <div className="mr-8 font-bold">{review.name}</div>
+                  <div className="mr-8 font-bold truncate">{review.name}</div>
                 </div>
-                <div className="bg-black text-white rounded-lg px-6 py-1.5 text-sm">
+                <div className="bg-black text-white rounded-lg w-[85px] h-[32px] flex items-center justify-center text-sm truncate">
                   팔로잉
                 </div>
               </div>

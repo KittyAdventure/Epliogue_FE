@@ -35,11 +35,13 @@ const BookListSection: React.FC = () => {
   const settings = {
     dots: false,
     infinite: false, // 무한 반복 제거
-    speed: 500,
+    speed: 700,
     slidesToShow: 2,
     slidesToScroll: 1,
     arrows: true,
     adaptiveHeight: true,
+    autoplay: true, // 자동 재생 활성화
+    autoplaySpeed: 3000, // 3초마다 변경
     afterChange: (index: number) => {
       // 마지막 슬라이드에서도 정상적으로 정보 업데이트
       setCurrentIndex(Math.min(index, books.length - 2));
