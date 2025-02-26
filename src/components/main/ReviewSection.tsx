@@ -29,11 +29,11 @@ const ReviewSection: React.FC = () => {
   }, []);
 
   const settings = {
-    dots: false,
+    dots: true,
     infinite: false, // 무한 반복 제거
     speed: 500,
     slidesToShow: 4,
-    slidesToScroll: 1,
+    slidesToScroll: 4,
     arrows: true,
     adaptiveHeight: true,
   };
@@ -43,15 +43,15 @@ const ReviewSection: React.FC = () => {
   }
 
   return (
-    <div className="section-wrap">
+    <div className="section-wrap overflow-hidden">
       <div>
-        <h2 className="text-4xl font-bold mb-11">리뷰</h2>
+        <h2 className="text-4xl font-bold mb-11 text-center">리뷰</h2>
       </div>
 
       <div>
         <Slider {...settings}>
           {reviews.map((review) => (
-            <div className="w-full h-auto bg-white rounded-2xl shadow-lg p-4">
+            <div className="w-full aspect-[3/2] bg-white rounded-2xl shadow-lg p-4 mb-5 flex flex-col justify-between">
               {/* user */}
               <div className="flex justify-between items-center mb-2">
                 <div className="user flex items-center gap-2">
@@ -66,21 +66,24 @@ const ReviewSection: React.FC = () => {
                   팔로잉
                 </div>
               </div>
+
               {/* review */}
-              <div className="flex p-4 w-full gap-8">
+              <div className="flex w-full gap-4 py-3">
                 <img
                   src={review.bookimg}
                   alt={review.booktit}
-                  className="w-1/3 h-full"
+                  className="w-1/4 h-full object-cover"
                 />
-                <div className="w-2/3 h-2/3 flex flex-wrap content-between gap-3">
-                  <div className="font-bold text-base truncate">
+                <div className="w-2/3 flex flex-col gap-3">
+                  <div className="font-bold text-base line-clamp-1">
                     {review.booktit}
                   </div>
-                  <div className="text-sm line-clamp-5">{review.text}</div>{' '}
-                  {/* text truncation */}
+                  <div className="text-sm line-clamp-3 overflow-hidden">
+                    {review.text}
+                  </div>
                 </div>
               </div>
+
               {/* footer */}
               <div className="flex justify-between items-center">
                 <div>댓글 ({review.comment})</div>
