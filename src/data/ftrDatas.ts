@@ -1,3 +1,4 @@
+// For Footer
 export interface FtrDatas {
   name: string;
   path: string;

@@ -5,8 +5,10 @@ import { snsDatas } from '../../data/snsDatas';
 
 const Footer = (): React.JSX.Element => {
   return (
+    // 푸터는 좌측, 우측 영역으로 나누었다
       <footer className="footer flex bg-[#333] text-neutral-content items-center h-[250px]">
         <div className="flex justify-between w-full max-w-[1440px] mx-auto my-0">
+          {/* 좌측 로고+text */}
           <div className="ftr-left flex">
             <div>
               <img
@@ -26,7 +28,7 @@ const Footer = (): React.JSX.Element => {
                 ))}
               </ul>
               <ul className="ftr-contact flex">
-                <li>(주)에필로그&nbsp;&nbsp;|&nbsp;&nbsp;냥냥모험단</li>
+                <li className='mr-[20px]'>(주)에필로그&nbsp;&nbsp;|&nbsp;&nbsp;냥냥모험단</li>
                 <li>문의) zerobase@gmail.com</li>
               </ul>
               <p className="copyright btn-neutral">
@@ -34,6 +36,7 @@ const Footer = (): React.JSX.Element => {
               </p>
             </div>
           </div>
+          {/* 우측 SNS Icons */}
           <div className="ftr-right flex flex-col flex-wrap justify-center">
             <nav className="text-white">
               {snsDatas.map((snsData, idx) => (

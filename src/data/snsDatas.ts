@@ -1,3 +1,4 @@
+// For Footer > SnS
 export interface SnsDatas {
   name: string;
   path: string;

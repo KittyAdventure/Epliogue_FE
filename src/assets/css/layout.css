@@ -1,11 +1,4 @@
 /* 공통 */
-.hdr-wrap,
-.ftr-wrap {
-  display: flex;
-  justify-content: space-between;
-  max-width: 1440px;
-  margin: 0 auto;
-}
 .section-wrap {
   max-width: 1820px;
   margin: 0 auto;
@@ -22,27 +15,7 @@
   padding-right: 40px;
 }
 
-/* Header */
-.header {
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
-}
-
-.gnb ul {
-  display: flex;
-}
-.gnb ul li {
-  margin-right: 20px;
-  line-height: 80px;
-}
-.hdr-menu {
-  display: flex;
-}
-.hdr-menu li {
-  line-height: 80px;
-  margin-right: 20px;
-}
-
-/* Footer */
+/* Header.tsx */
+/* Tailwindcss 적용 */
+/* Footer.tsx */
 /* Tailwind 적용 */
