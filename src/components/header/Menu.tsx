@@ -17,7 +17,7 @@ const Menu = (): React.JSX.Element => {
     <ul className="flex">
       {menuDatas.map((menuData, idx) => (
         <li key={idx} className="leading-[80px] ml-[10px] w-[30px]">
-          <Link to={menuData.path}>
+          <Link to={menuData.path} >
             <i className={menuData.icon} style={{fontSize:"20px"}}></i>
           </Link>
         </li>

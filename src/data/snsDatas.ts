@@ -6,7 +6,19 @@ export interface SnsDatas {
 }
 
 export const snsDatas: SnsDatas[] = [
-  { name: 'GitHub', path: '/', icon: 'fa-brands fa-square-github' },
-  { name: 'Facebook', path: '/', icon: 'fa-brands fa-square-facebook' },
-  { name: 'Instagram', path: '/', icon: 'fa-brands fa-instagram' },
+  {
+    name: 'GitHub',
+    path: 'https://github.com/KittyAdventure/Epliogue_FE',
+    icon: 'fab fa-github-square',
+  },
+  {
+    name: 'Facebook',
+    path: 'https://github.com/KittyAdventure/Epliogue_FE',
+    icon: 'fab fa-facebook-square',
+  },
+  {
+    name: 'Instagram',
+    path: 'https://github.com/KittyAdventure/Epliogue_FE',
+    icon: 'fab fa-instagram',
+  },
 ];
