@@ -43,7 +43,7 @@ const ReviewSection: React.FC = () => {
   }
 
   return (
-    <div className="section-wrap overflow-hidden">
+    <div className="section-wrap overflow-hidden mb-[200px]">
       <div>
         <h2 className="text-4xl font-bold mb-11">리뷰</h2>
       </div>

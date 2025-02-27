@@ -43,7 +43,7 @@ const GatheringSection: React.FC = () => {
   };
 
   return (
-    <div className="section-wrap max-w-6xl mx-auto flex gap-16">
+    <div className="section-wrap flex gap-16 mb-[200px]">
       {/* 왼쪽 텍스트 영역 */}
       <div className="w-1/4">
         <h2 className="text-4xl font-bold mb-9">모임 리스트</h2>
