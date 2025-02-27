@@ -17,7 +17,6 @@ interface Gathering {
 const GatheringSection: React.FC = () => {
   const [gathering, setGathering] = useState<Gathering[]>([]);
   const [activeTab, setActiveTab] = useState<string>('online');
-  const [currentSlide, setCurrentSlide] = useState(0); // 현재 슬라이드 위치
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
 
@@ -32,21 +31,18 @@ const GatheringSection: React.FC = () => {
     (g) => g.type === activeTab || g.type === 'online offline',
   );
 
+  const slidesToShow = Math.min(filteredGathering.length, 3);
+
   const settings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: filteredGathering.length > 2 ? 3 : filteredGathering.length,
+    slidesToShow: slidesToShow > 0 ? slidesToShow : 1,
     slidesToScroll: 1,
     arrows: true,
-    beforeChange: (current: number, next: number) => {
-      setCurrentSlide(next);
-    },
     afterChange: (index: number) => {
       setIsPrevDisabled(index === 0);
-      setIsNextDisabled(
-        index >= filteredGathering.length - settings.slidesToShow,
-      );
+      setIsNextDisabled(index >= filteredGathering.length - slidesToShow);
     },
   };
 
@@ -56,7 +52,7 @@ const GatheringSection: React.FC = () => {
       <button
         className={`absolute left-[-40px] top-1/2 -translate-y-1/2 z-20 p-3 rounded-full transition-all duration-300 ease-in-out ${
           isPrevDisabled
-            ? 'bg-gray-400 opacity-20'
+            ? 'bg-black/5 opacity-20'
             : 'bg-black/40 hover:bg-black/70 text-white'
         }`}
         onClick={isPrevDisabled ? undefined : onClick}
@@ -73,7 +69,7 @@ const GatheringSection: React.FC = () => {
       <button
         className={`absolute right-[-40px] top-1/2 -translate-y-1/2 z-20 p-3 rounded-full transition-all duration-300 ease-in-out ${
           isNextDisabled
-            ? 'bg-gray-400'
+            ? 'bg-black/5 opacity-20'
             : 'bg-black/40 hover:bg-black/70 text-white'
         }`}
         onClick={isNextDisabled ? undefined : onClick}
@@ -119,13 +115,20 @@ const GatheringSection: React.FC = () => {
           >
             {filteredGathering.map((gathering, index) => (
               <div key={index} className="w-full">
-                <div className="relative w-full" style={{ aspectRatio: '2/3' }}>
+                {/* 배경과 이미지가 동일한 부모 div에 포함되어야 hover가 작동 */}
+                <div
+                  className="relative w-full group overflow-hidden rounded-lg"
+                  style={{ aspectRatio: '2/3' }}
+                >
+                  {/* 배경에 hover 효과 */}
                   <div className="absolute inset-0 bg-black bg-opacity-40 rounded-lg z-10"></div>
+                  {/* 이미지에 hover 효과 */}
                   <img
-                    className="absolute inset-0 w-full h-full object-cover rounded-lg z-5"
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg z-5 transition-transform duration-300 ease-in-out group-hover:scale-105"
                     src={gathering.image}
                     alt={gathering.title}
                   />
+                  {/* 내용 */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 z-20">
                     <h3 className="text-lg font-bold line-clamp-1 text-center">
                       {gathering.title}
@@ -135,7 +138,7 @@ const GatheringSection: React.FC = () => {
                       토론하며, 서로의 생각을 나누는 공간입니다.
                     </p>
                     <p className="mt-12 text-sm">현재 모임 인원 : (10/30)</p>
-                    <button className="mt-6 bg-white text-black px-6 py-2 rounded-lg font-bold shadow-md">
+                    <button className="transition-all duration-300 ease-in-out mt-6 bg-white text-black px-6 py-2 rounded-lg font-bold shadow-md hover:bg-black hover:text-white">
                       참여하기
                     </button>
                   </div>
