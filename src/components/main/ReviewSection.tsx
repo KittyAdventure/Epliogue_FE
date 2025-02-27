@@ -51,7 +51,7 @@ const ReviewSection: React.FC = () => {
       <div>
         <Slider {...settings}>
           {reviews.map((review) => (
-            <div className="w-full aspect-[3/2] bg-white rounded-2xl shadow-lg p-4 mb-5 flex flex-col justify-between">
+            <div className="w-full aspect-[3/2] bg-white rounded-2xl shadow-lg p-4 mb-5 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300">
               {/* user */}
               <div className="flex justify-between items-center mb-2">
                 <div className="user flex items-center gap-2">
@@ -62,9 +62,9 @@ const ReviewSection: React.FC = () => {
                   />
                   <div className="mr-8 font-bold truncate">{review.name}</div>
                 </div>
-                <div className="bg-black text-white rounded-lg w-[85px] h-[32px] flex items-center justify-center text-sm truncate">
+                <button className="bg-black text-white rounded-lg w-[85px] h-[32px] flex items-center justify-center text-sm truncate transition-all duration-300 ease-in-out hover:bg-black/10 hover:text-black">
                   팔로잉
-                </div>
+                </button>
               </div>
 
               {/* review */}
@@ -78,9 +78,7 @@ const ReviewSection: React.FC = () => {
                   <div className="font-bold text-base line-clamp-1">
                     {review.booktit}
                   </div>
-                  <div className="text-sm line-clamp-3 overflow-hidden">
-                    {review.text}
-                  </div>
+                  <div className="text-sm line-clamp-3">{review.text}</div>
                 </div>
               </div>
 
