@@ -23,28 +23,24 @@ const BookListSection: React.FC = () => {
         return response.json();
       })
       .then((data: Book[]) => {
-        // 가짜 빈 아이템 추가
-        setBooks([
-          ...data,
-          { title: '', author: '', description: '', image: '' },
-        ]);
+        // 빈 아이템을 추가하지 않고 데이터만 바로 설정
+        setBooks(data);
       })
       .catch((error) => console.error('Error loading books:', error));
   }, []);
 
   const settings = {
     dots: false,
-    infinite: false, // 무한 반복 제거
-    speed: 800,
+    infinite: true, // 무한 반복
+    speed: 1000,
     slidesToShow: 2,
     slidesToScroll: 1,
-    arrows: true,
+    arrows: false,
     adaptiveHeight: true,
     autoplay: true,
     autoplaySpeed: 4000,
     afterChange: (index: number) => {
-      // 마지막 슬라이드에서도 정상적으로 정보 업데이트
-      setCurrentIndex(Math.min(index, books.length - 2));
+      setCurrentIndex(Math.min(index, books.length - 1)); // 마지막 아이템에 대한 처리
     },
   };
 
@@ -72,11 +68,11 @@ const BookListSection: React.FC = () => {
         <Slider {...settings}>
           {books.map((book, index) => (
             <div key={index} className="image-container px-2">
-              <div className="relative w-full pb-[150%]">
-                {/* 가짜 아이템일 경우 빈 영역 */}
+              <div className="relative w-full rounded-lg overflow-hidden pb-[150%]">
+                {/* 책 이미지가 있을 때만 렌더링 */}
                 {book.image ? (
                   <img
-                    className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg hover:scale-104 transition-all duration-300 ease-in-out"
                     src={book.image}
                     alt={book.title}
                   />
