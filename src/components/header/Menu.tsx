@@ -8,8 +8,8 @@ interface MenuItem {
 }
 
 const menuDatas: MenuItem[] = [
-  { name: '', path: '/', icon:"fas fa-search"},
-  { name: '', path: '/', icon: "fas fa-user" },
+  { name: 'search', path: '/', icon:"fas fa-search"},
+  { name: 'mypage', path: '/login', icon: "fas fa-user" },
 ];
 
 const Menu = (): React.JSX.Element => {
@@ -17,7 +17,7 @@ const Menu = (): React.JSX.Element => {
     <ul className="flex">
       {menuDatas.map((menuData, idx) => (
         <li key={idx} className="leading-[80px] ml-[10px] w-[30px]">
-          <Link to={menuData.path} >
+          <Link to={menuData.path} title={menuData.name}>
             <i className={menuData.icon} style={{fontSize:"20px"}}></i>
           </Link>
         </li>
