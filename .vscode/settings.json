@@ -1,13 +1,13 @@
 {
   // 📝 자동 포맷팅 관련 설정
-  "editor.formatOnSave": true,         // 저장 시 자동 포맷
-  "editor.formatOnPaste": true,        // 붙여넣기 시 자동 포맷
+  "editor.formatOnSave": true, // 저장 시 자동 포맷
+  "editor.formatOnPaste": true, // 붙여넣기 시 자동 포맷
   "editor.defaultFormatter": "esbenp.prettier-vscode", // 기본 포맷터를 Prettier로 지정
 
   // 📌 코드 스타일 관련 설정
-  "editor.tabSize": 2,                 // 탭 대신 공백 2칸
-  "editor.insertSpaces": true,         // 탭 대신 공백 사용
-  "files.eol": "\n",                   // LF(Line Feed) 줄바꿈 (Windows/Unix 호환)
+  "editor.tabSize": 2, // 탭 대신 공백 2칸
+  "editor.insertSpaces": true, // 탭 대신 공백 사용
+  "files.eol": "\n", // LF(Line Feed) 줄바꿈 (Windows/Unix 호환)
 
   // 🔥 코드 정리 자동화
   "editor.codeActionsOnSave": {
@@ -16,25 +16,30 @@
   },
 
   // 🚀 TypeScript & JavaScript 관련 설정
-  "javascript.updateImportsOnFileMove.enabled": "always",  // 파일 이동 시 import 경로 자동 수정
+  "javascript.updateImportsOnFileMove.enabled": "always", // 파일 이동 시 import 경로 자동 수정
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.tsdk": "node_modules/typescript/lib",        // 프로젝트 내 TypeScript 버전 사용
+  "typescript.tsdk": "node_modules/typescript/lib", // 프로젝트 내 TypeScript 버전 사용
 
   // 🔍 Linting 관련 설정 (ESLint & Prettier)
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],  
-  "eslint.alwaysShowStatus": true,        // ESLint 상태바 항상 표시
-  "prettier.singleQuote": true,           // 작은따옴표 사용
-  "prettier.trailingComma": "all",        // 모든 곳에서 쉼표 추가
-  "prettier.arrowParens": "always",       // 화살표 함수 괄호 항상 사용
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.alwaysShowStatus": true, // ESLint 상태바 항상 표시
+  "prettier.singleQuote": true, // 작은따옴표 사용
+  "prettier.trailingComma": "all", // 모든 곳에서 쉼표 추가
+  "prettier.arrowParens": "always", // 화살표 함수 괄호 항상 사용
 
   // 🖼️ UI 관련 설정
-  "workbench.iconTheme": "vs-seti",  // VSCode 아이콘 테마 (Material Theme)
-  "workbench.colorTheme": "Default Dark+",      // VSCode 테마 설정
-  "editor.minimap.enabled": true,               // 미니맵 활성화
+  "workbench.iconTheme": "vs-seti", // VSCode 아이콘 테마 (Material Theme)
+  "workbench.colorTheme": "Default Dark+", // VSCode 테마 설정
+  "editor.minimap.enabled": false, // 미니맵 활성화
 
   // 🛠️ 기타 편의 기능
-  "files.autoSave": "afterDelay",           // 일정 시간 후 자동 저장
-  "explorer.confirmDelete": false,          // 파일 삭제 시 확인 안 함
+  "files.autoSave": "afterDelay", // 일정 시간 후 자동 저장
+  "explorer.confirmDelete": false, // 파일 삭제 시 확인 안 함
   "terminal.integrated.defaultProfile.windows": "Git Bash", // 기본 터미널 Git Bash 설정
-  "window.zoomLevel": 1                      // UI 확대 수준
+  "window.zoomLevel": 1 // UI 확대 수준
 }

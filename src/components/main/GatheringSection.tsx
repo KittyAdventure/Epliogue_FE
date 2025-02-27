@@ -77,16 +77,37 @@ const GatheringSection: React.FC = () => {
           <Slider {...settings}>
             {filteredGathering.map((gathering, index) => (
               <div key={index} className="w-full">
-                {/* 이미지 비율 유지 */}
+                {/* 이미지 컨테이너 */}
                 <div className="relative w-full" style={{ aspectRatio: '2/3' }}>
+                  {/* 반투명 검정 오버레이 (z-index: 10) */}
+                  <div className="absolute inset-0 bg-black bg-opacity-60 rounded-lg z-10"></div>
+
+                  {/* 이미지 (z-index: 5) */}
                   <img
-                    className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg z-5"
                     src={gathering.image}
                     alt={gathering.title}
                   />
-                </div>
-                <div className="font-bold text-center mt-2">
-                  {gathering.title}
+
+                  {/* 텍스트 및 버튼 컨텐츠 (z-index: 20) */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 z-20">
+                    <h3 className="text-lg font-bold line-clamp-1 text-center">
+                      {gathering.title}
+                    </h3>
+                    <p className="text-sm mt-4 text-center line-clamp-2">
+                      저희 모임은 책을 사랑하는 사람들이 모여 함께 읽고,
+                      토론하며, 서로의 생각을 나누는 공간입니다. 문학, 역사,
+                      철학, 과학 등 다양한 분야의 책을 읽으며 세상을 바라보는
+                      시야를 넓히고, 깊이 있는 대화를 통해 삶의 지혜를 얻고자
+                      합니다.
+                    </p>
+                    <p className="mt-12 text-sm">현재 모임 인원 : (10/30)</p>
+
+                    {/* 참여하기 버튼 */}
+                    <button className="mt-6 bg-white text-black px-6 py-2 rounded-lg font-bold shadow-md">
+                      참여하기
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

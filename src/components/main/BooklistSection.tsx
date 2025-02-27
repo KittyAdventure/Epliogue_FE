@@ -35,13 +35,13 @@ const BookListSection: React.FC = () => {
   const settings = {
     dots: false,
     infinite: false, // 무한 반복 제거
-    speed: 700,
+    speed: 800,
     slidesToShow: 2,
     slidesToScroll: 1,
     arrows: true,
     adaptiveHeight: true,
-    autoplay: true, // 자동 재생 활성화
-    autoplaySpeed: 3000, // 3초마다 변경
+    autoplay: true,
+    autoplaySpeed: 4000,
     afterChange: (index: number) => {
       // 마지막 슬라이드에서도 정상적으로 정보 업데이트
       setCurrentIndex(Math.min(index, books.length - 2));
@@ -53,15 +53,15 @@ const BookListSection: React.FC = () => {
   }
 
   return (
-    <div className="section-wrap max-w-6xl mx-auto flex items-center gap-16">
+    <div className="section-wrap h-[90vh] max-w-6xl mx-auto flex items-center gap-16">
       {/* 왼쪽 텍스트 영역 */}
-      <div className="w-1/3">
+      <div className="w-1/3 h-[19%] flex flex-col">
         <h2 className="text-4xl font-bold mb-11">인기 책 리스트</h2>
         <div className="flex gap-4 items-end">
           <h3 className="text-xl font-semibold">{books[currentIndex].title}</h3>
           <p>{books[currentIndex].author}</p>
         </div>
-        <div className="inline-block w-full border-solid border-1"></div>
+        <div className="inline-block w-full border-solid border-1 mt-4"></div>
         <p className="mt-4 text-sm leading-relaxed text-gray-700">
           {books[currentIndex].description}
         </p>
