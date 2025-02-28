@@ -1,8 +1,4 @@
-import { useState } from 'react';
-
 const ProjectPage = () => {
-  const [showBackground, setShowBackground] = useState(false);
-
   return (
     <div className="w-full">
       {/* 배경 및 로고 */}
@@ -16,15 +12,9 @@ const ProjectPage = () => {
       </section>
 
       {/* 기획 배경 */}
-      <section
-        className="h-screen flex flex-col justify-center items-center text-center bg-gray-100 p-10 transition-opacity duration-500"
-        onMouseEnter={() => setShowBackground(true)}
-      >
-        {showBackground && (
-          <div className="absolute inset-0 bg-gray-300 opacity-50 transition-all"></div>
-        )}
+      <section className="relative h-screen flex flex-col justify-center items-center bg-gray-200 text-black">
         <h2 className="text-3xl font-bold mb-4">기획배경</h2>
-        <p className="max-w-3xl text-lg">
+        <p className="max-w-3xl text-lg text-center">
           현대인은 다양한 디지털 플랫폼에서 책과 관련된 정보를 접하지만, 기초
           독서 플랫폼은 다소 한계가 있어...
         </p>
