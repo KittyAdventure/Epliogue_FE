@@ -1,22 +1,22 @@
 import { Link } from 'react-router-dom';
 
-// data/navDatas.ts 지우고 코드여기 복붙 (최적화)
 interface NavItem {
   name: string;
   path: string;
 }
+
 const navDatas: NavItem[] = [
-  { name: '소개', path: '/' },
-  { name: '책', path: '/' },
-  { name: '모임', path: '/' },
+  { name: '소개', path: '/project' },
+  { name: '책', path: '/book' },
+  { name: '모임', path: '/gathering' },
 ];
 
-const Nav = (): React.JSX.Element => {
+const Nav = () => {
   return (
     <nav className="gnb">
-      <ul className='flex'>
+      <ul className="flex">
         {navDatas.map((navData, idx) => (
-          <li key={idx} className='mr-[20px] leading-[80px]'>
+          <li key={idx} className="mr-[20px] leading-[80px]">
             <Link to={navData.path}>{navData.name}</Link>
           </li>
         ))}
@@ -24,4 +24,5 @@ const Nav = (): React.JSX.Element => {
     </nav>
   );
 };
+
 export default Nav;
