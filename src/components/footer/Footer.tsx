@@ -21,7 +21,11 @@ const Footer = (): React.JSX.Element => {
             <ul className="ftr-info flex gap-x-5">
               {ftrDatas.map((ftrData, idx) => (
                 <li key={idx}>
-                  <Link to={ftrData.path} className="bg-primary" title={ftrData.name}>
+                  <Link
+                    to={ftrData.path}
+                    className="bg-primary"
+                    title={ftrData.name}
+                  >
                     {ftrData.name}
                   </Link>
                 </li>
@@ -42,7 +46,12 @@ const Footer = (): React.JSX.Element => {
         <div className="ftr-right flex flex-col flex-wrap justify-center">
           <nav className="text-white flex justify-between">
             {snsDatas.map((snsData, idx) => (
-              <Link key={idx} to={snsData.path} title={snsData.name} className="block ml-[20px]">
+              <Link
+                key={idx}
+                to={snsData.path}
+                title={snsData.name}
+                className="block ml-[20px]"
+              >
                 <i className={snsData.icon} style={{ fontSize: '30px' }}></i>
               </Link>
             ))}

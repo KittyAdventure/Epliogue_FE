@@ -13,7 +13,7 @@ const navDatas: NavItem[] = [
 
 const Nav = () => {
   return (
-    <nav className="gnb">
+    <nav className="gnb w-40">
       <ul className="flex">
         {navDatas.map((navData, idx) => (
           <li key={idx} className="mr-[20px] leading-[80px]">
