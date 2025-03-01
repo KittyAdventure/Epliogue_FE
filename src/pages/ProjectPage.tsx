@@ -1,6 +1,7 @@
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import logo from '../assets/images/logo.png';
 import { memberData } from '../data/memberData';
 
 const ProjectPage = () => {
@@ -32,13 +33,22 @@ const ProjectPage = () => {
 
   return (
     <div className="w-full project-page-section">
-      {/* 배경 및 로고 */}
-      <section className="relative h-screen flex flex-col justify-center items-center bg-gray-800 text-white">
-        <div className="text-4xl font-bold">LOGO</div>
-        <div className="text-sm mt-2">LOGO의 의미</div>
+      {/* 로고 섹션 */}
+      <section className="relative h-screen flex flex-col justify-center items-center">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute w-60 h-60 border-4 border-white rounded-full animate-ping opacity-50"></div>{' '}
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-40 h-auto object-contain z-10"
+          />
+        </div>
+        <div className="text-lg mt-4 font-semibold">LOGO의 의미</div>
         <div className="absolute bottom-10 flex flex-col items-center">
-          <span className="text-sm">Scroll Down</span>
-          <span className="animate-bounce text-xl">↓</span>
+          <span className="text-lg font-semibold mb-2">
+            더 많은 정보를 보려면
+          </span>
+          <span className="animate-bounce text-3xl text-black">↓</span>
         </div>
       </section>
 
