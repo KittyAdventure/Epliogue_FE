@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
@@ -15,7 +15,6 @@ interface Review {
 
 const ReviewSection: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const reviewSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('http://localhost:5000/reviews')
@@ -25,28 +24,13 @@ const ReviewSection: React.FC = () => {
         }
         return response.json();
       })
-      .then((data) => {
-        setReviews(data);
-      })
+      .then((data) => setReviews(data)) // 🔥 reviews 상태 업데이트
       .catch((error) => console.error('Error loading reviews:', error));
   }, []);
 
-  useEffect(() => {
-    if (reviews.length > 0 && reviewSectionRef.current) {
-      setTimeout(() => {
-        const slickList = reviewSectionRef.current?.querySelector(
-          '.slick-list',
-        ) as HTMLElement;
-        if (slickList) {
-          slickList.style.overflow = 'visible';
-        }
-      }, 100);
-    }
-  }, [reviews]);
-
   const settings = {
     dots: true,
-    infinite: false,
+    infinite: false, // 무한 반복 제거
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -59,27 +43,21 @@ const ReviewSection: React.FC = () => {
   }
 
   return (
-    <div
-      ref={reviewSectionRef}
-      className="section-wrap overflow-hidden mb-[200px]"
-    >
+    <div className="section-wrap overflow-hidden mb-[200px] review-section">
       <div>
         <h2 className="text-4xl font-bold mb-11">리뷰</h2>
       </div>
 
       <div>
         <Slider {...settings}>
-          {reviews.map((review, index) => (
-            <div
-              key={index}
-              className="w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300"
-            >
+          {reviews.map((review) => (
+            <div className="w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300">
               {/* 유저 정보 */}
               <div className="flex justify-between items-center mb-2">
                 <div className="user flex items-center gap-2">
                   <img
                     src={review.profile}
-                    alt={`${review.booktit} 리뷰`}
+                    alt={review.booktit}
                     className="w-11 h-11 rounded-full"
                   />
                   <div className="font-bold truncate">{review.name}</div>
@@ -97,14 +75,18 @@ const ReviewSection: React.FC = () => {
                   className="w-1/4 aspect-[2/3] object-cover rounded-lg"
                 />
                 <div className="w-3/4 flex flex-col justify-between">
+                  {/* 제목 */}
                   <div className="font-bold text-base line-clamp-1">
                     {review.booktit}
                   </div>
+                  {/* 텍스트 (고정 높이 적용) */}
                   <div className="text-sm overflow-hidden line-clamp-4 min-h-[80px] h-[80px]">
                     {review.text}
                   </div>
                 </div>
               </div>
+
+              {/* 하단 댓글 & 좋아요 (항상 일정한 위치 유지) */}
               <div className="flex justify-between items-center mt-4">
                 <div>댓글 ({review.comment})</div>
                 <div>

@@ -15,6 +15,11 @@
   padding-right: 40px;
 }
 
+/* .project-page-section .slick-list, */
+.review-section .slick-list {
+  overflow: visible;
+}
+
 /* Header.tsx */
 /* Tailwindcss 적용 */
 /* Footer.tsx */

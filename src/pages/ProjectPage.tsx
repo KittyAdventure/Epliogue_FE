@@ -5,12 +5,15 @@ import { memberData } from '../data/memberData';
 
 const ProjectPage = () => {
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
-    speed: 500,
+    speed: 1000,
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true,
+    adaptiveHeight: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
     responsive: [
       {
         breakpoint: 1024,
@@ -28,7 +31,7 @@ const ProjectPage = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full project-page-section">
       {/* 배경 및 로고 */}
       <section className="relative h-screen flex flex-col justify-center items-center bg-gray-800 text-white">
         <div className="text-4xl font-bold">LOGO</div>
@@ -60,11 +63,11 @@ const ProjectPage = () => {
       <section className="min-h-[80vh] flex flex-col justify-center items-center bg-gradient-to-b from-gray-100 to-gray-300 p-10 text-center">
         <h2 className="text-4xl font-bold mb-10 text-gray-800">멤버소개</h2>
 
-        <div className="w-full max-w-5xl">
+        <div className="w-full max-w-7xl">
           <Slider {...settings}>
             {memberData.map((member, index) => (
               <div key={index} className="p-6">
-                <div className="bg-white shadow-lg rounded-2xl p-8 flex flex-col items-center min-h-[350px] transition-transform transform hover:scale-105 hover:shadow-2xl">
+                <div className="bg-white shadow-lg rounded-2xl p-8 flex flex-col items-center min-h-[350px] transition-all duration-300 hover:scale-105 mb-7">
                   <img
                     src={member.img}
                     alt={member.name}
@@ -75,15 +78,16 @@ const ProjectPage = () => {
                   <div className="mt-4 flex gap-4">
                     <a
                       href={`mailto:${member.email}`}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm transition hover:bg-blue-600"
+                      className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm transition-all duration-300 hover:bg-blue-600"
                     >
                       이메일
                     </a>
+
                     <a
                       href={member.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm transition hover:bg-gray-900"
+                      className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm transition-all duration-300 hover:bg-gray-900"
                     >
                       GitHub
                     </a>
