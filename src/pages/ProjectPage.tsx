@@ -1,4 +1,32 @@
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import { memberData } from '../data/memberData';
+
 const ProjectPage = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2, // 태블릿에서 2개씩 보이게
+        },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1, // 모바일에서 1개씩 보이게
+        },
+      },
+    ],
+  };
+
   return (
     <div className="w-full">
       {/* 배경 및 로고 */}
@@ -29,14 +57,41 @@ const ProjectPage = () => {
       </section>
 
       {/* 멤버 소개 */}
-      <section className="h-screen flex flex-col justify-center items-center bg-gray-100 p-10 text-center relative">
-        <h2 className="text-3xl font-bold mb-6">멤버소개</h2>
-        <div className="flex items-center space-x-4">
-          <button className="p-2 bg-gray-300 rounded-full">{'<'}</button>
-          <div className="w-32 h-32 bg-white shadow-md"></div>
-          <div className="w-32 h-32 bg-white shadow-md"></div>
-          <div className="w-32 h-32 bg-white shadow-md"></div>
-          <button className="p-2 bg-gray-300 rounded-full">{'>'}</button>
+      <section className="min-h-[80vh] flex flex-col justify-center items-center bg-gradient-to-b from-gray-100 to-gray-300 p-10 text-center">
+        <h2 className="text-4xl font-bold mb-10 text-gray-800">멤버소개</h2>
+
+        <div className="w-full max-w-5xl">
+          <Slider {...settings}>
+            {memberData.map((member, index) => (
+              <div key={index} className="p-6">
+                <div className="bg-white shadow-lg rounded-2xl p-8 flex flex-col items-center min-h-[350px] transition-transform transform hover:scale-105 hover:shadow-2xl">
+                  <img
+                    src={member.img}
+                    alt={member.name}
+                    className="w-40 h-40 object-cover rounded-full mb-6 shadow-md"
+                  />
+                  <h3 className="text-xl font-semibold">{member.name}</h3>
+                  <p className="text-md text-gray-600">{member.role}</p>
+                  <div className="mt-4 flex gap-4">
+                    <a
+                      href={`mailto:${member.email}`}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm transition hover:bg-blue-600"
+                    >
+                      이메일
+                    </a>
+                    <a
+                      href={member.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm transition hover:bg-gray-900"
+                    >
+                      GitHub
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Slider>
         </div>
       </section>
     </div>
