@@ -15,16 +15,19 @@ const BookListSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
-    fetch('http://localhost:5000/books')
+    fetch('/db.json')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
-      .then((data: Book[]) => {
-        // 빈 아이템을 추가하지 않고 데이터만 바로 설정
-        setBooks(data);
+      .then((data) => {
+        if (data.books) {
+          setBooks(data.books); // books 데이터만 추출
+        } else {
+          throw new Error('Books data not found');
+        }
       })
       .catch((error) => console.error('Error loading books:', error));
   }, []);
