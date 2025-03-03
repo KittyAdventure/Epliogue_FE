@@ -24,16 +24,17 @@ function PlaningSection() {
   };
 
   return (
-    <section className="relative h-screen flex flex-col justify-center items-center bg-gray-100 text-black overflow-hidden">
+    <div className="relative h-screen flex flex-col justify-center items-center bg-gray-100 text-black overflow-hidden">
       {/* 배경 알파벳 */}
       {['E', 'P', 'I', 'L', 'O', 'G', 'U', 'E'].map((letter, index) => (
         <motion.span
           key={index}
-          className="absolute text-[12vw] font-bold text-gray-300"
+          className="section-wrap absolute text-[12vw] font-bold text-gray-500"
           style={{
             top: `${index * 8 + 5}%`,
-            left: `${index * 10 + 3}%`,
+            left: `${index * 12 + 3}%`,
             whiteSpace: 'nowrap',
+            transform: 'translateXY(-50%,-50%)',
           }}
           variants={letterVariants}
           initial="hidden"
@@ -77,7 +78,7 @@ function PlaningSection() {
         whileInView="visible"
         viewport={{ once: true }}
       ></motion.div>
-    </section>
+    </div>
   );
 }
 
