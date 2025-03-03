@@ -19,20 +19,19 @@ interface InputInfo {
 const InputBox: React.FC<InputInfo> = ({type, id, name, placeholder}) => {
   const inputStyle = {
     width: "400px",
-    height: "60px",
-    backgroundColor: "initial",
-    color: "inherit",
+    height: "60px"
   }
   return (
     <div>
       <input
-        className="block w-[400px] h-[60px] border mx-[auto] mt-[20px] rounded-lg px-5"
+        className="block w-[400px] h-[60px] border mx-[auto] mt-[20px] rounded-lg px-5 placeholder-gray-400"
         type={type}
         id={id}
         name={name}
         placeholder={placeholder}
         style={inputStyle}
-        required
+        autoComplete="off"
+        // required
       />
     </div>
   );

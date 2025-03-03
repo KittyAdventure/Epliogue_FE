@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
+import '../../assets/css/checkbox.css';
 
 interface LoginActions {
   name: string;
@@ -21,7 +22,7 @@ const LoginForm = (): React.JSX.Element => {
         id="login-wrap"
         className="max-w-[400px] mx-[auto] text-center"
       >
-        <h2 className="text-4xl">로그인</h2>
+        <h2 className="text-4xl font-medium">로그인</h2>
         <InputBox
           className=""
           type="text"
@@ -35,18 +36,26 @@ const LoginForm = (): React.JSX.Element => {
           name="password"
           placeholder="비밀번호"
         />
-        <div className='checkbox text-left pl-2 mt-2'>
+        {/* 자동로그인 체크박스. Toggle상태를 기억하기 */}
+        <div className="checkboxContainer flex text-left pl-2 mt-2 text-[gray]">
           <input
+            className="mr-3"
             type="checkbox"
             id="autologin"
             name="autologin"
             placeholder="자동 로그인*"
           />
+          <label htmlFor="autologin" className="text-sm">
+            자동 로그인
+          </label>
         </div>
-        <label htmlFor="autologin">자동 로그인</label>
-        <div id="loginAction" className='mt-10 flex justify-around text-[gray]'>
+        <div id="loginAction" className="mt-10 flex justify-around text-[gray]">
           {loginOptions.map((loginOption, idx) => (
-            <Link key={idx} to={loginOption.path}>
+            <Link
+              key={idx}
+              to={loginOption.path}
+              className="block w-[33%] hover:text-[black]"
+            >
               {loginOption.name}
             </Link>
           ))}

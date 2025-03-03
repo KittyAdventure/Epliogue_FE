@@ -1,0 +1,16 @@
+/* loginform > checkbox input 전용 */
+
+input[type="checkbox"],
+input[type="checkbox"]::placeholder {
+  user-select: none;
+  -webkit-user-select: none; /* For Safari */
+  -moz-user-select: none;    /* For Firefox */
+  -ms-user-select: none;     /* For IE10+ */
+}
+
+.checkboxContainer {
+  user-select: none;
+  -webkit-user-select: none; /* For Safari */
+  -moz-user-select: none;    /* For Firefox */
+  -ms-user-select: none;     /* For IE10+ */
+}
