@@ -49,9 +49,9 @@ const BookListSection: React.FC = () => {
   }
 
   return (
-    <div className="section-wrap max-w-6xl mx-auto flex items-center gap-16">
+    <div className="section-wrap max-w-6xl mx-auto flex gap-16">
       {/* 왼쪽 텍스트 영역 */}
-      <div className="w-1/3 h-[19%] flex flex-col">
+      <div className="w-1/3 mt-[8%] flex flex-col">
         <h2 className="text-4xl font-bold mb-11">인기 책 리스트</h2>
         <div className="flex gap-4 items-end">
           <h3 className="text-xl font-semibold">{books[currentIndex].title}</h3>

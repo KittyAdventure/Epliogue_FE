@@ -1,6 +1,6 @@
 /* 공통 */
 .section-wrap {
-  /* max-width: 1820px; */
+  max-width: 1440px;
   margin-inline: auto;
   padding: 60px 30px;
 }
