@@ -8,11 +8,14 @@ function LogoSection() {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
   };
   return (
-    <section className="relative h-screen flex flex-col justify-center items-center">
+    <section
+      className="relative h-screen flex flex-col justify-center items-center"
+      // style={{ backgroundImage: `url(${logosection})` }}
+    >
       <img src={logo} alt="Logo" className="w-36 h-auto object-contain z-10" />
       <div className="text-gray-900 max-w-lg text-center">
         <h2 className="text-2xl font-bold mb-4">에필로그</h2>
-        <p className="text-sm">
+        <p className="text-m">
           고양이는 예로부터 독립적이면서도 호기심이 많은 존재로 알려져 있습니다.
           그런 고양이가 한 권의 책을 펼쳐 깊이 몰입하는 모습은, 지식과 이야기
           속으로 빠져드는 모든 독자의 모습을 상징합니다. 책을 읽는다는 것은

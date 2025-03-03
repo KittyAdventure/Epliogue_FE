@@ -2,18 +2,49 @@ import { motion } from 'framer-motion';
 
 function PlaningSection() {
   const textVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1, ease: 'easeInOut' } },
-  };
-  const lineVariants = {
-    hidden: { height: '0%' },
+    hidden: { opacity: 0, y: 20 },
     visible: {
-      height: '100%',
+      opacity: 1,
+      y: 0,
+      transition: { duration: 1, ease: 'easeInOut' },
+    },
+  };
+
+  const lineVariants = {
+    hidden: { scaleY: 0 },
+    visible: {
+      scaleY: 1,
       transition: { duration: 2, ease: 'easeInOut' },
     },
   };
+
+  const letterVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 0.1, transition: { duration: 2, ease: 'easeInOut' } },
+  };
+
   return (
-    <section className="relative h-screen flex flex-col justify-center items-center bg-gray-100 text-black">
+    <section className="relative h-screen flex flex-col justify-center items-center bg-gray-100 text-black overflow-hidden">
+      {/* 배경 알파벳 */}
+      {['E', 'P', 'I', 'L', 'O', 'G', 'U', 'E'].map((letter, index) => (
+        <motion.span
+          key={index}
+          className="absolute text-[12vw] font-bold text-gray-300"
+          style={{
+            top: `${index * 8 + 5}%`,
+            left: `${index * 10 + 3}%`,
+            whiteSpace: 'nowrap',
+          }}
+          variants={letterVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          {letter}
+        </motion.span>
+      ))}
+
+      {/* 제목 */}
       <motion.h2
         className="text-3xl font-bold mb-4"
         variants={textVariants}
@@ -24,7 +55,7 @@ function PlaningSection() {
         기획배경
       </motion.h2>
 
-      {/* 기획 배경 텍스트 */}
+      {/* 설명 텍스트 */}
       <motion.p
         className="max-w-3xl text-lg text-center"
         variants={textVariants}
@@ -38,9 +69,9 @@ function PlaningSection() {
         있는 공간이 필요하다.
       </motion.p>
 
-      {/* 선 */}
+      {/* 세로 선 */}
       <motion.div
-        className="absolute left-[50%] top-0 w-[2px] bg-black h-[40vh]"
+        className="absolute left-[50%] top-0 w-[2px] bg-black h-[40vh] origin-top"
         variants={lineVariants}
         initial="hidden"
         whileInView="visible"
