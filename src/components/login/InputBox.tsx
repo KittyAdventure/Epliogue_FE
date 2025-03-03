@@ -14,9 +14,11 @@ interface InputInfo {
   id: string;
   name: string;
   placeholder: string;
+  value?:string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const InputBox: React.FC<InputInfo> = ({type, id, name, placeholder}) => {
+const InputBox: React.FC<InputInfo> = ({type, id, name, placeholder, value, onChange}) => {
   const inputStyle = {
     width: "400px",
     height: "60px"
@@ -31,6 +33,8 @@ const InputBox: React.FC<InputInfo> = ({type, id, name, placeholder}) => {
         placeholder={placeholder}
         style={inputStyle}
         autoComplete="off"
+        value={value}
+        onChange={onChange}
         // required
       />
     </div>
