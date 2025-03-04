@@ -1,7 +1,6 @@
-import React, {useState} from "react"
-import { Link } from 'react-router-dom';
-import {useNavigate} from "react-router-dom"
-import axios from "axios"
+import React, { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
@@ -16,17 +15,21 @@ const loginOptions: LoginActions[] = [
   { name: '비밀번호 찾기', path: '#' },
   { name: '회원가입', path: '/login/signup' },
 ];
+interface LoginProps {
+  setLoggedIn:(loggedIn:boolean)=> void;
+}
 
 // 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
-const LoginForm = (): React.JSX.Element => {
+const LoginForm: React.FC<LoginProps> = ({setLoggedIn}) => {
   const navigate = useNavigate();
   const [loginName, setLoginName] = useState("")
   const [password, setPassword] = useState("")
+  
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await axios.get('http://localhost:3001/members');
+      const response = await axios.get('http://localhost:3000/members');
       const members = response.data;
       console.log(members); // Should print the array of members
 
@@ -37,14 +40,15 @@ const LoginForm = (): React.JSX.Element => {
       console.log(user); // Check the result of the find method
 
       if (user) {
-        // Redirect to MyPage
+        // Redirect to MyPage if setLoggedIn true
+        setLoggedIn(true)
         navigate('/mypage');
       } else {
-        alert('Invalid username or password');
+        alert('ID 또는 비밀번호가 올바르지 않습니다. 다시 확인해주세요');
       }
     } catch (error) {
       console.error('Error logging in:', error);
-      alert('An error occurred during login');
+      alert('오류가 발생했습니다');
     }
   };
 
