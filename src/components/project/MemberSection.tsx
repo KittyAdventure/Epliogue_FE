@@ -31,8 +31,13 @@ function MemberSection() {
     ],
   };
   return (
-    <section className="min-h-[80vh] flex flex-col justify-center items-center bg-gradient-to-b from-gray-100 to-gray-300 p-10 text-center">
-      <h2 className="text-4xl font-bold mb-10 text-gray-800">멤버소개</h2>
+    <section
+      className="min-h-[80vh] flex flex-col justify-center items-center p-10 text-center"
+      style={{ background: 'linear-gradient(to bottom, #f7fafc, #e2e8f0)' }}
+    >
+      <h2 className="text-4xl font-bold mb-4 mx-auto text-shadow-md">
+        멤버소개
+      </h2>
 
       <div className="w-full max-w-7xl">
         <Slider {...settings}>
@@ -49,7 +54,7 @@ function MemberSection() {
                 <div className="mt-4 flex gap-4">
                   <a
                     href={`mailto:${member.email}`}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm transition-all duration-300 hover:bg-blue-600"
+                    className="px-4 py-2 bg-[#F26666] text-white rounded-lg text-sm transition-all duration-300 hover:bg-[#e24f4f]"
                   >
                     이메일
                   </a>

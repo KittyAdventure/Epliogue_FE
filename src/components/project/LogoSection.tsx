@@ -40,8 +40,8 @@ function LogoSection() {
         backgroundSize: 'cover',
       }}
     >
-      {/* 배경 위에 반투명 레이어 추가 */}
-      <div className="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm"></div>
+      {/* 반투명 레이어 */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
       <motion.img
         src={logowh}
         alt="Logo"
@@ -53,7 +53,7 @@ function LogoSection() {
       />
       <div className="text-center z-20">
         <motion.h2
-          className="text-4xl font-extrabold tracking-wide drop-shadow-md mb-6"
+          className="text-4xl font-extrabold text-white tracking-wide mb-6 uppercase text-shadow-lg"
           variants={textVariants}
           initial="hidden"
           whileInView="visible"
@@ -64,7 +64,7 @@ function LogoSection() {
 
         {/* 설명 텍스트 */}
         <motion.p
-          className="max-w-3xl text-lg text-center"
+          className="max-w-3xl text-lg text-gray-200 leading-relaxed"
           variants={textVariants}
           initial="hidden"
           whileInView="visible"
