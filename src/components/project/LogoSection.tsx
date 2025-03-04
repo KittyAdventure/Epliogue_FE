@@ -1,12 +1,13 @@
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
-import logo from '../../assets/images/logo.png';
+import logowh from '../../assets/images/logowh.png';
 
 function LogoSection() {
   const scrollToNext = () => {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
   };
+
   const textVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -16,17 +17,59 @@ function LogoSection() {
     },
   };
 
+  const logoVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 0.6,
+      y: 0,
+      transition: { duration: 1, ease: 'easeInOut' },
+    },
+  };
+
+  const letterVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 2, ease: 'easeInOut' } },
+  };
+
   return (
-    <section
-      className="relative h-screen flex flex-col justify-center items-center"
-      // style={{ backgroundImage: `url(${logosection})` }}
+    <div
+      className="relative h-screen flex flex-col items-center text-white"
+      style={{
+        backgroundImage: `url(../../public/img/logosection.webp)`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
     >
-      <img src={logo} alt="Logo" className="w-36 h-auto object-contain z-10" />
-      <div className="text-gray-900 max-w-lg text-center">
-        <motion.h2 className="text-2xl font-bold mb-4" variants={textVariants}>
+      {/* 배경 위에 반투명 레이어 추가 */}
+      <div className="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm"></div>
+      <motion.img
+        src={logowh}
+        alt="Logo"
+        className="max-w-xs h-auto object-contain z-10 mb-6 mt-[20vh]"
+        variants={logoVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      />
+      <div className="text-center z-20">
+        <motion.h2
+          className="text-4xl font-extrabold tracking-wide drop-shadow-md mb-6"
+          variants={textVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           에필로그
         </motion.h2>
-        <motion.p className="text-m" variants={textVariants}>
+
+        {/* 설명 텍스트 */}
+        <motion.p
+          className="max-w-3xl text-lg text-center"
+          variants={textVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           고양이는 예로부터 독립적이면서도 호기심이 많은 존재로 알려져 있습니다.
           그런 고양이가 한 권의 책을 펼쳐 깊이 몰입하는 모습은, 지식과 이야기
           속으로 빠져드는 모든 독자의 모습을 상징합니다. 책을 읽는다는 것은
@@ -39,20 +82,27 @@ function LogoSection() {
         className="absolute bottom-12 flex flex-col items-center cursor-pointer"
         onClick={scrollToNext}
       >
-        <span className="text-lg font-semibold mb-2">
+        <motion.span
+          className="text-lg font-semibold mb-2"
+          variants={letterVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           더 많은 정보를 보려면
-        </span>
+        </motion.span>
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
+          variants={letterVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
         >
-          <FontAwesomeIcon
-            icon={faArrowDown}
-            className="text-4xl transform transition-all hover:scale-125"
-          />
+          <FontAwesomeIcon icon={faArrowDown} className="text-4xl" />
         </motion.div>
       </div>
-    </section>
+    </div>
   );
 }
 
