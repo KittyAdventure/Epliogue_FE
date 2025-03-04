@@ -15,6 +15,7 @@ function ExpectedSection() {
         end: 'bottom top',
         scrub: 1,
         markers: true,
+        pinSpacing: false, // 추가된 부분
       },
     });
   }, []);
@@ -38,7 +39,7 @@ function ExpectedSection() {
       </section>
       {/* 기대효과 2 section */}
       <section
-        className="expected-02 h-screen flex justify-center items-center z-20"
+        className="expected-02 h-screen flex justify-center items-center"
         style={{
           backgroundImage:
             "url('https://cdn.pixabay.com/photo/2022/11/30/01/17/background-7625668_1280.jpg')",

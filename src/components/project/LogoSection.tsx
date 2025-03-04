@@ -5,7 +5,7 @@ import logowh from '../../assets/images/logowh.png';
 
 function LogoSection() {
   const scrollToNext = () => {
-    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+    window.scrollTo({ top: window.innerHeight + 80, behavior: 'smooth' });
   };
 
   const textVariants = {
