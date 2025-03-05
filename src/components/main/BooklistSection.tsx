@@ -22,11 +22,15 @@ const BookListSection: React.FC = () => {
         }
         return response.json();
       })
-      .then((data: Book[]) => {
-        // 빈 아이템을 추가하지 않고 데이터만 바로 설정
-        setBooks(data);
+      .then((data) => {
+        if (data.items) {
+          setBooks(data.items);
+        }
       })
-      .catch((error) => console.error('Error loading books:', error));
+      .catch((error) => {
+        console.error('Error loading books:', error);
+        setBooks([]);
+      });
   }, []);
 
   const settings = {
