@@ -35,7 +35,7 @@ function LogoSection() {
     <div
       className="relative h-screen flex flex-col items-center text-white"
       style={{
-        backgroundImage: `url(../../public/img/logosection.webp)`,
+        backgroundImage: `url(/img/logosection.webp)`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }}
