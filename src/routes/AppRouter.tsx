@@ -32,7 +32,7 @@ const AppRouter = (): React.JSX.Element => {
         <Route path="/project" element={<ProjectPage />} />
         <Route path="/book" element={<BookPage />} />
         <Route path="/gathering" element={<GatheringPage />} />
-        <Route path="/book/:bookId" element={<BookDetailPage />} />
+        <Route path="/book/:isbn" element={<BookDetailPage />} />
       </Routes>
       <Footer />
     </Router>

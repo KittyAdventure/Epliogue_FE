@@ -14,17 +14,17 @@ interface Book {
 }
 
 const BookDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Extract the book ID from the URL
+  const { isbn } = useParams<{ isbn: string }>(); // Extract the book ID from the URL
   const [book, setBook] = useState<Book | null>(null);
 
   useEffect(() => {
-    if (id) {
-      fetch(`http://localhost:5000/books/detail/${id}`)
+    if (isbn) {
+      fetch(`http://localhost:5000/books/detail/${isbn}`)
         .then((response) => response.json())
         .then((data) => setBook(data))
         .catch((error) => console.error('Error loading book details:', error));
     }
-  }, [id]);
+  }, [isbn]);
 
   if (!book) {
     return <div>Loading book details...</div>;
