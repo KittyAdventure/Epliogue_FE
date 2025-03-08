@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Book {
   title: string;
@@ -14,7 +15,10 @@ interface Book {
 
 const BookPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
-  const [selectedBooks, setSelectedBooks] = useState<Set<number>>(new Set());
+  const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
+  const [sortCriterion, setSortCriterion] = useState<string>('latest');
+  const [createdAt, setCreatedAt] = useState<number[]>([]); // 책 등록일 저장용 상태
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost:5000/books')
@@ -27,6 +31,8 @@ const BookPage: React.FC = () => {
       .then((data) => {
         if (data.items) {
           setBooks(data.items);
+          const currentTime = new Date().getTime();
+          setCreatedAt(new Array(data.items.length).fill(currentTime)); // 책이 로드된 시각을 저장
         }
       })
       .catch((error) => {
@@ -35,13 +41,33 @@ const BookPage: React.FC = () => {
       });
   }, []);
 
-  const toggleBookmark = (index: number) => {
+  // 책 정렬 함수
+  const sortBooks = (books: Book[], createdAt: number[]) => {
+    if (sortCriterion === 'latest') {
+      return [...books].sort((a, b) => {
+        // `books`와 `createdAt`을 인덱스 기반으로 함께 비교
+        return createdAt[books.indexOf(b)] - createdAt[books.indexOf(a)]; // 등록일 기준 최신순 정렬 (내림차순)
+      });
+    } else if (sortCriterion === 'pubDate') {
+      return [...books].sort((a, b) => {
+        return new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime(); // 출간일순 정렬 (오름차순)
+      });
+    }
+    return books; // 기본값은 원래 순서로 반환
+  };
+
+  // 정렬 기준 변경 핸들러
+  const handleSortChange = (criterion: string) => {
+    setSortCriterion(criterion);
+  };
+
+  const toggleBookmark = (isbn: string) => {
     setSelectedBooks((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
+      if (newSet.has(isbn)) {
+        newSet.delete(isbn);
       } else {
-        newSet.add(index);
+        newSet.add(isbn);
       }
       return newSet;
     });
@@ -51,13 +77,15 @@ const BookPage: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  // 책 정렬 후 렌더링
+  const sortedBooks = sortBooks(books, createdAt);
+
   return (
     <section className="section-wrap">
       <div className="pt-6 flex flex-col gap-14">
-        {/* 타이틀 */}
         <h1 className="text-3xl font-bold mb-6">책 정보 페이지</h1>
         <div className="flex w-full justify-between gap-[2vw]">
-          {/* 정렬기준 */}
+          {/* 정렬 기준 선택 */}
           <div className="w-1/7 h-[17vh] p-4 bg-gray-100 rounded-lg shadow-md">
             <div className="flex items-center mb-2 ml-2">
               <h2 className="text-sm text-[#888888] mr-1">정렬 기준</h2>
@@ -65,7 +93,10 @@ const BookPage: React.FC = () => {
             </div>
             <hr className="border-gray-300 mb-4" />
             <div className="flex flex-col space-y-3 text-gray-700 ml-2">
-              <button className="text-left focus:text-blue-500 focus:font-bold">
+              <button
+                className="text-left focus:text-blue-500 focus:font-bold"
+                onClick={() => handleSortChange('latest')}
+              >
                 최신순
               </button>
               <button className="text-left focus:text-blue-500 focus:font-bold">
@@ -74,25 +105,33 @@ const BookPage: React.FC = () => {
               <button className="text-left focus:text-blue-500 focus:font-bold">
                 리뷰순
               </button>
-              <button className="text-left focus:text-blue-500 focus:font-bold">
+              <button
+                className="text-left focus:text-blue-500 focus:font-bold"
+                onClick={() => handleSortChange('pubDate')}
+              >
                 출간일순
               </button>
             </div>
           </div>
+
           {/* 책 목록 */}
           <div className="w-6/7 overflow-y-auto max-h-[80vh] grid grid-cols-[repeat(3,minmax(0,0.5fr))] gap-12 ml-12 pr-11 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            {books.map((book, index) => (
-              <div key={index} className="relative">
+            {sortedBooks.map((book) => (
+              <div
+                key={book.isbn} // ISBN을 고유 키로 사용
+                className="relative cursor-pointer book-card"
+                onClick={() => navigate(`/book/${book.isbn}`)} // 책 상세 페이지로 이동
+              >
                 <div
                   className={`absolute top-0 right-2 cursor-pointer ${
-                    selectedBooks.has(index)
+                    selectedBooks.has(book.isbn)
                       ? 'text-green-500'
-                      : 'text-black/80'
+                      : 'text-black/90'
                   }`}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleBookmark(index);
+                    toggleBookmark(book.isbn);
                   }}
                 >
                   <svg
@@ -100,17 +139,19 @@ const BookPage: React.FC = () => {
                     viewBox="0 0 24 24"
                     fill="currentColor"
                     className="w-10 h-12"
+                    style={{
+                      filter:
+                        'drop-shadow(0.5px 2px 3px rgba(255, 255, 255, 0.5))',
+                    }}
                   >
                     <path d="M6 2a2 2 0 00-2 2v18l8-5 8 5V4a2 2 0 00-2-2H6z" />
                   </svg>
                 </div>
-
                 <img
                   src={book.image}
                   alt={book.title}
-                  className="w-full h-[90%] object-cover rounded-lg shadow-md mb-4" // 이미지와 제목 사이에 간격 추가
+                  className="w-full h-[90%] object-cover rounded-lg shadow-md mb-4"
                 />
-
                 <h2 className="text-lg font-semibold mt-3 text-center">
                   {book.title}
                 </h2>
