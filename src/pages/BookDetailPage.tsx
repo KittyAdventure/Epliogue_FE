@@ -128,7 +128,15 @@ const BookDetailPage: React.FC = () => {
       window.location.href = shareOptions.kakaoShareUrl; // 카카오 링크 공유 예시
     }
   };
-  const [filter, setFilter] = useState('latest');
+  const [filter, setFilter] = useState('');
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const options = [
+    { value: 'latest', label: '최신순' },
+    { value: 'likes', label: '좋아요순' },
+    { value: 'comments', label: '댓글 많은 순' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 6;
 
@@ -182,37 +190,38 @@ const BookDetailPage: React.FC = () => {
         </div>
 
         {/* 텍스트 영역 */}
-        <div className="w-2/3 flex flex-col gap-4">
+        <div className="w-2/3 flex flex-col justify-center gap-2">
           <div className="flex items-center">
-            <span className="text-m font-semibold">★평균 4.5</span>
-            <span className="text-xs text-gray-500">(2.3만명)</span>
+            <span className="text-m font-semibold">★ 평균 4.5</span>
+            <span className="text-xs text-gray-500 ml-1">(2.3만명)</span>
           </div>
-          <div className="flex items-center">
-            <h2 className="text-2xl font-semibold">{book.title}</h2>
+          <div className="flex items-center mb-3">
+            <h2 className="text-3xl font-bold">{book.title}</h2>
+            <h3 className="text-lg text-gray-700 mx-4">|</h3>
             <h3 className="text-lg text-gray-700">{book.author}</h3>
             <FaShareAlt
-              className="ml-2 cursor-pointer"
+              className="ml-2 cursor-pointer mt-[2px] text-black hover:text-gray-600 transition-colors duration-200"
               onClick={() => handleShareClick('book', book.isbn)}
             />
           </div>
-          <p className="text-base">{book.description}</p>
-          <div className="flex flex-col gap-4">
-            <p className="text-sm text-gray-500">가격: {book.price}원</p>
-            <p className="text-sm text-gray-500">출판: {book.pubDate}</p>
-            <p className="text-sm text-gray-500">출판사항: {book.publisher}</p>
+          <p className="text-lg">{book.description}</p>
+          <div className="flex flex-col gap-4 text-base text-gray-900 mt-3">
+            <p>출판일 : {book.pubDate}</p>
+            <p>출판사 : {book.publisher}</p>
+            <p>가격 : {book.price}원</p>
           </div>
 
           {/* 별점 부분 */}
-          <div className="flex flex-col">
-            <p className="text-sm text-gray-500">별점</p>
+          <div className="flex flex-col mt-4">
+            <p className="text-base text-gray-600 mb-3">별점</p>
             <div className="flex gap-1">
               {[...Array(5)].map((_, index) => (
                 <span
                   key={index}
-                  className={`text-2xl font-semibold cursor-pointer transition-all duration-300 ${
+                  className={`text-4xl font-semibold cursor-pointer transition-all duration-300 ${
                     (hoverRating || rating) > index
-                      ? 'text-yellow-500'
-                      : 'text-gray-400'
+                      ? 'text-yellow-400'
+                      : 'text-[#d1d1d1]'
                   }`}
                   onClick={() => handleRatingClick(index)}
                   onMouseEnter={() => handleMouseEnter(index)}
@@ -224,11 +233,14 @@ const BookDetailPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <button className="bg-black hover:bg-black/70 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-all duration-300">
+          <div className="flex gap-8 mt-4">
+            <button className="bg-black hover:bg-black/70 text-white font-bold py-3 px-7 rounded-lg shadow-lg transition-all duration-300">
               리뷰하기
             </button>
-            <button className="bg-white hover:bg-black/10 text-black font-bold py-2 px-5 rounded-lg shadow-lg transition-all duration-300">
+            <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg transition-all duration-300">
+              채팅하기
+            </button>
+            <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg transition-all duration-300">
               모임하기
             </button>
           </div>
@@ -276,17 +288,18 @@ const BookDetailPage: React.FC = () => {
           </div>
         </div>
       )}
+
       {/* 같은 작가 */}
       {book.sameAuthor && book.sameAuthor.length > 0 && (
         <div>
-          <h3 className="text-xl font-semibold mb-3 mt-28">
+          <h3 className="text-2xl font-bold mb-3 mt-28">
             같은 작가 다른 추천 작품
           </h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-9 mt-10">
             {book.sameAuthor.map((otherBook, index) => (
               <button
                 key={index}
-                className="bg-white hover:bg-gray-200 shadow-md text-sm px-5 py-3 rounded-full transition-all duration-300"
+                className="bg-white hover:bg-gray-200 shadow-md text-lg font-medium px-5 py-3 rounded-full transition-all duration-300"
                 onClick={() => navigate(`/book/${otherBook.title}`)}
               >
                 #{otherBook.title}
@@ -295,22 +308,42 @@ const BookDetailPage: React.FC = () => {
           </div>
         </div>
       )}
+
       {/* 리뷰 영역 */}
       <div className="review-section mt-28 mb-28">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">리뷰</h2>
-          <select
-            className="border p-2 rounded-lg text-sm cursor-pointer"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="latest">최신순</option>
-            <option value="likes">좋아요순</option>
-            <option value="comments">댓글 많은 순</option>
-          </select>
+          <div className="relative w-35 z-50">
+            <button
+              className="w-full border p-2 px-4 rounded-lg text-m bg-white flex justify-between items-center hover:"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {filter
+                ? options.find((opt) => opt.value === filter)?.label
+                : '필터'}
+              <span>▼</span>
+            </button>
+
+            {isOpen && (
+              <ul className="absolute w-full mt-1 border py-2 border-gray-300 rounded-lg bg-white shadow-md">
+                {options.map((option) => (
+                  <li
+                    key={option.value}
+                    className="py-2 px-4 cursor-pointer hover:font-bold transition-all duration-300"
+                    onClick={() => {
+                      setFilter(option.value);
+                      setIsOpen(false);
+                    }}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-3 md:grid-cols-2 gap-20">
+        <div className="grid grid-cols-3 md:grid-cols-2 gap-20 mt-10">
           {paginatedReviews.map((review, index) => (
             <div
               key={index}
@@ -324,7 +357,7 @@ const BookDetailPage: React.FC = () => {
                 />
                 <span className="font-semibold">{review.name}</span>
               </div>
-              <p className="text-sm mb-3 line-clamp-5 leading-relaxed">
+              <p className="text-m mb-3 line-clamp-5 leading-relaxed">
                 {review.text}
               </p>
               <div className="absolute bottom-5 left-6 right-6 flex justify-between text-sm text-gray-500">
@@ -335,14 +368,16 @@ const BookDetailPage: React.FC = () => {
           ))}
         </div>
         {/* 페이지네이션 */}
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-16">
           {Array.from(
             { length: Math.ceil(reviews.length / reviewsPerPage) },
             (_, i) => (
               <button
                 key={i}
-                className={`mx-1 px-3 py-1 rounded-lg border ${
-                  currentPage === i + 1 ? 'bg-black text-white' : 'bg-gray-200'
+                className={`mx-1 px-3 py-1 mb-1 ${
+                  currentPage === i + 1
+                    ? 'text-black font-bold bg-gray-100 rounded-full'
+                    : ''
                 }`}
                 onClick={() => setCurrentPage(i + 1)}
               >
