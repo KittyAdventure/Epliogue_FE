@@ -15,6 +15,22 @@
   padding-right: 40px;
 }
 
+/* mainpage #reviewsection */
+#review .slick-dots {
+  display: block;
+  bottom: -50px;
+}
+#review .slick-dots li button:before {
+  font-size: 10px;
+  color: gray;
+}
+#review .slick-dots li {
+  margin: 0 1px;
+}
+#review .slick-dots li.slick-active button:before {
+  color: #ff4c4c;
+}
+
 /* .project-page-section .slick-list, */
 .review-section .slick-list {
   overflow: visible;
