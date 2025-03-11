@@ -1,6 +1,12 @@
 import { FaLink, FaTimes } from 'react-icons/fa';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 
+declare global {
+  interface Window {
+    Kakao: any; // Kakao 객체의 타입을 any로 선언
+  }
+}
+
 interface ShareOption {
   shareUrl: string;
   kakaoShareUrl: string;
@@ -15,13 +21,45 @@ const ShareModal: React.FC<ShareModalProps> = ({
   shareOptions,
   setShareModalOpen,
 }) => {
+  // const JAVASCRIPT_KET = import.meta.env.VITE_APP_JAVASCRIPT_KEY;
+
+  // // 카카오 SDK 초기화 (필요한 경우만)
+  // useEffect(() => {
+  //   if (window.Kakao && !window.Kakao.isInitialized()) {
+  //     window.Kakao.init(JAVASCRIPT_KET); // 카카오 개발자 사이트에서 제공하는 JavaScript Key
+  //   }
+  // }, [JAVASCRIPT_KET]); // JAVASCRIPT_KET이 변경될 때만 초기화
+
+  // 링크 복사
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareOptions.shareUrl);
     alert('링크가 복사되었습니다!');
   };
 
+  // 카카오톡으로 공유
   const handleKakaoShare = () => {
-    window.location.href = shareOptions.kakaoShareUrl;
+    if (window.Kakao) {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '공유할 내용 제목',
+          description: '공유할 내용 설명',
+          imageUrl: '이미지 URL',
+          link: {
+            webUrl: shareOptions.shareUrl,
+            mobileWebUrl: shareOptions.shareUrl,
+          },
+        },
+        buttons: [
+          {
+            title: '웹에서 보기',
+            link: {
+              webUrl: shareOptions.shareUrl,
+            },
+          },
+        ],
+      });
+    }
   };
 
   return (
