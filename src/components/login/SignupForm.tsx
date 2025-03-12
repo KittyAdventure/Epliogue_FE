@@ -1,8 +1,16 @@
+import {useState} from "react"
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
 
 // 회원가입 클릭 -> 이 페이지로 온다
 const SignupForm = (): React.JSX.Element => {
+  // password management, send to InputBox to check
+  const [password, setPassword] = useState<string>("")
+  
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.currentTarget.value);
+  }
+
   return (
     <div id="signupForm" className="p-[120px]">
       <form
@@ -23,6 +31,8 @@ const SignupForm = (): React.JSX.Element => {
           id="password"
           name="password"
           placeholder="비밀번호*"
+          value={password}
+          onChange={handlePasswordChange}
         />
         <InputBox type="email" id="email" name="email" placeholder="이메일*" />
         <InputBox type="text" id="name" name="name" placeholder="이름*" />

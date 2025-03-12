@@ -8,21 +8,39 @@
  * 4)placeholder
  * 5)extra
  */
+import { useState } from 'react';
 interface InputInfo {
   className?: string;
   type: string;
   id: string;
   name: string;
   placeholder: string;
-  value?:string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  disabled?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  validate?: (value: string) => string | null;
 }
+const InputBox: React.FC<InputInfo> = ({
+  type,
+  id,
+  name,
+  placeholder,
+  value,
+  disabled,
+  onChange,
+  validate,
+}) => {
+  const [error, setError] = useState<string | null>(null);
 
-const InputBox: React.FC<InputInfo> = ({type, id, name, placeholder, value, onChange}) => {
-  const inputStyle = {
-    width: "400px",
-    height: "60px"
-  }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    onChange?.(event);
+    if (validate) {
+      const validationError = validate(inputValue);
+      setError(validationError);
+    }
+  };
+
   return (
     <div>
       <input
@@ -31,12 +49,13 @@ const InputBox: React.FC<InputInfo> = ({type, id, name, placeholder, value, onCh
         id={id}
         name={name}
         placeholder={placeholder}
-        style={inputStyle}
         autoComplete="off"
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
+        disabled={disabled}
         // required
       />
+      {error && <p className="">{error}</p>}
     </div>
   );
 };

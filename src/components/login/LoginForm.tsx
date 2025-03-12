@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -16,20 +16,27 @@ const loginOptions: LoginActions[] = [
   { name: '회원가입', path: '/login/signup' },
 ];
 interface LoginProps {
-  setLoggedIn:(loggedIn:boolean)=> void;
+  setLoggedIn: (loggedIn: boolean) => void;
 }
 
 // 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
-const LoginForm: React.FC<LoginProps> = ({setLoggedIn}) => {
+const LoginForm: React.FC<LoginProps> = ({ setLoggedIn }) => {
   const navigate = useNavigate();
-  const [loginName, setLoginName] = useState("")
-  const [password, setPassword] = useState("")
-  
+  const [loginName, setLoginName] = useState('');
+  const [password, setPassword] = useState('');
+
+  const validatePassword = (valPW: string): string | null => {
+    if (valPW.length <= 6) {
+      return '암호는 6자 이상이어야 합니다';
+    }
+    return null;
+  };
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await axios.get('http://localhost:3000/members');
+      const response = await axios.get('http://localhost:5000/members');
       const members = response.data;
       console.log(members); // Should print the array of members
 
@@ -41,7 +48,7 @@ const LoginForm: React.FC<LoginProps> = ({setLoggedIn}) => {
 
       if (user) {
         // Redirect to MyPage if setLoggedIn true
-        setLoggedIn(true)
+        setLoggedIn(true);
         navigate('/mypage');
       } else {
         alert('ID 또는 비밀번호가 올바르지 않습니다. 다시 확인해주세요');
@@ -81,6 +88,7 @@ const LoginForm: React.FC<LoginProps> = ({setLoggedIn}) => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setPassword(e.target.value)
           }
+          validate={validatePassword}
         />
         {/* 자동로그인 체크박스. Toggle상태를 기억하기 */}
         <div className="checkboxContainer flex text-left pl-2 mt-2 text-[gray]">
@@ -106,7 +114,7 @@ const LoginForm: React.FC<LoginProps> = ({setLoggedIn}) => {
             </Link>
           ))}
         </div>
-        <ButtonBig name="로그인" arialabel="로그인"/>
+        <ButtonBig name="로그인" arialabel="로그인" />
         <p className="mt-[80px]">다른 방법으로 로그인하기</p>
         <ButtonBig
           provider="kakao"
