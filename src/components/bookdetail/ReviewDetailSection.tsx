@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+// ReviewDetailSection.tsx
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Review {
   name: string;
@@ -13,28 +15,29 @@ interface Review {
 
 function ReviewDetailSection() {
   const [reviews, setReviews] = useState<Review[]>([]);
-
   const [filter, setFilter] = useState('');
-
   const [isOpen, setIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 6;
+  const navigate = useNavigate();
 
   const options = [
     { value: 'latest', label: '최신순' },
     { value: 'likes', label: '좋아요순' },
     { value: 'comments', label: '댓글 많은 순' },
   ];
-  const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 6;
 
   const filteredReviews = [...reviews].sort((a, b) => {
     if (filter === 'likes') return Number(b.like) - Number(a.like);
     if (filter === 'comments') return Number(b.comment) - Number(a.comment);
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
+
   const paginatedReviews = filteredReviews.slice(
     (currentPage - 1) * reviewsPerPage,
     currentPage * reviewsPerPage,
   );
+
   useEffect(() => {
     fetch('http://localhost:5000/reviews')
       .then((response) => {
@@ -43,9 +46,10 @@ function ReviewDetailSection() {
         }
         return response.json();
       })
-      .then((data) => setReviews(data)) // 🔥 reviews 상태 업데이트
+      .then((data) => setReviews(data))
       .catch((error) => console.error('Error loading reviews:', error));
   }, []);
+
   return (
     <div className="review-section mt-28 mb-28">
       <div className="flex justify-between items-center mb-4">
@@ -80,11 +84,12 @@ function ReviewDetailSection() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 md:grid-cols-2 gap-20 mt-10">
+      <div className="review-box grid grid-cols-3 md:grid-cols-2 gap-20 mt-10">
         {paginatedReviews.map((review, index) => (
           <div
             key={index}
             className="bg-white p-6 rounded-lg shadow-md relative h-[300px] hover:bg-black/5 cursor-pointer transition-all duration-300"
+            onClick={() => navigate(`/reviews/${review.booktit}`)} // 클릭 시 해당 리뷰 상세 페이지로 이동
           >
             <div className="flex items-center gap-2 mb-6">
               <img
@@ -104,6 +109,7 @@ function ReviewDetailSection() {
           </div>
         ))}
       </div>
+
       {/* 페이지네이션 */}
       <div className="flex justify-center mt-16">
         {Array.from(

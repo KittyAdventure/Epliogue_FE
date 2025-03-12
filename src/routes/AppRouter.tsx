@@ -14,6 +14,9 @@ import GatheringPage from '../pages/GatheringPage';
 import ProjectPage from '../pages/ProjectPage';
 // Book
 import BookDetailPage from '../pages/BookDetailPage';
+// Review
+import ReviewDetailSection from '../components/bookdetail/ReviewDetailSection';
+import ReviewPage from '../pages/ReviewPage';
 
 const AppRouter = (): React.JSX.Element => {
   // 로그인 상태, Header로 전달
@@ -33,6 +36,8 @@ const AppRouter = (): React.JSX.Element => {
         <Route path="/book" element={<BookPage />} />
         <Route path="/gathering" element={<GatheringPage />} />
         <Route path="/book/:isbn" element={<BookDetailPage />} />
+        <Route path="/review" element={<ReviewDetailSection />} />
+        <Route path="/reviews/:id" element={<ReviewPage />} />
       </Routes>
       <Footer />
     </Router>
