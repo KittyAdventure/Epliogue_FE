@@ -1,4 +1,5 @@
-import { FaLink, FaTimes } from 'react-icons/fa';
+import { X } from 'lucide-react';
+import { FaLink } from 'react-icons/fa';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 
 declare global {
@@ -92,11 +93,12 @@ const ShareModal: React.FC<ShareModalProps> = ({
             </span>
           </div>
         </div>
+        {/* 닫기 버튼 */}
         <button
-          className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-2xl"
           onClick={() => setShareModalOpen(false)}
+          className="absolute top-4 right-4"
         >
-          <FaTimes />
+          <X size={24} />
         </button>
       </div>
     </div>

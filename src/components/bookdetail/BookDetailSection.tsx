@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaShareAlt, FaStar } from 'react-icons/fa';
+import ReviewModal from './ReviewModal';
 import ShareModal from './ShareModal';
 
 interface Book {
@@ -28,6 +29,7 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
   const [shareModalOpen, setShareModalOpen] = useState<boolean>(false);
   const [shareOptions, setShareOptions] = useState<ShareOption | null>(null);
+  const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
 
   const toggleBookmark = (isbn: string) => {
     setSelectedBooks((prev) => {
@@ -124,7 +126,10 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
         </div>
 
         <div className="flex gap-8 mt-4">
-          <button className="bg-black hover:bg-black/70 text-white font-bold py-3 px-7 rounded-lg shadow-lg">
+          <button
+            className="bg-black hover:bg-black/70 text-white font-bold py-3 px-7 rounded-lg shadow-lg"
+            onClick={() => setReviewModalOpen(true)}
+          >
             리뷰하기
           </button>
           <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg">
@@ -135,7 +140,10 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
           </button>
         </div>
       </div>
-
+      {/* 리뷰 모달창 */}
+      {reviewModalOpen && (
+        <ReviewModal setReviewModalOpen={setReviewModalOpen} />
+      )}
       {/* 공유 모달창 */}
       {shareModalOpen && shareOptions && (
         <ShareModal
