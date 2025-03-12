@@ -1,4 +1,3 @@
-// ReviewDetailSection.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +10,7 @@ interface Review {
   booktit: string;
   bookimg: string;
   date: string;
+  images: string[]; // 이미지 배열 추가 (최대 5개)
 }
 
 function ReviewDetailSection() {
@@ -88,7 +88,7 @@ function ReviewDetailSection() {
         {paginatedReviews.map((review, index) => (
           <div
             key={index}
-            className="bg-white p-6 rounded-lg shadow-md relative h-[300px] hover:bg-black/5 cursor-pointer transition-all duration-300"
+            className="bg-white p-6 rounded-lg shadow-md relative h-[360px] hover:bg-black/5 cursor-pointer transition-all duration-300"
             onClick={() => navigate(`/reviews/${review.booktit}`)} // 클릭 시 해당 리뷰 상세 페이지로 이동
           >
             <div className="flex items-center gap-2 mb-6">
@@ -99,9 +99,26 @@ function ReviewDetailSection() {
               />
               <span className="font-semibold">{review.name}</span>
             </div>
+
+            {/* 이미지 렌더링 */}
+            <div className="mb-3">
+              <div className="grid grid-cols-5 gap-2">
+                {(review.images || []).slice(0, 5).map((image, idx) => (
+                  <div key={idx} className="relative w-full">
+                    <img
+                      src={image}
+                      alt={`review-image-${idx}`}
+                      className="w-full h-full object-cover rounded-lg aspect-square"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <p className="text-m mb-3 line-clamp-5 leading-relaxed">
               {review.text}
             </p>
+
             <div className="absolute bottom-5 left-6 right-6 flex justify-between text-sm text-gray-500">
               <span>댓글 {review.comment}개</span>
               <span>좋아요 {review.like}개</span>

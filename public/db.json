@@ -325,7 +325,14 @@
       "comment": "150",
       "like": "50",
       "booktit": "물고기는 존재하지 않는다",
-      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg"
+      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+      "images": [
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg"
+      ]
     },
     {
       "name": "어른",
@@ -334,7 +341,13 @@
       "comment": "64",
       "like": "1",
       "booktit": "어른의 행복은 조용하다",
-      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791169851053.jpg"
+      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791169851053.jpg",
+      "images": [
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg"
+      ]
     },
     {
       "name": "followlink",
@@ -343,7 +356,12 @@
       "comment": "150",
       "like": "50",
       "booktit": "관엽식물, 한 권이면 충분합니다",
-      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791168623323.jpg"
+      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791168623323.jpg",
+      "images": [
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg"
+      ]
     },
     {
       "name": "부처",
@@ -352,7 +370,11 @@
       "comment": "459",
       "like": "1,226",
       "booktit": "초역 부처의 말",
-      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791193506516.jpg"
+      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791193506516.jpg",
+      "images": [
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg"
+      ]
     },
     {
       "name": "물고기",
@@ -361,7 +383,10 @@
       "comment": "150",
       "like": "50",
       "booktit": "물고기는 존재하지 않는다",
-      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg"
+      "bookimg": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg",
+      "images": [
+        "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791189327156.jpg"
+      ]
     },
     {
       "name": "물고기",
