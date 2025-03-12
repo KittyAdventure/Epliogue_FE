@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaShareAlt, FaStar } from 'react-icons/fa';
-import ReviewModal from './ReviewModal';
-import ShareModal from './ShareModal';
+import ReviewModal from '../modal/ReviewModal';
+import ShareModal from '../modal/ShareModal';
 
 interface Book {
   title: string;
