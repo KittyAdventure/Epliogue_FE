@@ -1,4 +1,56 @@
 {
+  "members": [
+    {
+      "loginId": "user1",
+      "password": "password",
+      "nickname": "Bob",
+      "name": "홍길동",
+      "birthdate": "1999-1-19",
+      "email": "bob@gmail.com",
+      "phone": "000-1234-5678",
+      "profileUrl": ""
+    },
+    {
+      "loginId": "user2",
+      "password": "password",
+      "nickname": "Andy",
+      "name": "김아무개",
+      "birthdate": "1999-2-19",
+      "email": "andy@gmail.com",
+      "phone": "000-1234-5678",
+      "profileUrl": ""
+    },
+    {
+      "loginId": "user3",
+      "password": "password",
+      "nickname": "Clara",
+      "name": "오나라",
+      "birthdate": "1999-3-19",
+      "email": "clara@gmail.com",
+      "phone": "000-1234-5678",
+      "profileUrl": ""
+    },
+    {
+      "loginId": "user4",
+      "password": "password",
+      "nickname": "Imauser",
+      "name": "임유저",
+      "birthdate": "1999-4-19",
+      "email": "imauser@gmail.com",
+      "phone": "000-1234-5678",
+      "profileUrl": ""
+    },
+    {
+      "loginId": "user5",
+      "password": "password",
+      "nickname": "Michael",
+      "name": "마이클",
+      "birthdate": "1999-5-19",
+      "email": "michael@gmail.com",
+      "phone": "000-1234-5678",
+      "profileUrl": ""
+    }
+  ],
   "books": {
     "total": "12",
     "items": [
