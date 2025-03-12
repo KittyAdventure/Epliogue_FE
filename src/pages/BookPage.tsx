@@ -16,7 +16,7 @@ const BookPage: React.FC = () => {
       <div className="pt-6 flex flex-col gap-14">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold mb-6">전체 책 리스트</h1>
-          <div className="w-35 z-50">
+          <div className="w-36 z-50">
             <button
               className="w-full border p-2 px-4 rounded-lg text-m bg-white flex justify-between items-center hover:"
               onClick={() => setIsOpen(!isOpen)}
@@ -28,7 +28,7 @@ const BookPage: React.FC = () => {
             </button>
 
             {isOpen && (
-              <ul className="absolute w-35 mt-1 border py-2 border-gray-300 rounded-lg bg-white shadow-md">
+              <ul className="absolute w-36 mt-1 border py-2 border-gray-300 rounded-lg bg-white shadow-md">
                 {options.map((option) => (
                   <li
                     key={option.value}

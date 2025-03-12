@@ -54,7 +54,7 @@ function ReviewDetailSection() {
     <div className="review-section mt-28 mb-28">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">리뷰</h2>
-        <div className="relative w-35 z-50">
+        <div className="relative w-36 z-50">
           <button
             className="w-full border p-2 px-4 rounded-lg text-m bg-white flex justify-between items-center hover:"
             onClick={() => setIsOpen(!isOpen)}
