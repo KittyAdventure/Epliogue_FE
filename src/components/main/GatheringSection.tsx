@@ -16,7 +16,6 @@ interface Gathering {
 
 const GatheringSection: React.FC = () => {
   const [gathering, setGathering] = useState<Gathering[]>([]);
-  const [activeTab, setActiveTab] = useState<string>('online');
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
 
@@ -27,11 +26,7 @@ const GatheringSection: React.FC = () => {
       .catch((error) => console.error('Error loading gathering:', error));
   }, []);
 
-  const filteredGathering = gathering.filter(
-    (g) => g.type === activeTab || g.type === 'online offline',
-  );
-
-  const slidesToShow = Math.min(filteredGathering.length, 3);
+  const slidesToShow = Math.min(gathering.length, 3);
 
   const settings = {
     dots: false,
@@ -42,7 +37,7 @@ const GatheringSection: React.FC = () => {
     arrows: true,
     afterChange: (index: number) => {
       setIsPrevDisabled(index === 0);
-      setIsNextDisabled(index >= filteredGathering.length - slidesToShow);
+      setIsNextDisabled(index >= gathering.length - slidesToShow);
     },
   };
 
@@ -84,51 +79,28 @@ const GatheringSection: React.FC = () => {
     <div className="section-wrap flex gap-16 mb-[200px]">
       <div className="w-1/4">
         <h2 className="text-4xl font-bold mb-9">모임 리스트</h2>
-        <div className="flex flex-col items-start gap-4">
-          <button
-            onClick={() => setActiveTab('online')}
-            className={`py-2 px-4 ${
-              activeTab === 'online' ? 'font-bold bg-gray-100' : 'text-gray-500'
-            }`}
-          >
-            # 온라인
-          </button>
-          <button
-            onClick={() => setActiveTab('offline')}
-            className={`py-2 px-4 ${
-              activeTab === 'offline'
-                ? 'font-bold bg-gray-100'
-                : 'text-gray-500'
-            }`}
-          >
-            # 오프라인
-          </button>
-        </div>
+        <p className="text-lg font-medium"># 오프라인</p>
       </div>
 
-      <div className="w-3/4 h-full relative">
-        {filteredGathering.length > 0 ? (
+      <div className="w-3/4 h-full relative pt-[90px]">
+        {gathering.length > 0 ? (
           <Slider
             {...settings}
             prevArrow={<CustomPrevArrow />}
             nextArrow={<CustomNextArrow />}
           >
-            {filteredGathering.map((gathering, index) => (
+            {gathering.map((gathering, index) => (
               <div key={index} className="w-full">
-                {/* 배경과 이미지가 동일한 부모 div에 포함되어야 hover가 작동 */}
                 <div
                   className="relative w-full group overflow-hidden rounded-lg"
                   style={{ aspectRatio: '2/3' }}
                 >
-                  {/* 배경에 hover 효과 */}
                   <div className="absolute inset-0 bg-black bg-opacity-40 rounded-lg z-10"></div>
-                  {/* 이미지에 hover 효과 */}
                   <img
                     className="absolute inset-0 w-full h-full object-cover rounded-lg z-5 transition-transform duration-300 ease-in-out group-hover:scale-105"
                     src={gathering.image}
                     alt={gathering.title}
                   />
-                  {/* 내용 */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 z-20">
                     <h3 className="text-lg font-bold line-clamp-1 text-center">
                       {gathering.title}

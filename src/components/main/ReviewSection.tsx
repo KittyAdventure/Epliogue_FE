@@ -43,9 +43,9 @@ const ReviewSection: React.FC = () => {
   }
 
   return (
-    <div className="section-wrap overflow-hidden mb-[200px] review-section">
+    <div className="section-wrap overflow-hidden mt-[100px] mb-[150px] review-section">
       <div>
-        <h2 className="text-4xl font-bold mb-11">리뷰</h2>
+        <h2 className="text-4xl font-bold mb-11">최신순 리뷰</h2>
       </div>
 
       <div>
@@ -62,9 +62,6 @@ const ReviewSection: React.FC = () => {
                   />
                   <div className="font-bold truncate">{review.name}</div>
                 </div>
-                <button className="bg-black text-white rounded-lg w-[85px] h-[32px] text-sm truncate transition-all duration-300 hover:bg-black/10 hover:text-black">
-                  팔로잉
-                </button>
               </div>
 
               {/* 리뷰 내용 */}

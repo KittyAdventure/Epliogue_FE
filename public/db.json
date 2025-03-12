@@ -393,47 +393,38 @@
   ],
   "gathering": [
     {
-      "type": "online offline",
       "title": "채식주의자",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788936434595.jpg"
     },
     {
-      "type": "offline",
       "title": "급류",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788937473401.jpg"
     },
     {
-      "type": "online",
       "title": "행동하지 않으면 인생은 바뀌지 않는다",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9791139716146.jpg"
     },
     {
-      "type": "offline",
       "title": "내가 원하는 것을 나도 모를 때",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791193937150.jpg"
     },
     {
-      "type": "online",
       "title": "소년이 온다",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788936434120.jpg"
     },
     {
-      "type": "offline online",
       "title": "모순",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788998441012.jpg"
     },
     {
-      "type": "online",
       "title": "어른의 행복은 조용하다",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791169851053.jpg"
     },
     {
-      "type": "offline",
       "title": "그릿",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791168342682.jpg"
     },
     {
-      "type": "online",
       "title": "관엽식물, 한 권이면 충분합니다",
       "image": "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791168623323.jpg"
     }
