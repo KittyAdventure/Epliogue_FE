@@ -61,7 +61,7 @@ function ReviewDetailSection() {
           >
             {filter
               ? options.find((opt) => opt.value === filter)?.label
-              : '필터'}
+              : '정렬'}
             <span>▼</span>
           </button>
 
