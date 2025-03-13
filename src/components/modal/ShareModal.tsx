@@ -1,10 +1,11 @@
 import { X } from 'lucide-react';
+import { useEffect } from 'react';
 import { FaLink } from 'react-icons/fa';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 
 declare global {
   interface Window {
-    Kakao: any; // Kakao 객체의 타입을 any로 선언
+    Kakao: any;
   }
 }
 
@@ -22,14 +23,31 @@ const ShareModal: React.FC<ShareModalProps> = ({
   shareOptions,
   setShareModalOpen,
 }) => {
-  // const JAVASCRIPT_KET = import.meta.env.VITE_APP_JAVASCRIPT_KEY;
+  const JAVASCRIPT_KEY = import.meta.env.VITE_APP_JAVASCRIPT_KEY;
 
-  // // 카카오 SDK 초기화 (필요한 경우만)
-  // useEffect(() => {
-  //   if (window.Kakao && !window.Kakao.isInitialized()) {
-  //     window.Kakao.init(JAVASCRIPT_KET); // 카카오 개발자 사이트에서 제공하는 JavaScript Key
-  //   }
-  // }, [JAVASCRIPT_KET]); // JAVASCRIPT_KET이 변경될 때만 초기화
+  useEffect(() => {
+    if (!JAVASCRIPT_KEY) {
+      console.error('Kakao JavaScript Key가 설정되지 않았습니다.');
+      return;
+    }
+
+    if (window.Kakao && window.Kakao.isInitialized()) {
+      console.log('Kakao SDK 이미 초기화됨');
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+    script.async = true;
+    script.onload = () => {
+      console.log('Kakao SDK 로드 완료');
+      if (window.Kakao) {
+        window.Kakao.init(JAVASCRIPT_KEY);
+        console.log('Kakao SDK 초기화 여부:', window.Kakao.isInitialized());
+      }
+    };
+    document.body.appendChild(script);
+  }, [JAVASCRIPT_KEY]);
 
   // 링크 복사
   const handleCopyLink = () => {
@@ -39,28 +57,31 @@ const ShareModal: React.FC<ShareModalProps> = ({
 
   // 카카오톡으로 공유
   const handleKakaoShare = () => {
-    if (window.Kakao) {
-      window.Kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: '공유할 내용 제목',
-          description: '공유할 내용 설명',
-          imageUrl: '이미지 URL',
+    if (!window.Kakao || !window.Kakao.Share) {
+      alert('Kakao SDK가 로드되지 않았습니다.');
+      return;
+    }
+
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '공유할 내용 제목',
+        description: '공유할 내용 설명',
+        imageUrl: '이미지 URL',
+        link: {
+          webUrl: shareOptions.shareUrl,
+          mobileWebUrl: shareOptions.shareUrl,
+        },
+      },
+      buttons: [
+        {
+          title: '웹에서 보기',
           link: {
             webUrl: shareOptions.shareUrl,
-            mobileWebUrl: shareOptions.shareUrl,
           },
         },
-        buttons: [
-          {
-            title: '웹에서 보기',
-            link: {
-              webUrl: shareOptions.shareUrl,
-            },
-          },
-        ],
-      });
-    }
+      ],
+    });
   };
 
   return (
