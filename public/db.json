@@ -1,4 +1,38 @@
 {
+  "mypage": {
+    "userNickname": "bird",
+    "totalPage": "5",
+    "reviews": [
+      {
+        "reviewId": "1",
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": "2022",
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": "23",
+        "thumbnail": "http://dd.com/1"
+      },
+      {
+        "reviewId": "2",
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": "2022",
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": "231",
+        "thumbnail": "http://dd.com/1"
+      },
+      {
+        "reviewId": "3",
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": "2022",
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": "7",
+        "thumbnail": "http://dd.com/1"
+      }
+    ]
+  },
+
   "members": [
     {
       "loginId": "user1",

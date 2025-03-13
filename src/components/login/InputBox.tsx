@@ -1,14 +1,6 @@
-/**
- * 로그인/회원가입용
- *
- * props
- * 1)type
- * 2)id
- * 3)name
- * 4)placeholder
- * 5)extra
- */
+
 import { useState } from 'react';
+
 interface InputInfo {
   className?: string;
   type: string;
@@ -20,6 +12,7 @@ interface InputInfo {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   validate?: (value: string) => string | null;
 }
+
 const InputBox: React.FC<InputInfo> = ({
   type,
   id,

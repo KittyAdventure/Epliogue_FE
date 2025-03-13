@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// 고정
 import UserInfo from './UserInfo';
 import Calendar from './Calendar';
 // Tabs
@@ -15,6 +14,7 @@ interface Tab {
   name: string;
   value: number;
 }
+// Values must be called from User's Data
 const tabs: Tab[] = [
   { id: "tab1", name: 'Review', value: 55 },
   { id: "tab2", name: 'Meeting', value: 5 },
@@ -23,7 +23,7 @@ const tabs: Tab[] = [
   { id: "tab5", name: 'Points', value: 10000 },
 ];
 
-// 임시 props, UserInfo 로 전달
+// UserInfo 로 전달하는 임시 props
 const nickname: string = 'helloworld';
 const username: string = 'webdev247';
 const email: string = 'webdev00@zerobase.com';
@@ -32,6 +32,7 @@ const following: number = 33;
 
 // 마이페이지 클릭 -> 로그인 되어있음 -> 이 페이지로 온다
 const MyPage = (): React.JSX.Element => {
+  // default tab is Review
   const [activeTab, setActiveTab] = useState<string>('Review');
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
@@ -58,7 +59,9 @@ const MyPage = (): React.JSX.Element => {
         <div className="content w-4/5 ml-20">
           <div className="mypage flex">
             {tabs.map((tab) => (
-              <div className="flex flex-col text-center" key={tab.id}>
+              // id must be given to the parent when mapping
+              // each button(tabs), upon click changes activeTab
+              <div key={tab.id} className="flex flex-col text-center">
                 <button
                   onClick={() => handleTabClick(tab.name)}
                   className={`${
@@ -77,6 +80,7 @@ const MyPage = (): React.JSX.Element => {
               </div>
             ))}
           </div>
+          {/* Contents shown upon clicking(activeTab) */}
           <div className="border border-black mt-20">
             {activeTab === 'Review' && <TabReview />}
             {activeTab === 'Meeting' && <TabMeeting />}

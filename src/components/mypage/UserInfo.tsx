@@ -1,16 +1,22 @@
-import {useState} from "react"
-import UserInfoEdit from "./UserInfoEdit"
+import { useState } from 'react';
+import UserInfoEdit from './UserInfoEdit';
 
 interface AboutUsers {
-  nickname:string;
+  nickname: string;
   username: string;
   email: string;
-  followers:number;
-  following:number;
+  followers: number;
+  following: number;
 }
 
-const UserInfo: React.FC<AboutUsers> = ({nickname,username,email,followers,following}): React.JSX.Element => {
-  const [showModal, setShowModal] = useState (true);
+const UserInfo: React.FC<AboutUsers> = ({
+  nickname,
+  username,
+  email,
+  followers,
+  following,
+}): React.JSX.Element => {
+  const [showModal, setShowModal] = useState(false);
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
   return (

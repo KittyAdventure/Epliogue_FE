@@ -1,10 +1,10 @@
+// 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
+import axios from "axios"
+import '../../assets/css/checkbox.css';
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
-import '../../assets/css/checkbox.css';
 
 interface LoginActions {
   name: string;
@@ -15,16 +15,16 @@ const loginOptions: LoginActions[] = [
   { name: '비밀번호 찾기', path: '#' },
   { name: '회원가입', path: '/login/signup' },
 ];
-interface LoginProps {
+interface LoginCheck {
   setLoggedIn: (loggedIn: boolean) => void;
 }
 
-// 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
-const LoginForm: React.FC<LoginProps> = ({ setLoggedIn }) => {
-  const navigate = useNavigate();
+const LoginForm: React.FC<LoginCheck> = ({ setLoggedIn }) => {
+  const navigate = useNavigate(); //다른 페이지로 이동시켜줌
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
 
+  // 암호 길이 확인 (refactor 필요)
   const validatePassword = (valPW: string): string | null => {
     if (valPW.length <= 6) {
       return '암호는 6자 이상이어야 합니다';
@@ -33,29 +33,22 @@ const LoginForm: React.FC<LoginProps> = ({ setLoggedIn }) => {
   };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    // prevents form's default behavior(refresh) upon submitting
     e.preventDefault();
-
+    // json-server는 POST가 안되서 test할려면 middleware필요-지금은 안함
     try {
-      const response = await axios.get('http://localhost:5000/members');
-      const members = response.data;
-      console.log(members); // Should print the array of members
-
-      const user = members.find(
-        (member: { loginId: string; password: string }) =>
-          member.loginId === loginName && member.password === password,
-      );
-      console.log(user); // Check the result of the find method
-
+      const response = await axios.get("http://localhost:5000/members")
+      const user = response.data
       if (user) {
-        // Redirect to MyPage if setLoggedIn true
+        console.log('Login Success', user);
         setLoggedIn(true);
         navigate('/mypage');
+        // Redirect to MyPage if setLoggedIn true
       } else {
-        alert('ID 또는 비밀번호가 올바르지 않습니다. 다시 확인해주세요');
+        console.error('Wrong Info');
       }
     } catch (error) {
-      console.error('Error logging in:', error);
-      alert('오류가 발생했습니다');
+      console.error('Error during login', error);
     }
   };
 
@@ -71,23 +64,25 @@ const LoginForm: React.FC<LoginProps> = ({ setLoggedIn }) => {
         <InputBox
           className=""
           type="text"
-          id="nickname"
-          name="nickname"
-          placeholder="user1"
+          id="loginId"
+          name="loginId"
+          placeholder="user1~user5"
           value={loginName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setLoginName(e.target.value)
-          }
+          onChange={(e) => setLoginName(e.target.value)}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          //   setLoginName(e.target.value)
+          // }
         />
         <InputBox
           type="password"
           id="password"
           name="password"
-          placeholder="password"
+          placeholder="암호: password"
           value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value)
-          }
+          onChange={(e) => setPassword(e.target.value)}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          //   setPassword(e.target.value)
+          // }
           validate={validatePassword}
         />
         {/* 자동로그인 체크박스. Toggle상태를 기억하기 */}
