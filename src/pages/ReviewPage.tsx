@@ -49,7 +49,8 @@ export default function CommentPage() {
   const [newComment, setNewComment] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // 선택된 이미지 상태 관리
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); // 현재 선택된 이미지 인덱스
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [filter, setFilter] = useState('');
   const images = [
     '../../public/img/members/member1.jpg',
     '../../public/img/members/member2.jpg',
@@ -57,7 +58,10 @@ export default function CommentPage() {
     '../../public/img/members/member4.jpg',
     '../../public/img/members/member5.jpg',
   ];
-
+  const options = [
+    { value: 'latest', label: '최신순' },
+    { value: 'likes', label: '좋아요순' },
+  ];
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -188,9 +192,36 @@ export default function CommentPage() {
           </div>
         </div>
       </div>
+      {/* 정렬 */}
+      <div className="absolute float-right right-16 w-36 z-50 mt-7">
+        <button
+          className="w-full border p-2 px-4 rounded-lg text-m bg-white flex justify-between items-center hover:"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {filter ? options.find((opt) => opt.value === filter)?.label : '정렬'}
+          <span>▼</span>
+        </button>
+
+        {isOpen && (
+          <ul className="absolute w-full mt-1 border py-2 border-gray-300 rounded-lg bg-white shadow-md">
+            {options.map((option) => (
+              <li
+                key={option.value}
+                className="py-2 px-4 cursor-pointer hover:font-bold transition-all duration-300"
+                onClick={() => {
+                  setFilter(option.value);
+                  setIsOpen(false);
+                }}
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* 댓글 목록에 스크롤 적용 */}
-      <div className="mt-10 max-h-[60vh] overflow-y-auto">
+      <div className="mt-20 max-h-[60vh] overflow-y-auto">
         {comments.map((comment) => (
           <div key={comment.id} className="border-b border-gray-200 py-6">
             <div className="flex items-center gap-4">
