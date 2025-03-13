@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import FilterSectopm from '../components/booklist/FilterSectopm';
+import FilterSection from '../components/booklist/FilterSection';
 import ListSection from '../components/booklist/ListSection';
 
 const BookPage: React.FC = () => {
@@ -48,7 +48,7 @@ const BookPage: React.FC = () => {
 
         <div className="flex w-full justify-between gap-[2vw]">
           {/* 필터 영역 */}
-          <FilterSectopm />
+          <FilterSection />
 
           {/* 책 리스트 영역 */}
           <ListSection />
