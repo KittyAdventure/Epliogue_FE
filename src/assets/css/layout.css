@@ -36,6 +36,36 @@
   overflow: visible;
 }
 
+/* react-datepicker */
+.react-datepicker {
+  border-color: #e7e7e7;
+}
+.react-datepicker-popper .react-datepicker__triangle {
+  stroke: #e7e7e7;
+}
+.react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle {
+  fill: #222;
+  color: #222;
+}
+.react-datepicker__navigation {
+  top: 8px;
+}
+.react-datepicker__navigation-icon::before {
+  border-color: #fff;
+}
+.react-datepicker__header {
+  font-size: 1rem;
+  background-color: #222222;
+  border: 0;
+  color: white;
+}
+.react-datepicker__month {
+  margin: 0.8rem;
+}
+.react-datepicker__month-text {
+  font-size: 0.9rem;
+  padding-block: 3px;
+}
 /* Header.tsx */
 /* Tailwindcss 적용 */
 /* Footer.tsx */

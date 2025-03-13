@@ -1,11 +1,16 @@
+import { addMonths } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { useState } from 'react';
-import { FaFilter, FaStar } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { FaCalendarAlt, FaFilter, FaStar } from 'react-icons/fa';
 
-function FilterSectopm() {
+function FilterSection() {
   const [filter, setFilter] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
 
   const englishLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -88,6 +93,30 @@ function FilterSectopm() {
       ),
     },
   ];
+  // Custom Input Component
+  const CustomInput = ({
+    value,
+    onClick,
+  }: {
+    value: string;
+    onClick: () => void;
+  }) => (
+    <div className="relative w-full">
+      <input
+        type="text"
+        value={value}
+        onClick={onClick}
+        readOnly
+        className="w-full border px-4 py-2 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-blue-400"
+        placeholder="YYYY-MM"
+      />
+      <FaCalendarAlt
+        onClick={onClick}
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+      />
+    </div>
+  );
+
   return (
     <div className="w-72 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
       <h3 className="text-lg font-semibold flex items-center mb-4 text-gray-800">
@@ -165,30 +194,56 @@ function FilterSectopm() {
         )}
       </div>
 
-      {/* 출판일 기간 */}
+      {/* 출판일 기간 (년-월) */}
       <h4 className="font-semibold mt-10 mb-4 text-gray-700">출판일 기간</h4>
-      <div className="flex flex-col gap-3 mb-8">
-        <input
-          type="date"
-          className="border p-2 rounded-md w-full bg-white text-gray-800 focus:ring-2 focus:ring-blue-400"
-          value={startDate}
-          onChange={(e) => {
-            setStartDate(e.target.value);
-            setEndDate('');
+      {/* 첫 번째 날짜 선택 */}
+      <div className="mb-4">
+        <label className="block text-gray-600 font-medium mb-1">시작일</label>
+        <DatePicker
+          selected={startDate}
+          onChange={(date: Date | null) => {
+            setStartDate(date);
+            setEndDate(null); // 시작 날짜 변경 시 종료 날짜 초기화
           }}
+          dateFormat="yyyy-MM"
+          showMonthYearPicker
+          locale={ko}
+          placeholderText="YYYY-MM"
+          customInput={
+            <CustomInput
+              value={startDate ? startDate.toLocaleDateString() : ''}
+              onClick={() => {}}
+            />
+          }
+          calendarClassName="custom-calendar" // 커스텀 클래스 이름 추가
         />
-        <span className="text-center text-gray-600 font-black text-xl">~</span>
-        <input
-          type="date"
-          className="border p-2 rounded-md w-full bg-white text-gray-800 focus:ring-2 focus:ring-blue-400"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          min={startDate}
-          disabled={!startDate}
+      </div>
+
+      <span className="w-full inline-block text-center text-gray-600 font-black text-xl">
+        ~
+      </span>
+
+      {/* 두 번째 날짜 선택 */}
+      <div className="mt-4">
+        <label className="block text-gray-600 font-medium mb-1">종료일</label>
+        <DatePicker
+          selected={endDate}
+          onChange={(date: Date | null) => setEndDate(date)}
+          dateFormat="yyyy-MM"
+          showMonthYearPicker
+          locale={ko}
+          placeholderText="YYYY-MM"
+          customInput={
+            <CustomInput
+              value={endDate ? endDate.toLocaleDateString() : ''}
+              onClick={() => {}}
+            />
+          }
+          minDate={startDate ? addMonths(startDate, 0) : undefined} // 시작월 이전 선택 방지
         />
       </div>
     </div>
   );
 }
 
-export default FilterSectopm;
+export default FilterSection;
