@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaShareAlt } from 'react-icons/fa';
+import { FaShareAlt, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
@@ -105,7 +105,26 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
           <p>출판사 : {book.publisher}</p>
           <p>가격 : {book.price}원</p>
         </div>
-
+        <div className="flex flex-col mt-4">
+          <p className="text-base text-gray-600 mb-3">별점</p>
+          <div className="flex gap-1">
+            {[...Array(5)].map((_, index) => (
+              <span
+                key={index}
+                className={`text-4xl font-semibold cursor-pointer ${
+                  (hoverRating || rating) > index
+                    ? 'text-yellow-400'
+                    : 'text-[#d1d1d1]'
+                }`}
+                onClick={() => handleRatingClick(index)}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <FaStar />
+              </span>
+            ))}
+          </div>
+        </div>
         <div className="flex gap-8 mt-4">
           <button
             className="bg-black hover:bg-black/70 text-white font-bold py-3 px-7 rounded-lg shadow-lg"
