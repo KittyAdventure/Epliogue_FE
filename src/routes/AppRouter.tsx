@@ -17,6 +17,8 @@ import BookDetailPage from '../pages/BookDetailPage';
 // Review
 import ReviewDetailSection from '../components/bookdetail/ReviewDetailSection';
 import ReviewPage from '../pages/ReviewPage';
+// Search
+import SearchPage from '../pages/SearchPage';
 
 const AppRouter = (): React.JSX.Element => {
   // 로그인 상태, Header로 전달
@@ -38,6 +40,7 @@ const AppRouter = (): React.JSX.Element => {
         <Route path="/book/:isbn" element={<BookDetailPage />} />
         <Route path="/review" element={<ReviewDetailSection />} />
         <Route path="/reviews/:id" element={<ReviewPage />} />
+        <Route path="/search/:searchTerm" element={<SearchPage />} />
       </Routes>
       <Footer />
     </Router>
