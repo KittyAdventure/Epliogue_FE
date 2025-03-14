@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FaShareAlt, FaStar } from 'react-icons/fa';
+import { FaShareAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
 
@@ -24,6 +25,7 @@ interface BookDetailSectionProps {
 }
 
 function BookDetailSection({ book }: BookDetailSectionProps) {
+  const navigate = useNavigate();
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
@@ -104,27 +106,6 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
           <p>가격 : {book.price}원</p>
         </div>
 
-        <div className="flex flex-col mt-4">
-          <p className="text-base text-gray-600 mb-3">별점</p>
-          <div className="flex gap-1">
-            {[...Array(5)].map((_, index) => (
-              <span
-                key={index}
-                className={`text-4xl font-semibold cursor-pointer ${
-                  (hoverRating || rating) > index
-                    ? 'text-yellow-400'
-                    : 'text-[#d1d1d1]'
-                }`}
-                onClick={() => handleRatingClick(index)}
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <FaStar />
-              </span>
-            ))}
-          </div>
-        </div>
-
         <div className="flex gap-8 mt-4">
           <button
             className="bg-black hover:bg-black/70 text-white font-bold py-3 px-7 rounded-lg shadow-lg"
@@ -132,7 +113,10 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
           >
             리뷰하기
           </button>
-          <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg">
+          <button
+            className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg"
+            onClick={() => navigate('/ChatPage')}
+          >
             채팅하기
           </button>
           <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg">
