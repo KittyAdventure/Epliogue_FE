@@ -1,34 +1,124 @@
 {
   "mypage": {
     "userNickname": "bird",
-    "totalPage": "5",
+    "totalPage": "13",
     "reviews": [
       {
-        "reviewId": "1",
+        "reviewid": 1,
         "reviewBooktitle": "여우와 함께 춤을",
-        "reviewBookPubYear": "2022",
+        "reviewBookPubYear": 2022,
         "reviewBookAuthor": "비우산",
-        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
-        "reviewCommentsCount": "23",
-        "thumbnail": "http://dd.com/1"
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
       },
       {
-        "reviewId": "2",
+        "reviewid": 2,
         "reviewBooktitle": "여우와 함께 춤을",
-        "reviewBookPubYear": "2022",
+        "reviewBookPubYear": 2022,
         "reviewBookAuthor": "비우산",
-        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
-        "reviewCommentsCount": "231",
-        "thumbnail": "http://dd.com/1"
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
       },
       {
-        "reviewId": "3",
+        "reviewid": 3,
         "reviewBooktitle": "여우와 함께 춤을",
-        "reviewBookPubYear": "2022",
+        "reviewBookPubYear": 2022,
         "reviewBookAuthor": "비우산",
-        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
-        "reviewCommentsCount": "7",
-        "thumbnail": "http://dd.com/1"
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 4,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 5,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 6,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 7,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 8,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 9,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 10,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 11,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 12,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
+      },
+      {
+        "reviewid": 13,
+        "reviewBooktitle": "여우와 함께 춤을",
+        "reviewBookPubYear": 2022,
+        "reviewBookAuthor": "비우산",
+        "reviewContent": "Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.Donec tristique eros est, nec ullamcorper nulla aliquet ut.",
+        "reviewCommentsCount": 23,
+        "thumbnail": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg"
       }
     ]
   },
@@ -37,7 +127,7 @@
     {
       "loginId": "user1",
       "password": "password",
-      "nickname": "Bob",
+      "nickname": "bird",
       "name": "홍길동",
       "birthdate": "1999-1-19",
       "email": "bob@gmail.com",

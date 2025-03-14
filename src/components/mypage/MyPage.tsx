@@ -81,7 +81,7 @@ const MyPage = (): React.JSX.Element => {
             ))}
           </div>
           {/* Contents shown upon clicking(activeTab) */}
-          <div className="border border-black mt-20">
+          <div className="mt-20">
             {activeTab === 'Review' && <TabReview />}
             {activeTab === 'Meeting' && <TabMeeting />}
             {activeTab === 'Collection' && <TabCollection />}

@@ -19,7 +19,7 @@ const UserInfoEdit: React.FC<ModalProps> = ({ showModal, onClose }) => {
     e.preventDefault();
   }
   return (
-    <div className="flex justify-center items-center fixed top-0 left-0 bg-black/[0.7] w-full h-full">
+    <div className="flex justify-center items-center fixed top-0 left-0 bg-black/[0.7] w-full h-full z-[9999]">
       <form
         onSubmit={handleEdit}
         className="relative bg-white w-1/2 mx-[auto] text-center p-[120px]"
