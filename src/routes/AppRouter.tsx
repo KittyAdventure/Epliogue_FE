@@ -19,6 +19,7 @@ import ReviewDetailSection from '../components/bookdetail/ReviewDetailSection';
 import ReviewPage from '../pages/ReviewPage';
 // Search
 import SearchPage from '../pages/SearchPage';
+import UserSearchPage from '../pages/UserSearchPage';
 // Chat
 import ChatPage from '../pages/ChatPage';
 
@@ -43,6 +44,7 @@ const AppRouter = (): React.JSX.Element => {
         <Route path="/review" element={<ReviewDetailSection />} />
         <Route path="/reviews/:id" element={<ReviewPage />} />
         <Route path="/search/:searchTerm" element={<SearchPage />} />
+        <Route path="/user-search/:term" element={<UserSearchPage />} />
         <Route path="/ChatPage" element={<ChatPage />} />
       </Routes>
       <Footer />

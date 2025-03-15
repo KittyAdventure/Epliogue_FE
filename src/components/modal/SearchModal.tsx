@@ -27,9 +27,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const [filter, setFilter] = useState('');
 
   const options = [
-    { value: 'latest', label: '제목' },
-    { value: 'likes', label: '저자' },
+    { value: 'title', label: '제목' },
+    { value: 'author', label: '저자' },
+    { value: 'user', label: '유저' },
   ];
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   const navigate = useNavigate();
@@ -41,7 +43,20 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
       localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));
       setSearchTerm('');
       onClose();
-      navigate(`/search/${searchTerm}`);
+
+      // 필터에 따라 다른 페이지로 이동
+      if (filter === 'user') {
+        navigate(`/user-search/${searchTerm}`);
+      } else {
+        navigate(`/search/${searchTerm}`);
+      }
+    }
+  };
+
+  // 엔터키로 검색 처리
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -111,6 +126,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                     placeholder="검색어를 입력하세요..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={handleKeyPress} // 엔터키 이벤트 추가
                     className="w-full px-4 py-2 text-base focus:outline-none focus:border-none"
                   />
 
