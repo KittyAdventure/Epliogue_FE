@@ -1,3 +1,4 @@
+import { X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -74,17 +75,32 @@ const ChatPage: React.FC = () => {
     navigate(-1);
   };
 
+  // 메시지 입력 비우기
+  const handleClearInput = () => {
+    setNewMessage('');
+  };
+
+  // 다른 유저 페이지로 이동 (예시: 유저 프로필 클릭)
+  const handleViewUserProfile = (username: string) => {
+    navigate(`/user/${username}`);
+  };
+
   return (
     <div className="flex flex-col section-wrap rounded-lg shadow-lg overflow-hidden bg-gray-50 my-10">
       {/* 제목 */}
       <div className="flex justify-between bg-black p-6 rounded-t-lg shadow-md">
-        <h1 className="text-3xl font-semibold text-white">모임 명</h1>
+        <h1 className="text-3xl font-semibold text-white">
+          [ 채식주의자 ]
+          <span className="ml-4 text-base font-medium text-gray-300">
+            온라인 채팅창
+          </span>
+        </h1>
         {profile.username && (
           <button
             className="bg-red-600 hover:bg-red-700 text-white rounded-full px-6 py-2 font-semibold transition-colors duration-300"
             onClick={handleLeaveGroup}
           >
-            모임 나가기
+            채팅 나가기
           </button>
         )}
       </div>
@@ -92,7 +108,7 @@ const ChatPage: React.FC = () => {
       <div className="flex flex-1 bg-white rounded-b-lg">
         <div className="flex flex-col">
           <h2 className="text-lg font-semibold text-white bg-gray-700 p-5 max-h-[65px]">
-            모임 인원 목록 ({users.length}/300)
+            현재 채팅 인원 ({users.length}/30)
           </h2>
           {/* 사이드바 */}
           <aside
@@ -101,7 +117,11 @@ const ChatPage: React.FC = () => {
           >
             <ul className="space-y-4">
               {users.map((user) => (
-                <li key={user} className="flex items-center space-x-3">
+                <li
+                  key={user}
+                  className="flex items-center space-x-3 cursor-pointer hover:bg-gray-200 p-2 rounded-lg"
+                  onClick={() => handleViewUserProfile(user)} // 클릭 시 프로필 페이지로 이동
+                >
                   <div className="w-10 h-10 rounded-full bg-gray-400 text-white flex items-center justify-center text-lg font-semibold">
                     {user.charAt(0).toUpperCase()}
                   </div>
@@ -112,13 +132,16 @@ const ChatPage: React.FC = () => {
           </aside>
 
           {/* 내 프로필 */}
-          <div className="p-5 bg-gray-700 border-gray-200 my-auto max-h-[80px] flex items-center gap-4 rounded-bl-lg">
+          <div
+            className="p-5 bg-gray-700 border-gray-200 my-auto max-h-[80px] flex items-center gap-4 rounded-bl-lg cursor-pointer hover:bg-gray-800 transition-all duration-300 ease-in-out transform"
+            onClick={() => handleViewUserProfile(profile.username)} // 프로필 클릭 시 마이페이지로 이동
+          >
             <img
               src={profile.avatar}
               alt={profile.username}
               className="w-11 h-11 rounded-full object-cover"
             />
-            <div className="text-lg font-semibold text-white">
+            <div className="text-lg font-semibold text-white transition-colors duration-300 ease-in-out hover:text-gray-300">
               {profile.username}
             </div>
           </div>
@@ -151,15 +174,24 @@ const ChatPage: React.FC = () => {
 
           {/* 메시지 입력 영역 */}
           <div className="p-5 bg-gray-100 max-h-[80px] rounded-br-lg">
-            <div className="flex items-center space-x-3">
+            <div className="relative flex items-center space-x-3 w-full">
               <input
                 type="text"
-                className="flex-1 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                className="relative flex-1 rounded-full pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
                 placeholder="메시지를 입력하세요..."
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
+              {newMessage && (
+                <button
+                  className="absolute right-[6rem] top-1/2 transform -translate-y-1/2 text-gray-500"
+                  onClick={handleClearInput}
+                  aria-label="Clear message"
+                >
+                  <X size={20} />
+                </button>
+              )}
               <button
                 className="bg-gray-700 hover:bg-gray-800 text-white rounded-full px-6 py-2 font-semibold transition-colors duration-300"
                 onClick={handleSendMessage}
