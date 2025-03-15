@@ -1,11 +1,4 @@
-import { http } from 'msw'; //v2.x
-
-// import { setupWorker, rest} from "msw" v1.x
-// req,res,ctx no longer used in v2.x and above
-// req: intercepted HTTP request (RestRequest)
-// res: mocked response (ResponseComposition)
-// ctx: utility function (RestContext)
-
+import { http } from 'msw';
 // Define a type for the mock database structure
 type Review = {
   reviewid: number;

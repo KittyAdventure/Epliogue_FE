@@ -22,19 +22,28 @@ const TabReview = (): React.JSX.Element => {
 
   const fetchReviews = async (memberId: string, page: number) => {
     try {
+      const apiUrl = //env production 인지 development 인지 확인 후 url 할당
+        import.meta.env.NODE === 'production'
+          ? import.meta.env.VITE_API_URL_PROD
+          : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.get(
-        `http://localhost:5000/mypage`,
-        { params: { id: memberId, page } }, //query parameter
-        // `http://localhost:5000/mypage/reviews?_page=${page}&_limit=${pageLimit}` access reviews directly
+        `${apiUrl}/mypage`,
+        {
+          //query parameter
+          params: { id: memberId, page },
+          // headers 필요 (인증)
+          // headers: {
+          //   Authorization: `Bearer ${token}`,
+          // },
+        },
       );
-      console.log(response)
-      console.log(response.data)
-      const {userNickname, totalPage, reviews=[] } = response.data//mypage 각 가져오기
+      console.log(response);
+      console.log(response.data);
+      const { userNickname, totalPage, reviews = [] } = response.data; //mypage 각 가져오기
 
       setUserNickname(userNickname);
       setReviews(reviews);
       setTotalPages(Number(totalPage));
-
     } catch (error) {
       console.error('Failed to fetch reviews:', error);
     }
@@ -58,39 +67,38 @@ const TabReview = (): React.JSX.Element => {
       <div className="flex flex-wrap gap-y-20 justify-between w-full min-h-[680px] mt-10">
         {reviews.length > 0 ? (
           reviews.map((review) => (
-          <div
-            key={review.reviewid}
-            className="reviewPost relative rounded-xl w-[30%] h-[300px] p-5 shadow-md hover:shadow-lg z-[10]"
-          >
-            <button className="reviewDelBtn absolute top-3 right-3 text-[gray] text-sm">
-              삭제하기
-            </button>
-            <div className="reviewContainer flex items-center">
-              <img
-                src={review.thumbnail}
-                alt="review book thumbnail"
-                className="block w-[50px] max-h-20 mr-5 leading-20 shadow-sm"
-              />
-              <div className="reviewTop">
-                <h5>{review.reviewBooktitle}</h5>
-                <p className="text-[gray]">
-                  <span className="mr-1">{review.reviewBookPubYear}</span> |
-                  <span className="ml-1">{review.reviewBookAuthor}</span>
-                </p>
+            <div
+              key={review.reviewid}
+              className="reviewPost relative rounded-xl w-[30%] h-[300px] p-5 shadow-md hover:shadow-lg z-[10]"
+            >
+              <button className="reviewDelBtn absolute top-3 right-3 text-[gray] text-sm">
+                삭제하기
+              </button>
+              <div className="reviewContainer flex items-center">
+                <img
+                  src={review.thumbnail}
+                  alt="review book thumbnail"
+                  className="block w-[50px] max-h-20 mr-5 leading-20 shadow-sm"
+                />
+                <div className="reviewTop">
+                  <h5>{review.reviewBooktitle}</h5>
+                  <p className="text-[gray]">
+                    <span className="mr-1">{review.reviewBookPubYear}</span> |
+                    <span className="ml-1">{review.reviewBookAuthor}</span>
+                  </p>
+                </div>
               </div>
+              <p className="mt-5 leading-5 h-[120px] line-clamp-6">
+                {review.reviewContent}
+              </p>
+              <button className="reviewCommentCnt block mt-5">
+                댓글 ({review.reviewCommentsCount})
+              </button>
             </div>
-            <p className="mt-5 leading-5 h-[120px] line-clamp-6">
-              {review.reviewContent}
-            </p>
-            <button className="reviewCommentCnt block mt-5">
-              댓글 ({review.reviewCommentsCount})
-            </button>
-          </div>
           ))
         ) : (
           <p>"새로 리뷰를 적어보세요"</p>
         )}
-        
       </div>
 
       <div className="pagination flex justify-center my-[120px] text-center text-2xl">
