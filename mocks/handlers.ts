@@ -1,4 +1,10 @@
-import { http } from 'msw';
+import { http } from 'msw'; //v2.x
+
+// import { setupWorker, rest} from "msw" v1.x
+// req,res,ctx no longer used in v2.x and above
+// req: intercepted HTTP request (RestRequest)
+// res: mocked response (ResponseComposition)
+// ctx: utility function (RestContext)
 
 // Define a type for the mock database structure
 type Review = {
@@ -190,17 +196,22 @@ const mockDatabase: {mypage: User[]} = {
   ],
 };
 
-// Handlers for intercepting requests
+
+//Handlers for intercepting requests
 export const handlers = [
-  http.get('http://localhost:5000/mypage', (req, res, ctx) => {
-    const memberId = req.url.searchParams.get('id');
-    const page = parseInt(req.url.searchParams.get('page') || '1', 10);
+  http.get('http://localhost:5000/mypage', ({request}) => {
+    const url = new URL(request.url)
+    const memberId = url.searchParams.get('id');
+    const page = parseInt(url.searchParams.get('page') || '1', 10);
 
     // Find the user in the mock database
     const user = mockDatabase.mypage.find((user) => user.id === memberId);
 
     if (!user) {
-      return res(ctx.status(404), ctx.json({ error: 'User not found' }));
+      return new Response(
+        JSON.stringify({error: "User not found"}),
+        {status: 404, headers: {"Content-Type": "application/json"}}
+      )
     }
 
     // Simulate pagination
@@ -211,13 +222,13 @@ export const handlers = [
       startIndex + pageLimit,
     );
 
-    return res(
-      ctx.status(200),
-      ctx.json({
+    return new Response(
+      JSON.stringify({
         userNickname: user.userNickname,
         totalPage: user.totalPage,
         reviews: paginatedReviews,
       }),
+      { status: 202, headers: { 'Content-Type': 'application/json' } },
     );
   }),
 ];
