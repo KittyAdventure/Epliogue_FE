@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 interface SameAuthorSection {
-  sameAuthor: Array<{ title: string }>;
+  sameAuthor: Array<{ title: string; isbn: string }>;
 }
 
 function SameAuthorSection({ sameAuthor }: SameAuthorSection) {
@@ -17,11 +17,13 @@ function SameAuthorSection({ sameAuthor }: SameAuthorSection) {
         같은 작가 다른 추천 작품
       </h3>
       <div className="flex flex-wrap gap-9 mt-10">
-        {sameAuthor.map((otherBook, index) => (
+        {sameAuthor.map((otherBook) => (
           <button
-            key={index}
+            key={otherBook.isbn} // ISBN을 key로 사용
             className="bg-white hover:bg-gray-200 shadow-md text-lg font-medium px-5 py-3 rounded-full transition-all duration-300"
-            onClick={() => navigate(`/book/${otherBook.title}`)}
+            onClick={() =>
+              navigate(`/book/${encodeURIComponent(otherBook.isbn)}`)
+            } // URL 인코딩
           >
             # {otherBook.title}
           </button>

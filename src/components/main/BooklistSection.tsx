@@ -1,72 +1,48 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Link 추가
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 
 interface Book {
+  id: string;
   title: string;
   author: string;
   description: string;
-  image: string;
+  avgRating: string;
+  coverUrl: string;
+  price: string;
+  publisher: string;
+  pubDate: string;
+  isbn: string; // ISBN 추가
 }
 
 const BookListSection: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  // ----------------------------------------------------------------
-  const fetchBooks = async () => {
-    try {
-      
-      //env = production 인지 development 인지 확인 후 url 할당
-      //url 은 .env 파일에 보관
-      // apiUrl = "http://localhost:5000"
-      const apiUrl =
-        import.meta.env.NODE === 'production'
-          ? import.meta.env.VITE_API_URL_PROD
-          : import.meta.env.VITE_API_URL_DEV;
-
-      const response = await axios.get(`${apiUrl}/books`);
-      console.log('RESPONSE HERE');
-      console.log(response);
-      if (response.data.items) {
-        setBooks(response.data.items);
-      }
-    } catch (error) {
-      console.error('failed to fetch books', error);
-      setBooks([]);
-    }
-  };
-
   useEffect(() => {
-    console.log('FETCHBOOKS');
-    fetchBooks();
+    fetch('http://localhost:5000/trending-books')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data) {
+          setBooks(data);
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading books:', error);
+        setBooks([]);
+      });
   }, []);
-  // --------------------------------------------------------------
-
-  // useEffect(() => {
-  //   fetch('http://localhost:5000/books')
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       if (data.items) {
-  //         setBooks(data.items);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error loading books:', error);
-  //       setBooks([]);
-  //     });
-  // }, []);
 
   const settings = {
     dots: false,
-    infinite: true, // 무한 반복
+    infinite: true,
     speed: 1000,
     slidesToShow: 2,
     slidesToScroll: 1,
@@ -105,12 +81,17 @@ const BookListSection: React.FC = () => {
             <div key={index} className="image-container px-2">
               <div className="relative w-full rounded-lg overflow-hidden pb-[150%]">
                 {/* 책 이미지가 있을 때만 렌더링 */}
-                {book.image ? (
-                  <img
-                    className="absolute inset-0 w-full h-full object-cover rounded-lg hover:scale-104 transition-all duration-300 ease-in-out"
-                    src={book.image}
-                    alt={book.title}
-                  />
+                {book.coverUrl ? (
+                  <Link
+                    to={`/book/${book.id}`}
+                    className="absolute inset-0 w-full h-full"
+                  >
+                    <img
+                      className="absolute inset-0 w-full h-full object-cover rounded-lg hover:scale-104 transition-all duration-300 ease-in-out"
+                      src={book.coverUrl}
+                      alt={book.title}
+                    />
+                  </Link>
                 ) : (
                   <div className="absolute inset-0 w-full h-full bg-transparent"></div>
                 )}

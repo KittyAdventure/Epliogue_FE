@@ -3,15 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 function ListSection() {
   interface Book {
-    title: string;
-    author: string;
-    description: string;
-    image: string;
-    price: string;
-    publisher: string;
-    pubDate: string;
-    isbn: string;
-    sameAuthor: Array<{ title: string }>;
+    thumbnail: string;
+    bookTitle: string;
+    bookId: string;
   }
 
   const [books, setBooks] = useState<Book[]>([]);
@@ -19,14 +13,14 @@ function ListSection() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/books')
+    fetch('http://localhost:5000/main-page')
       // http://13.125.112.89:8080/aip/books/main-page
       .then((response) => response.json())
       .then((data) => {
-        if (data.items) {
-          setBooks(data.items);
+        if (data.books) {
+          setBooks(data.books);
           const currentTime = new Date().getTime();
-          setCreatedAt(new Array(data.items.length).fill(currentTime));
+          setCreatedAt(new Array(data.books.length).fill(currentTime));
         }
       })
       .catch((error) => {
@@ -51,19 +45,19 @@ function ListSection() {
     <div className="w-6/7 overflow-y-auto max-h-[80vh] grid grid-cols-3 gap-12 ml-12 pr-11 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
       {sortedBooks.map((book) => (
         <div
-          key={book.isbn}
+          key={book.bookId}
           className="relative cursor-pointer book-card"
-          onClick={() => navigate(`/book/${book.isbn}`)}
+          onClick={() => navigate(`/book/${book.bookId}`)}
         >
           <div className="relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
             <img
-              src={book.image}
-              alt={book.title}
+              src={book.thumbnail}
+              alt={book.bookTitle}
               className="absolute inset-0 w-full h-full object-conver transition-transform duration-450 ease-in-out transform hover:scale-105"
             />
           </div>
           <h2 className="text-lg font-semibold mt-3 text-center">
-            {book.title}
+            {book.bookTitle}
           </h2>
         </div>
       ))}

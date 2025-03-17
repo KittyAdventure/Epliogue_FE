@@ -5,6 +5,7 @@ import ReviewDetailSection from '../components/bookdetail/ReviewDetailSection';
 import SameAuthorSection from '../components/bookdetail/SameAuthorSection';
 
 interface Book {
+  isbn: string;
   title: string;
   author: string;
   description: string;
@@ -12,8 +13,8 @@ interface Book {
   price: string;
   publisher: string;
   pubDate: string;
-  isbn: string;
-  sameAuthor: Array<{ title: string }>;
+  avgRating: string;
+  sameAuthor: Array<{ title: string; isbn: string }>;
 }
 
 const BookDetailPage: React.FC = () => {
@@ -22,7 +23,7 @@ const BookDetailPage: React.FC = () => {
   const { isbn } = useParams();
 
   useEffect(() => {
-    fetch('http://localhost:5000/books')
+    fetch('http://localhost:5000/detail') // books/detail
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -30,7 +31,7 @@ const BookDetailPage: React.FC = () => {
         return response.json();
       })
       .then((data) => {
-        setBooks(data.detail);
+        setBooks(data);
       })
       .catch((error) => {
         console.error('Error loading books:', error);
