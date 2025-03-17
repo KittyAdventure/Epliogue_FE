@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
@@ -14,24 +15,54 @@ const BookListSection: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
+  // ----------------------------------------------------------------
+  const fetchBooks = async () => {
+    try {
+      
+      //env = production 인지 development 인지 확인 후 url 할당
+      //url 은 .env 파일에 보관
+      // apiUrl = "http://localhost:5000"
+      const apiUrl =
+        import.meta.env.NODE === 'production'
+          ? import.meta.env.VITE_API_URL_PROD
+          : import.meta.env.VITE_API_URL_DEV;
+
+      const response = await axios.get(`${apiUrl}/books`);
+      console.log('RESPONSE HERE');
+      console.log(response);
+      if (response.data.items) {
+        setBooks(response.data.items);
+      }
+    } catch (error) {
+      console.error('failed to fetch books', error);
+      setBooks([]);
+    }
+  };
+
   useEffect(() => {
-    fetch('http://localhost:5000/books')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.items) {
-          setBooks(data.items);
-        }
-      })
-      .catch((error) => {
-        console.error('Error loading books:', error);
-        setBooks([]);
-      });
+    console.log('FETCHBOOKS');
+    fetchBooks();
   }, []);
+  // --------------------------------------------------------------
+
+  // useEffect(() => {
+  //   fetch('http://localhost:5000/books')
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       if (data.items) {
+  //         setBooks(data.items);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error loading books:', error);
+  //       setBooks([]);
+  //     });
+  // }, []);
 
   const settings = {
     dots: false,
