@@ -33,7 +33,7 @@ const following: number = 33;
 // 마이페이지 클릭 -> 로그인 되어있음 -> 이 페이지로 온다
 const MyPage = (): React.JSX.Element => {
   // default tab is Review
-  const [activeTab, setActiveTab] = useState<string>('Review');
+  const [activeTab, setActiveTab] = useState<string>('Comment');
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
   };
@@ -81,13 +81,11 @@ const MyPage = (): React.JSX.Element => {
             ))}
           </div>
           {/* Contents shown upon clicking(activeTab) */}
-          <div className="mt-20">
             {activeTab === 'Review' && <TabReview />}
             {activeTab === 'Meeting' && <TabMeeting />}
             {activeTab === 'Collection' && <TabCollection />}
             {activeTab === 'Comment' && <TabComment />}
             {activeTab === 'Points' && <TabPoints />}
-          </div>
         </div>
       </div>
     </div>

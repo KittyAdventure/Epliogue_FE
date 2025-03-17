@@ -9,7 +9,6 @@ type Review = {
   reviewCommentsCount: number;
   thumbnail: string;
 };
-
 type User = {
   id: string;
   userNickname: string;
@@ -191,9 +190,10 @@ const mockDatabase: {mypage: User[]} = {
 
 
 //Handlers for intercepting requests
-export const handlers = [
+export const reviewHandler = [
   http.get('http://localhost:5000/mypage', ({request}) => {
     const url = new URL(request.url)
+    console.log(`hello ${url}`)
     const memberId = url.searchParams.get('id');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
 

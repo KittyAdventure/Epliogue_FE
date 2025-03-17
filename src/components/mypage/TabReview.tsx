@@ -1,9 +1,10 @@
 /**
- * 마이페이지 용 컴포넌트
+ * 마이페이지 콘텐츠 컴포넌트
  */
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-// @db.json nickname = userNickname
+import Pagination from './Pagination';
+
 interface Review {
   reviewid: number;
   reviewBooktitle: string;
@@ -26,17 +27,14 @@ const TabReview = (): React.JSX.Element => {
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(
-        `${apiUrl}/mypage`,
-        {
-          //query parameter
-          params: { id: memberId, page },
-          // headers 필요 (인증)
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // },
-        },
-      );
+      const response = await axios.get(`${apiUrl}/mypage`, {
+        //query parameter
+        params: { id: memberId, page },
+        // headers 필요 (인증)
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      });
       console.log(response);
       console.log(response.data);
       const { userNickname, totalPage, reviews = [] } = response.data; //mypage 각 가져오기
@@ -51,17 +49,11 @@ const TabReview = (): React.JSX.Element => {
 
   // useEffect needed to automatically trigger API call when 'page' state updates
   useEffect(() => {
-    fetchReviews('test321', page);
+    fetchReviews('test123', page);
   }, [page]); //run the code when [something] changes
-  const handlePrev = () => {
-    if (page > 1) setPage((prev) => prev - 1); //cant go below 1 (refactorable), setPage to new value
-  };
-  const handleNext = () => {
-    if (page < totalPages) setPage((prev) => prev + 1); //cant go above last page
-  };
 
   return (
-    <div className="">
+    <div className="mt-20">
       <h3 className="text-2xl">{userNickname} 남긴 리뷰</h3>
 
       <div className="flex flex-wrap gap-y-20 justify-between w-full min-h-[680px] mt-10">
@@ -101,36 +93,13 @@ const TabReview = (): React.JSX.Element => {
         )}
       </div>
 
-      <div className="pagination flex justify-center my-[120px] text-center text-2xl">
-        <button
-          onClick={handlePrev}
-          disabled={page === 1}
-          className={`fas fa-chevron-left w-[50px] h-[50px] mr-5 
-            ${page === 1 ? 'text-[gray]' : ''}`}
-        ></button>
-        <div className="">
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-            return (
-              <button
-                key={pageNumber}
-                onClick={() => setPage(pageNumber)}
-                className={`px-5 py-1
-                  ${pageNumber === page ? 'text-[black]' : 'text-[gray]'}`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
-        </div>
-        <button
-          onClick={handleNext}
-          disabled={page === totalPages}
-          className={`fas fa-chevron-right w-[50px] h-[50px] ml-5
-            ${page === totalPages ? 'text-[gray]' : ''}`}
-        ></button>
-      </div>
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={(newPage) => setPage(newPage)}
+      />
     </div>
   );
 };
 export default TabReview;
+
