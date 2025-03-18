@@ -168,7 +168,6 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
           />
         </div>
 
-        {/* Add your buttons here */}
         <div className="flex gap-8 mt-4">
           <button
             className="bg-black hover:bg-black/70 text-white font-bold py-3 px-7 rounded-lg shadow-lg"
