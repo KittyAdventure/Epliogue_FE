@@ -1,10 +1,13 @@
-import { useState } from 'react';
-import { FaShareAlt, FaStar } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
+import Collection from './Collection';
+import Rating from './Rating';
+import Share from './Share';
 
 interface Book {
+  isbn: string;
   title: string;
   author: string;
   description: string;
@@ -12,12 +15,8 @@ interface Book {
   price: string;
   publisher: string;
   pubDate: string;
-  isbn: string;
-}
-
-interface ShareOption {
-  shareUrl: string;
-  kakaoShareUrl: string;
+  avgRating: string;
+  sameAuthor: Array<{ title: string; isbn: string }>;
 }
 
 interface BookDetailSectionProps {
@@ -25,60 +24,117 @@ interface BookDetailSectionProps {
 }
 
 function BookDetailSection({ book }: BookDetailSectionProps) {
-  const navigate = useNavigate();
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
   const [shareModalOpen, setShareModalOpen] = useState<boolean>(false);
-  const [shareOptions, setShareOptions] = useState<ShareOption | null>(null);
+  const [shareOptions, setShareOptions] = useState<{
+    shareUrl: string;
+    kakaoShareUrl: string;
+  } | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
+  const [hasRating, setHasRating] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const toggleBookmark = (isbn: string) => {
-    setSelectedBooks((prev) => {
-      const newSet = new Set(prev);
-      newSet.has(isbn) ? newSet.delete(isbn) : newSet.add(isbn);
-      return newSet;
-    });
-  };
+  useEffect(() => {
+    const fetchCollection = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/collection`);
+        if (!response.ok)
+          throw new Error('컬렉션 정보를 가져오는 데 실패했습니다.');
 
-  const handleRatingClick = (index: number) => setRating(index + 1);
-  const handleMouseEnter = (index: number) => setHoverRating(index + 1);
-  const handleMouseLeave = () => setHoverRating(0);
-
-  const handleShareClick = () => {
-    const shareData = {
-      shareUrl: `https://localhost:5000/book/${book.isbn}`,
-      kakaoShareUrl: `https://localhost:5000/book/${book.isbn}?kakao=true`,
+        const data = await response.json();
+        const bookIds: Set<string> = new Set(
+          data.map((item: { bookId: string }) => item.bookId),
+        );
+        setSelectedBooks(bookIds);
+      } catch (error) {
+        console.error('컬렉션 로딩 오류:', error);
+      }
     };
+
+    const fetchRating = async () => {
+      try {
+        const response = await fetch(`/api/books/${book.isbn}/ratings`);
+        if (!response.ok)
+          throw new Error('별점 정보를 가져오는 데 실패했습니다.');
+
+        const data = await response.json();
+        if (data && data.score) {
+          setRating(data.score);
+          setHasRating(true);
+        }
+      } catch (error) {
+        console.error('별점 정보 로딩 오류:', error);
+      }
+    };
+
+    fetchCollection();
+    fetchRating();
+  }, [book.isbn]);
+
+  const handleShareClick = (shareData: {
+    shareUrl: string;
+    kakaoShareUrl: string;
+  }) => {
     setShareOptions(shareData);
     setShareModalOpen(true);
   };
 
+  const handleRatingClick = async (index: number) => {
+    const newRating = index + 1;
+
+    if (rating === newRating) {
+      try {
+        const response = await fetch(`/api/books/${book.isbn}/ratings`, {
+          method: 'DELETE',
+        });
+
+        if (response.status === 404) {
+          throw new Error('해당 책에 대한 별점이 존재하지 않습니다.');
+        }
+        // 삭제 후 상태 초기화
+        setRating(0);
+        setHasRating(false);
+        console.log('별점 삭제 성공');
+      } catch (error) {
+        console.error('별점 삭제 오류:', error);
+      }
+    } else {
+      try {
+        const response = await fetch(`/api/books/${book.isbn}/ratings`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ score: newRating }),
+        });
+
+        if (!response.ok) throw new Error('별점 등록 실패');
+
+        const data = await response.json();
+        console.log('별점 등록 성공:', data);
+        setRating(newRating);
+        setHasRating(true);
+      } catch (error) {
+        console.error('별점 등록 오류:', error);
+      }
+    }
+  };
+
+  const handleMouseEnter = (index: number) => setHoverRating(index + 1);
+  const handleMouseLeave = () => setHoverRating(0);
+
   return (
     <div className="pt-6 flex gap-14">
       <div className="w-1/3 relative">
-        <div
-          className={`absolute top-0 right-2 cursor-pointer ${
-            selectedBooks.has(book.isbn) ? 'text-green-500' : 'text-black/90'
-          }`}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleBookmark(book.isbn);
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-10 h-12"
-            style={{
-              filter: 'drop-shadow(0.5px 2px 3px rgba(255, 255, 255, 0.5))',
-            }}
-          >
-            <path d="M6 2a2 2 0 00-2 2v18l8-5 8 5V4a2 2 0 00-2-2H6z" />
-          </svg>
-        </div>
+        <Collection
+          bookIsbn={book.isbn}
+          bookTitle={book.title}
+          bookImage={book.image}
+          selectedBooks={selectedBooks}
+          setSelectedBooks={setSelectedBooks}
+        />
         <img
           src={book.image}
           alt={book.title}
@@ -87,17 +143,13 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
       </div>
       <div className="w-2/3 flex flex-col justify-center gap-2">
         <div className="flex items-center">
-          <span className="text-m font-semibold">★ 평균 4.5</span>
-          <span className="text-xs text-gray-500 ml-1">(2.3만명)</span>
+          <span className="text-m font-semibold">★ 평균 {book.avgRating}</span>
         </div>
         <div className="flex items-center mb-3">
           <h2 className="text-3xl font-bold">{book.title}</h2>
           <h3 className="text-lg text-gray-700 mx-4">|</h3>
           <h3 className="text-lg text-gray-700">{book.author}</h3>
-          <FaShareAlt
-            className="ml-2 cursor-pointer mt-[2px]"
-            onClick={handleShareClick}
-          />
+          <Share bookIsbn={book.isbn} onShareClick={handleShareClick} />
         </div>
         <p className="text-lg">{book.description}</p>
         <div className="flex flex-col gap-4 text-base text-gray-900 mt-3">
@@ -107,24 +159,16 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
         </div>
         <div className="flex flex-col mt-4">
           <p className="text-base text-gray-600 mb-3">별점</p>
-          <div className="flex gap-1">
-            {[...Array(5)].map((_, index) => (
-              <span
-                key={index}
-                className={`text-4xl font-semibold cursor-pointer ${
-                  (hoverRating || rating) > index
-                    ? 'text-yellow-400'
-                    : 'text-[#d1d1d1]'
-                }`}
-                onClick={() => handleRatingClick(index)}
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <FaStar />
-              </span>
-            ))}
-          </div>
+          <Rating
+            rating={rating}
+            hoverRating={hoverRating}
+            onRatingClick={handleRatingClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          />
         </div>
+
+        {/* Add your buttons here */}
         <div className="flex gap-8 mt-4">
           <button
             className="bg-black hover:bg-black/70 text-white font-bold py-3 px-7 rounded-lg shadow-lg"
@@ -143,9 +187,13 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
           </button>
         </div>
       </div>
+
       {/* 리뷰 모달창 */}
       {reviewModalOpen && (
-        <ReviewModal setReviewModalOpen={setReviewModalOpen} />
+        <ReviewModal
+          setReviewModalOpen={setReviewModalOpen}
+          bookId={book.isbn}
+        />
       )}
       {/* 공유 모달창 */}
       {shareModalOpen && shareOptions && (

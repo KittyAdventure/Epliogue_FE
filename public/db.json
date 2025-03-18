@@ -328,7 +328,7 @@
       "price": "13000",
       "publisher": "문학동네",
       "pubDate": "2007-11-13",
-      "avgRating": 4.2,
+      "avgRating": 4.5,
       "sameAuthor": [
         {
           "isbn": "9788937473401",
@@ -361,7 +361,7 @@
       "price": "12000",
       "publisher": "북하우스",
       "pubDate": "2019-06-20",
-      "avgRating": 4.0,
+      "avgRating": 4,
       "sameAuthor": []
     },
     {
@@ -795,6 +795,19 @@
       "id": "collection789",
       "shareUrl": "https://example.com/collection/collection789",
       "kakaoShareUrl": "https://example.com/collection/collection789?kakao=true"
+    }
+  ],
+  "collection": [
+    {
+      "page": "1",
+      "totalPages": "5",
+      "books": []
+    },
+    {
+      "id": "4d00",
+      "bookId": "9788936434595",
+      "bookTitle": "채식주의자",
+      "thumbnail": "https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788936434595.jpg"
     }
   ]
 }
