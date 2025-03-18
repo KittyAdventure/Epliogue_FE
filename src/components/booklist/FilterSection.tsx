@@ -1,34 +1,35 @@
 import { addMonths } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FaCalendarAlt, FaFilter, FaStar } from 'react-icons/fa';
 
-function FilterSection() {
-  // 상태 관리
-  const [chosung, setChosung] = useState<string | null>(null); // 한글 자음 필터
-  const [englishChosung, setEnglishChosung] = useState<string | null>(null); // 영어 자음 필터
-  const [rating, setRating] = useState<string | null>(null); // 별점 필터
-  const [startDate, setStartDate] = useState<Date | null>(null); // 시작일 필터
-  const [endDate, setEndDate] = useState<Date | null>(null); // 종료일 필터
-  const [isOpen, setIsOpen] = useState(false); // 별점 드롭다운 열기/닫기
-  const [filter, setFilter] = useState<string>(''); // 필터 값 문자열
+interface FilterProps {
+  chosung: string | null;
+  setChosung: (value: string | null) => void;
+  englishChosung: string | null;
+  setEnglishChosung: (value: string | null) => void;
+  rating: string | null;
+  setRating: (value: string | null) => void;
+  startDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  endDate: Date | null;
+  setEndDate: (date: Date | null) => void;
+}
 
-  // 필터값 초기화
-  const [query, setQuery] = useState<{
-    chosung: string | null;
-    englishChosung: string | null;
-    date: string | null;
-    rating: string | null;
-  }>({
-    chosung: null,
-    englishChosung: null,
-    date: null,
-    rating: null,
-  });
-
-  // 한글 자음과 영어 자음
+const FilterSection: React.FC<FilterProps> = ({
+  chosung,
+  setChosung,
+  englishChosung,
+  setEnglishChosung,
+  rating,
+  setRating,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+}) => {
   const koreanLetters = [
     'ㄱ',
     'ㄴ',
@@ -47,7 +48,7 @@ function FilterSection() {
   ];
   const englishLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  const options = [
+  const ratingOptions = [
     {
       value: '5',
       label: (
@@ -110,62 +111,44 @@ function FilterSection() {
     },
   ];
 
-  // 한글 자음 클릭 시 필터 적용
-  const handleChosungClick = (letter: string) => {
-    setChosung(letter);
-    setQuery((prev) => ({
-      ...prev,
-      chosung: letter,
-    }));
-    updateFilter();
-  };
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false); // 드롭다운 상태 추가
 
-  // 영어 자음 클릭 시 필터 적용
-  const handleEnglishChosungClick = (letter: string) => {
-    setEnglishChosung(letter);
-    setQuery((prev) => ({
-      ...prev,
-      englishChosung: letter,
-    }));
-    updateFilter();
-  };
+  const FilterButton = ({
+    letters,
+    selected,
+    setSelected,
+    otherSelected,
+    setOtherSelected,
+  }: {
+    letters: string[];
+    selected: string | null;
+    setSelected: (value: string | null) => void;
+    otherSelected: string | null;
+    setOtherSelected: (value: string | null) => void;
+  }) => (
+    <div className="flex flex-wrap gap-2">
+      {letters.map((letter) => (
+        <button
+          key={letter}
+          className={`w-10 h-10 flex items-center justify-center text-sm rounded-md transition-colors duration-300 ${
+            selected === letter
+              ? 'bg-black text-white font-bold'
+              : 'bg-white border text-gray-800 hover:bg-gray-300'
+          }`}
+          onClick={() => {
+            // 선택된 항목이 다른 항목이라면, 그 항목을 null로 설정
+            setSelected(selected === letter ? null : letter);
+            if (selected !== letter) {
+              setOtherSelected(null); // 반대편 항목을 초기화
+            }
+          }}
+        >
+          {letter}
+        </button>
+      ))}
+    </div>
+  );
 
-  // 별점 클릭 시 필터 적용
-  const handleRatingClick = (value: string) => {
-    setRating(value);
-    setQuery((prev) => ({
-      ...prev,
-      rating: value,
-    }));
-    updateFilter();
-  };
-
-  // 날짜 변경 시 필터 적용
-  const handleDateChange = (start: Date | null, end: Date | null) => {
-    setStartDate(start);
-    setEndDate(end);
-    setQuery((prev) => ({
-      ...prev,
-      date:
-        start && end
-          ? `${start.toLocaleDateString()}~${end.toLocaleDateString()}`
-          : null,
-    }));
-    updateFilter();
-  };
-
-  // 필터 상태 업데이트 (query 객체를 문자열로 변환)
-  const updateFilter = () => {
-    const filterString = Object.keys(query)
-      .map((key) => `${key}: ${query[key as keyof typeof query] || 'All'}`)
-      .join(', ');
-    setFilter(filterString);
-  };
-
-  // 별점 필터 드롭다운 토글
-  const toggleDropdown = () => setIsOpen(!isOpen);
-
-  // 날짜 선택기용 커스텀 입력 컴포넌트
   const CustomInput = ({
     value,
     onClick,
@@ -179,7 +162,7 @@ function FilterSection() {
         value={value}
         onClick={onClick}
         readOnly
-        className="w-full border px-4 py-2 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-blue-400"
+        className="w-full border px-4 py-2 rounded-lg bg-white text-gray-800"
         placeholder="YYYY-MM"
       />
       <FaCalendarAlt
@@ -189,6 +172,15 @@ function FilterSection() {
     </div>
   );
 
+  const handleRatingClick = () => {
+    setIsDropdownOpen(!isDropdownOpen); // 드롭다운 열기/닫기
+  };
+
+  const handleRatingSelect = (value: string) => {
+    setRating(value); // 별점 선택
+    setIsDropdownOpen(false); // 드롭다운 닫기
+  };
+
   return (
     <div className="w-72 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
       <h3 className="text-lg font-semibold flex items-center mb-4 text-gray-800">
@@ -196,67 +188,46 @@ function FilterSection() {
       </h3>
       <hr className="mb-4 border-gray-300" />
 
-      {/* 한글 자음 필터 */}
+      {/* 책 제목 필터 */}
       <h4 className="font-semibold mb-3 text-gray-700">책 제목</h4>
-      <div className="mb-5">
-        <h5 className="font-medium mb-2 text-gray-600 text-sm">한글</h5>
-        <div className="flex flex-wrap gap-2">
-          {koreanLetters.map((letter) => (
-            <button
-              key={letter}
-              className={`w-10 h-10 flex items-center justify-center text-sm rounded-md transition-colors duration-300 ${
-                chosung === letter
-                  ? 'bg-black text-white font-bold'
-                  : 'bg-white border text-gray-800 hover:bg-gray-300'
-              }`}
-              onClick={() => handleChosungClick(letter)}
-            >
-              {letter}
-            </button>
-          ))}
-        </div>
-      </div>
+      <h5 className="font-medium mb-2 text-gray-600 text-sm">한글</h5>
+      <FilterButton
+        letters={koreanLetters}
+        selected={chosung}
+        setSelected={setChosung}
+        otherSelected={englishChosung}
+        setOtherSelected={setEnglishChosung}
+      />
 
-      {/* 영어 자음 필터 */}
-      <div className="mb-3">
-        <h5 className="font-medium mb-2 text-gray-600 text-sm">영문</h5>
-        <div className="flex flex-wrap gap-2">
-          {englishLetters.map((letter) => (
-            <button
-              key={letter}
-              className={`w-10 h-10 flex items-center justify-center text-sm rounded-md transition-colors duration-300 ${
-                englishChosung === letter
-                  ? 'bg-black text-white font-bold'
-                  : 'bg-white border text-gray-800 hover:bg-gray-300'
-              }`}
-              onClick={() => handleEnglishChosungClick(letter)}
-            >
-              {letter}
-            </button>
-          ))}
-        </div>
-      </div>
+      <h5 className="font-medium mt-5 mb-2 text-gray-600 text-sm">영문</h5>
+      <FilterButton
+        letters={englishLetters}
+        selected={englishChosung}
+        setSelected={setEnglishChosung}
+        otherSelected={chosung}
+        setOtherSelected={setChosung}
+      />
 
       {/* 별점 필터 */}
       <h4 className="font-semibold mt-10 mb-4 text-gray-700">별점</h4>
-      <div className="relative">
+      <div className="relative z-50">
         <button
           className="w-full border p-2 px-4 rounded-lg text-m bg-white flex justify-between items-center"
-          onClick={toggleDropdown}
+          onClick={handleRatingClick} // 드롭다운 열기/닫기
         >
           {rating
-            ? options.find((opt) => opt.value === rating)?.label
+            ? ratingOptions.find((opt) => opt.value === rating)?.label
             : '별점 선택'}
           <span className="ml-12">▼</span>
         </button>
 
-        {isOpen && (
-          <ul className="absolute w-full mt-1 border py-2 border-gray-300 rounded-lg bg-white shadow-md z-50">
-            {options.map((option) => (
+        {isDropdownOpen && ( // 드롭다운이 열려있을 때만 표시
+          <ul className="absolute w-full mt-1 border border-gray-300 rounded-lg bg-white shadow-md">
+            {ratingOptions.map((option) => (
               <li
                 key={option.value}
-                className="flex gap-1.5 items-center py-2 px-4 cursor-pointer hover:font-bold transition-all duration-300 text-[#FACC15]"
-                onClick={() => handleRatingClick(option.value)}
+                className="flex gap-1.5 items-center py-3 px-4 cursor-pointer hover:font-bold transition-all duration-300 text-[#FACC15] hover:bg-gray-100"
+                onClick={() => handleRatingSelect(option.value)} // 별점 선택
               >
                 {option.label}
               </li>
@@ -265,14 +236,15 @@ function FilterSection() {
         )}
       </div>
 
-      {/* 출판일 기간 */}
+      {/* 출판일 기간 (년-월) */}
       <h4 className="font-semibold mt-10 mb-4 text-gray-700">출판일 기간</h4>
       <div className="mb-4">
-        <label className="block text-gray-600 font-medium mb-1">시작일</label>
+        <label className="block text-gray-600 font-medium mb-2">시작일</label>
         <DatePicker
           selected={startDate}
           onChange={(date: Date | null) => {
-            handleDateChange(date, endDate); // 시작일 변경
+            setStartDate(date);
+            setEndDate(null);
           }}
           dateFormat="yyyy-MM"
           showMonthYearPicker
@@ -286,18 +258,14 @@ function FilterSection() {
           }
         />
       </div>
-
       <span className="w-full inline-block text-center text-gray-600 font-black text-xl">
         ~
       </span>
-
       <div className="mt-4">
-        <label className="block text-gray-600 font-medium mb-1">종료일</label>
+        <label className="block text-gray-600 font-medium mb-2">종료일</label>
         <DatePicker
           selected={endDate}
-          onChange={(date: Date | null) => {
-            handleDateChange(startDate, date); // 종료일 변경
-          }}
+          onChange={(date: Date | null) => setEndDate(date)}
           dateFormat="yyyy-MM"
           showMonthYearPicker
           locale={ko}
@@ -311,14 +279,8 @@ function FilterSection() {
           minDate={startDate ? addMonths(startDate, 0) : undefined}
         />
       </div>
-
-      {/* 필터 상태 표시 */}
-      <div className="mt-4">
-        <h5 className="text-gray-700 font-semibold">현재 필터:</h5>
-        <p className="text-gray-600">{filter || '없음'}</p>
-      </div>
     </div>
   );
-}
+};
 
 export default FilterSection;

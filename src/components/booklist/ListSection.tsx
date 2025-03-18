@@ -1,49 +1,25 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function ListSection() {
-  interface Book {
-    thumbnail: string;
-    bookTitle: string;
-    bookId: string;
-  }
+interface Book {
+  thumbnail: string;
+  bookTitle: string;
+  bookId: string;
+}
 
-  const [books, setBooks] = useState<Book[]>([]);
-  const [createdAt, setCreatedAt] = useState<number[]>([]);
+interface ListSectionProps {
+  books: Book[];
+}
+
+const ListSection: React.FC<ListSectionProps> = ({ books }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch('http://localhost:5000/main-page')
-      // http://13.125.112.89:8080/aip/books/main-page
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.books) {
-          setBooks(data.books);
-          const currentTime = new Date().getTime();
-          setCreatedAt(new Array(data.books.length).fill(currentTime));
-        }
-      })
-      .catch((error) => {
-        console.error('Error loading books:', error);
-        setBooks([]);
-      });
-  }, []);
-
-  const sortByLatest = (books: Book[], createdAt: number[]) => {
-    return [...books].sort(
-      (a, b) => createdAt[books.indexOf(b)] - createdAt[books.indexOf(a)],
-    );
-  };
-
-  const sortedBooks = sortByLatest(books, createdAt);
-
-  if (books.length === 0) {
+  if (!books.length) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="w-6/7 overflow-y-auto max-h-[80vh] grid grid-cols-3 gap-12 ml-12 pr-11 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-      {sortedBooks.map((book) => (
+    <div className="w-6/7 overflow-y-auto max-h-[95vh] grid grid-cols-3 gap-12 ml-12 pr-11 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      {books.map((book) => (
         <div
           key={book.bookId}
           className="relative cursor-pointer book-card"
@@ -63,6 +39,6 @@ function ListSection() {
       ))}
     </div>
   );
-}
+};
 
 export default ListSection;
