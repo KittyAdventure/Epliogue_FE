@@ -59,8 +59,8 @@ const TabComment = (): React.JSX.Element => {
           <table className="w-full mt-10 ">
             <thead className="headerTitle w-full border-y-1">
               <tr>
-                {hdrRowTitle.map((rowTitle) => (
-                  <th className=" font-medium leading-10 text-center">
+                {hdrRowTitle.map((rowTitle, idx) => (
+                  <th key={idx} className=" font-medium leading-10 text-center">
                     {rowTitle.name}
                   </th>
                 ))}
