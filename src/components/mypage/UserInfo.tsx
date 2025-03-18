@@ -3,22 +3,23 @@ import UserInfoEdit from './UserInfoEdit';
 
 interface AboutUsers {
   nickname: string;
-  username: string;
+  loginId: string;
   email: string;
-  followers: number;
-  following: number;
+  follower: string;
+  following: string;
 }
 
 const UserInfo: React.FC<AboutUsers> = ({
   nickname,
-  username,
+  loginId,
   email,
-  followers,
-  following,
+  follower,
+  following
 }): React.JSX.Element => {
   const [showModal, setShowModal] = useState(false);
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
   return (
     <div>
       <div className="my-0 mx-[auto] w-40 h-40 border border-gray-500 rounded-full flex items-center justify-center">
@@ -26,7 +27,7 @@ const UserInfo: React.FC<AboutUsers> = ({
       </div>
       <div className="user-info mt-5">
         <h4 className="text-xl font-medium">{nickname}</h4>
-        <p className="text-[#333]">{username}</p>
+        <p className="text-[#333]">{loginId}</p>
         <p className="text-[#333]">{email}</p>
         <div>
           <button
@@ -42,7 +43,7 @@ const UserInfo: React.FC<AboutUsers> = ({
         </div>
         <div className="follow-info flex justify-center items-center mt-3">
           <button className="mr-3 hover:underline">
-            Followers: {followers}
+            Followers: {follower}
           </button>
           <span> | </span>
           <button className="ml-3 hover:underline">

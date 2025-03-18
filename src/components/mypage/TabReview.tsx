@@ -27,7 +27,7 @@ const TabReview = (): React.JSX.Element => {
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}/mypage`, {
+      const response = await axios.get(`${apiUrl}/mypage/review`, {
         //query parameter
         params: { id: memberId, page },
         // headers 필요 (인증)
@@ -35,8 +35,8 @@ const TabReview = (): React.JSX.Element => {
         //   Authorization: `Bearer ${token}`,
         // },
       });
-      console.log(response);
-      console.log(response.data);
+      // console.log(response);
+      // console.log(response.data);
       const { userNickname, totalPage, reviews = [] } = response.data; //mypage 각 가져오기
 
       setUserNickname(userNickname);
