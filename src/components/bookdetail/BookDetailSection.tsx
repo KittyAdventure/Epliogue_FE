@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
+import ChatButton from './ChatButton';
 import Collection from './Collection';
 import Rating from './Rating';
 import Share from './Share';
@@ -21,9 +22,16 @@ interface Book {
 
 interface BookDetailSectionProps {
   book: Book;
+  memberId: number; // memberId를 추가
+  bookName: string; // bookName을 추가
+  bookId: string;
 }
 
-function BookDetailSection({ book }: BookDetailSectionProps) {
+function BookDetailSection({
+  book,
+  memberId,
+  bookName,
+}: BookDetailSectionProps) {
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
@@ -175,8 +183,14 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
           >
             리뷰하기
           </button>
+          {/* 채팅하기 */}
+          <ChatButton
+            memberId={memberId}
+            bookName={book.title}
+            bookId={book.isbn}
+          />
           <button
-            className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg"
+            className="bg-blue-300 hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg"
             onClick={() => navigate('/ChatPage')}
           >
             채팅하기
