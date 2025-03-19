@@ -19,7 +19,7 @@ const Collection = ({
 
   const collection = async (isbn: string) => {
     const isCollection = selectedBooks.has(isbn);
-    const url = `http://localhost:5000/collection${
+    const url = `${import.meta.env.VITE_API_URL_DEV}/collection${
       isCollection ? `/${isbn}` : ''
     }`;
     const method = isCollection ? 'DELETE' : 'POST';

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
 import ChatButton from './ChatButton';
@@ -22,16 +21,12 @@ interface Book {
 
 interface BookDetailSectionProps {
   book: Book;
-  memberId: number; // memberId를 추가
-  bookName: string; // bookName을 추가
+  memberId: number;
+  bookName: string;
   bookId: string;
 }
 
-function BookDetailSection({
-  book,
-  memberId,
-  bookName,
-}: BookDetailSectionProps) {
+function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
@@ -42,12 +37,13 @@ function BookDetailSection({
   } | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
   const [hasRating, setHasRating] = useState<boolean>(false);
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchCollection = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/collection`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL_DEV}/collection`,
+        );
+
         if (!response.ok)
           throw new Error('컬렉션 정보를 가져오는 데 실패했습니다.');
 
@@ -63,7 +59,9 @@ function BookDetailSection({
 
     const fetchRating = async () => {
       try {
-        const response = await fetch(`/api/books/${book.isbn}/ratings`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+        );
         if (!response.ok)
           throw new Error('별점 정보를 가져오는 데 실패했습니다.');
 
@@ -94,9 +92,12 @@ function BookDetailSection({
 
     if (rating === newRating) {
       try {
-        const response = await fetch(`/api/books/${book.isbn}/ratings`, {
-          method: 'DELETE',
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+          {
+            method: 'DELETE',
+          },
+        );
 
         if (response.status === 404) {
           throw new Error('해당 책에 대한 별점이 존재하지 않습니다.');
@@ -110,13 +111,16 @@ function BookDetailSection({
       }
     } else {
       try {
-        const response = await fetch(`/api/books/${book.isbn}/ratings`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ score: newRating }),
           },
-          body: JSON.stringify({ score: newRating }),
-        });
+        );
 
         if (!response.ok) throw new Error('별점 등록 실패');
 
@@ -189,12 +193,12 @@ function BookDetailSection({
             bookName={book.title}
             bookId={book.isbn}
           />
-          <button
+          {/* <button
             className="bg-blue-300 hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg"
             onClick={() => navigate('/ChatPage')}
           >
             채팅하기
-          </button>
+          </button> */}
           <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg">
             모임하기
           </button>

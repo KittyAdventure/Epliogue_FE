@@ -26,97 +26,50 @@ function ReviewDetailSection() {
     { value: 'likes', label: '좋아요순' },
   ];
 
-  // useEffect(() => {
-  //   const fetchReviews = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         ` /books/${bookId}/reviews?page=${currentPage}&size=${reviewsPerPage}&sortType=${sortType}`,
-  //       );
-
-  //       if (!response.ok) {
-  //         throw new Error('책을 찾을 수 없습니다.');
-  //       }
-
-  //       const data = await response.json();
-
-  //       // 정렬 로직 추가 (API가 정렬을 지원하지 않는 경우 대비)
-  //       let sortedReviews = data.content;
-
-  //       if (sortType === 'likes') {
-  //         sortedReviews = [...data.content].sort(
-  //           (a, b) =>
-  //             b.likeCount - a.likeCount ||
-  //             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  //         );
-  //       } else if (sortType === 'latest') {
-  //         sortedReviews = [...data.content].sort(
-  //           (a, b) =>
-  //             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  //         );
-  //       }
-  //       // 페이징 적용
-  //       const startIndex = (currentPage - 1) * reviewsPerPage;
-  //       const paginatedReviews = sortedReviews.slice(
-  //         startIndex,
-  //         startIndex + reviewsPerPage,
-  //       );
-  //       setReviews(paginatedReviews);
-  //       setTotalPages(data.totalPages); // API 응답에서 totalPages를 설정
-  //     } catch (error) {
-  //       console.error('Error loading reviews:', error);
-  //     }
-  //   };
-
-  //   fetchReviews();
-  // }, [currentPage, sortType]);
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('http://localhost:5000/reviews');
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL_DEV}/books/${bookId}/reviews?page=${currentPage}&size=${reviewsPerPage}&sortType=${sortType}`,
+        );
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('책을 찾을 수 없습니다.');
         }
 
         const data = await response.json();
 
-        // 응답 데이터 확인: 데이터 구조가 올바른지 확인
-        console.log(data);
+        // 정렬 로직 추가 (API가 정렬을 지원하지 않는 경우 대비)
+        let sortedReviews = data.content;
 
-        let sortedReviews = data;
-
-        // 정렬 로직 추가
         if (sortType === 'likes') {
-          // 'comment' 필드를 'likeCount'처럼 사용
-          sortedReviews = [...data].sort(
+          sortedReviews = [...data.content].sort(
             (a, b) =>
-              b.comment - a.comment || // comment를 기준으로 정렬
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(), // comment가 같을 경우 createdAt으로 정렬
+              b.likeCount - a.likeCount ||
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           );
         } else if (sortType === 'latest') {
-          // createdAt 필드를 기준으로 정렬
-          sortedReviews = [...data].sort(
+          sortedReviews = [...data.content].sort(
             (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(), // 최신순 정렬
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           );
         }
-
-        // 페이징 처리
+        // 페이징 적용
         const startIndex = (currentPage - 1) * reviewsPerPage;
         const paginatedReviews = sortedReviews.slice(
           startIndex,
           startIndex + reviewsPerPage,
         );
-
         setReviews(paginatedReviews);
-        setTotalPages(Math.ceil(sortedReviews.length / reviewsPerPage)); // 페이지 수 계산 (API에서 받은 값 대신)
+        setTotalPages(data.totalPages); // API 응답에서 totalPages를 설정
       } catch (error) {
         console.error('Error loading reviews:', error);
       }
     };
 
     fetchReviews();
-  }, [currentPage, sortType]); // currentPage나 sortType이 바뀔 때마다 다시 호출
+  }, [currentPage, sortType]);
+
 
   return (
     <div className="review-section mt-28 mb-28">
@@ -214,3 +167,54 @@ function ReviewDetailSection() {
 }
 
 export default ReviewDetailSection;
+
+  // useEffect(() => {
+  //   const fetchReviews = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${import.meta.env.VITE_API_URL_DEV}/reviews`,
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+
+  //       const data = await response.json();
+
+  //       // 응답 데이터 확인: 데이터 구조가 올바른지 확인
+  //       console.log(data);
+
+  //       let sortedReviews = data;
+
+  //       // 정렬 로직 추가
+  //       if (sortType === 'likes') {
+  //         // 'comment' 필드를 'likeCount'처럼 사용
+  //         sortedReviews = [...data].sort(
+  //           (a, b) =>
+  //             b.comment - a.comment || // comment를 기준으로 정렬
+  //             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(), // comment가 같을 경우 createdAt으로 정렬
+  //         );
+  //       } else if (sortType === 'latest') {
+  //         // createdAt 필드를 기준으로 정렬
+  //         sortedReviews = [...data].sort(
+  //           (a, b) =>
+  //             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(), // 최신순 정렬
+  //         );
+  //       }
+
+  //       // 페이징 처리
+  //       const startIndex = (currentPage - 1) * reviewsPerPage;
+  //       const paginatedReviews = sortedReviews.slice(
+  //         startIndex,
+  //         startIndex + reviewsPerPage,
+  //       );
+
+  //       setReviews(paginatedReviews);
+  //       setTotalPages(Math.ceil(sortedReviews.length / reviewsPerPage)); // 페이지 수 계산 (API에서 받은 값 대신)
+  //     } catch (error) {
+  //       console.error('Error loading reviews:', error);
+  //     }
+  //   };
+
+  //   fetchReviews();
+  // }, [currentPage, sortType]);

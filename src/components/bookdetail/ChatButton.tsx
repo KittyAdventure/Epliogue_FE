@@ -1,10 +1,11 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ChatButtonProps {
   memberId: number;
   bookName: string;
-  bookId: string; // bookId를 받도록 추가
+  bookId: string;
 }
 
 const ChatButton: React.FC<ChatButtonProps> = ({
@@ -17,26 +18,26 @@ const ChatButton: React.FC<ChatButtonProps> = ({
 
   const handleChatClick = async () => {
     setLoading(true);
-
     try {
-      // 1. 채팅방 목록을 가짜 데이터로 설정
-      const fakeChatRooms = [
-        { roomId: 1, bookname: '채식주의자', bookid: '9788936434595' },
-        { roomId: 2, bookname: '테스트 책2', bookid: '456' },
-      ];
+      // 1. 채팅방 목록 조회
+      const chatroomsResponse = await axios.get(
+        `${import.meta.env.VITE_API_URL_DEV}/meeting/chatrooms`,
+        {
+          params: { page: 1, limit: 10 },
+        },
+      );
 
-      console.log('가짜 채팅방 목록:', fakeChatRooms);
-
-      // 2. 해당 책 제목과 bookId에 맞는 채팅방을 찾는다.
-      const existingRoom = fakeChatRooms.find(
-        (room) => room.bookname === bookName && room.bookid === bookId,
+      // 2. 해당 책 제목과 bookId에 맞는 채팅방 찾기
+      const existingRoom = chatroomsResponse.data.rooms.find(
+        (room: { bookname: string; bookid: string }) =>
+          room.bookname === bookName && room.bookid === bookId,
       );
 
       if (existingRoom) {
-        console.log(`기존 채팅방(${existingRoom.roomId})을 찾음.`);
+        // 3. 채팅방이 있다면 참여
         await joinChatRoom(existingRoom.roomId);
       } else {
-        console.log('해당 책의 채팅방이 없음, 새로 생성.');
+        // 4. 채팅방이 없다면 새로 생성
         await createChatRoom();
       }
     } catch (error) {
@@ -46,23 +47,36 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     }
   };
 
-  // 채팅방 참여
+  // ✅ 채팅방 참여
   const joinChatRoom = async (roomId: number) => {
     try {
-      console.log(`채팅방(${roomId})에 참가합니다.`); // 실제 API 호출 대신 로그 출력
-      navigate(`/ChatPage/${roomId}`); // 채팅방 페이지로 이동
+      await axios.post(
+        `${import.meta.env.VITE_API_URL_DEV}/meeting/chat/participates`,
+        {
+          roomId,
+          memberId,
+          bookId,
+        },
+      );
+      navigate(`/ChatPage/${roomId}`, { state: { memberId, bookId } }); // ✅ state로 데이터 전달
     } catch (error) {
       console.error('채팅방 참여 중 오류 발생', error);
       alert('채팅방 참여 중 오류가 발생했습니다.');
     }
   };
 
-  // 채팅방 생성
+  // ✅ 채팅방 생성
   const createChatRoom = async () => {
     try {
-      console.log('새로운 채팅방을 생성합니다.'); // 실제 API 호출 대신 로그 출력
-      const fakeRoomId = 999; // 가짜 채팅방 ID
-      navigate(`/ChatPage/${fakeRoomId}`); // 새로 생성된 채팅방 페이지로 이동
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL_DEV}/meeting/chatrooms`,
+        {
+          memberId,
+          bookname: bookName,
+        },
+      );
+      const roomId = response.data.roomId;
+      navigate(`/ChatPage/${roomId}`, { state: { memberId, bookId } }); // ✅ state로 데이터 전달
     } catch (error) {
       console.error('채팅방 생성 중 오류 발생', error);
       alert('채팅방 생성 중 오류가 발생했습니다.');

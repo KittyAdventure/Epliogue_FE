@@ -36,9 +36,12 @@ const BookPage: React.FC = () => {
         if (startDate) params.startDate = startDate;
         if (endDate) params.endDate = endDate;
 
-        const response = await axios.get('http://localhost:5000/main-page', {
-          params,
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL_DEV}/main-page`,
+          {
+            params,
+          },
+        );
         setBooks(response.data.books || []);
       } catch (error) {
         console.error('Error loading books:', error);

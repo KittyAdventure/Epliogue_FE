@@ -17,7 +17,7 @@ const ReviewSection: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/reviews')
+    fetch(`${import.meta.env.VITE_API_URL_DEV}/reviews`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

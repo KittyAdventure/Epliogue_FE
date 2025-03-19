@@ -4,6 +4,7 @@ import BookDetailSection from '../components/bookdetail/BookDetailSection';
 import ReviewDetailSection from '../components/bookdetail/ReviewDetailSection';
 import SameAuthorSection from '../components/bookdetail/SameAuthorSection';
 
+// Book 인터페이스 정의
 interface Book {
   isbn: string;
   title: string;
@@ -17,13 +18,17 @@ interface Book {
   sameAuthor: Array<{ title: string; isbn: string }>;
 }
 
-const BookDetailPage: React.FC = () => {
+interface BookDetailPageProps {
+  memberId: number;
+}
+
+const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [book, setBook] = useState<Book | null>(null);
   const { isbn } = useParams();
 
   useEffect(() => {
-    fetch('http://localhost:5000/detail') // books/detail
+    fetch(`${import.meta.env.VITE_API_URL_DEV}/detail`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -52,7 +57,13 @@ const BookDetailPage: React.FC = () => {
 
   return (
     <section className="section-wrap">
-      <BookDetailSection book={book} />
+      {/* BookDetailSection */}
+      <BookDetailSection
+        book={book}
+        memberId={memberId}
+        bookName={book.title}
+        bookId={book.isbn}
+      />
 
       {/* 같은 작가 */}
       <SameAuthorSection sameAuthor={book.sameAuthor} />
