@@ -28,7 +28,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
   const { isbn } = useParams();
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL_DEV}/detail`)
+    fetch(`${import.meta.env.VITE_API_URL_DEV}/books/detail`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

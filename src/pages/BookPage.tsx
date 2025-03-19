@@ -35,11 +35,12 @@ const BookPage: React.FC = () => {
         if (endDate) params.endDate = endDate;
 
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_DEV}/main-page`,
+          `${import.meta.env.VITE_API_URL_DEV}/books/main-page`,
           {
             params,
           },
         );
+        console.log(response); // 전체 응답 로그를 찍어 봅니다.
         setBooks(response.data.books || []);
       } catch (error) {
         console.error('Error loading books:', error);
