@@ -26,6 +26,7 @@ import ChatPage from '../pages/ChatPage';
 const AppRouter = (): React.JSX.Element => {
   // 로그인 상태, Header로 전달
   const [loggedIn, setLoggedIn] = useState(true);
+  const memberId = String(localStorage.getItem('memberId') || '1');
   return (
     <Router>
       <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
@@ -40,7 +41,10 @@ const AppRouter = (): React.JSX.Element => {
         <Route path="/project" element={<ProjectPage />} />
         <Route path="/book" element={<BookPage />} />
         <Route path="/gathering" element={<GatheringPage />} />
-        <Route path="/book/:isbn" element={<BookDetailPage />} />
+        <Route
+          path="/book/:isbn"
+          element={<BookDetailPage memberId={memberId} />}
+        />
         <Route path="/review" element={<ReviewDetailSection />} />
         <Route path="/reviews/:id" element={<ReviewPage />} />
         <Route path="/search/:searchTerm" element={<SearchPage />} />

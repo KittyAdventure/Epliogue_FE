@@ -117,7 +117,6 @@ const FilterSection: React.FC<FilterProps> = ({
     letters,
     selected,
     setSelected,
-    otherSelected,
     setOtherSelected,
   }: {
     letters: string[];

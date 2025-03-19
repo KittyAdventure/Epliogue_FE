@@ -21,7 +21,7 @@ interface Book {
 
 interface BookDetailSectionProps {
   book: Book;
-  memberId: number;
+  memberId: string;
   bookName: string;
   bookId: string;
 }
@@ -36,7 +36,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
     kakaoShareUrl: string;
   } | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
-  const [hasRating, setHasRating] = useState<boolean>(false);
+
   useEffect(() => {
     const fetchCollection = async () => {
       try {
@@ -49,7 +49,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
 
         const data = await response.json();
         const bookIds: Set<string> = new Set(
-          data.map((item: { bookId: string }) => item.bookId),
+          data.map((item: { bookId: number }) => item.bookId),
         );
         setSelectedBooks(bookIds);
       } catch (error) {
@@ -68,7 +68,6 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
         const data = await response.json();
         if (data && data.score) {
           setRating(data.score);
-          setHasRating(true);
         }
       } catch (error) {
         console.error('별점 정보 로딩 오류:', error);
@@ -104,7 +103,6 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
         }
         // 삭제 후 상태 초기화
         setRating(0);
-        setHasRating(false);
         console.log('별점 삭제 성공');
       } catch (error) {
         console.error('별점 삭제 오류:', error);
@@ -127,7 +125,6 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
         const data = await response.json();
         console.log('별점 등록 성공:', data);
         setRating(newRating);
-        setHasRating(true);
       } catch (error) {
         console.error('별점 등록 오류:', error);
       }
@@ -187,18 +184,11 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
           >
             리뷰하기
           </button>
-          {/* 채팅하기 */}
           <ChatButton
             memberId={memberId}
             bookName={book.title}
             bookId={book.isbn}
           />
-          {/* <button
-            className="bg-blue-300 hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg"
-            onClick={() => navigate('/ChatPage')}
-          >
-            채팅하기
-          </button> */}
           <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg">
             모임하기
           </button>

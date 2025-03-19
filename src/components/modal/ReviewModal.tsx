@@ -6,10 +6,7 @@ interface ReviewModalProps {
   bookId: string;
 }
 
-export default function ReviewModal({
-  setReviewModalOpen,
-  bookId,
-}: ReviewModalProps) {
+export default function ReviewModal({ setReviewModalOpen }: ReviewModalProps) {
   const [text, setText] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -44,39 +41,39 @@ export default function ReviewModal({
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSave = async () => {
-    if (!text.trim()) {
-      alert('리뷰 내용을 입력해야 합니다.');
-      return;
-    }
+  // const handleSave = async () => {
+  //   if (!text.trim()) {
+  //     alert('리뷰 내용을 입력해야 합니다.');
+  //     return;
+  //   }
 
-    try {
-      // 가짜 이미지 URL을 생성하는 부분 (실제 서버 호출 대신)
-      const imageUrls = await uploadImages(images);
+  //   try {
+  //     // 가짜 이미지 URL을 생성하는 부분 (실제 서버 호출 대신)
+  //     const imageUrls = await uploadImages(images);
 
-      // 가짜 서버 응답 시뮬레이션
-      const fakeResponse = {
-        ok: true,
-        json: () => ({ message: '리뷰 저장되었습니다.' }),
-      };
-      const data = await fakeResponse.json();
+  //     // 가짜 서버 응답 시뮬레이션
+  //     const fakeResponse = {
+  //       ok: true,
+  //       json: () => ({ message: '리뷰 저장되었습니다.' }),
+  //     };
+  //     const data = await fakeResponse.json();
 
-      if (fakeResponse.ok) {
-        alert(data.message); // 가짜 서버 응답 처리
-        setReviewModalOpen(false); // 모달 닫기
-      } else {
-        alert(data.message || '리뷰 저장 실패');
-      }
-    } catch (error) {
-      alert('리뷰 저장 중 오류가 발생했습니다.');
-    }
-  };
+  //     if (fakeResponse.ok) {
+  //       alert(data.message); // 가짜 서버 응답 처리
+  //       setReviewModalOpen(false); // 모달 닫기
+  //     } else {
+  //       alert(data.message || '리뷰 저장 실패');
+  //     }
+  //   } catch (error) {
+  //     alert('리뷰 저장 중 오류가 발생했습니다.');
+  //   }
+  // };
 
-  const uploadImages = async (files: File[]) => {
-    // 가짜 이미지 업로드: 이미지 파일을 object URL로 변환하여 반환
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    return imageUrls;
-  };
+  // const uploadImages = async (files: File[]) => {
+  //   // 가짜 이미지 업로드: 이미지 파일을 object URL로 변환하여 반환
+  //   const imageUrls = files.map((file) => URL.createObjectURL(file));
+  //   return imageUrls;
+  // };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
@@ -145,7 +142,7 @@ export default function ReviewModal({
 
           {/* 저장 버튼 */}
           <button
-            onClick={handleSave}
+            // onClick={handleSave}
             className="w-1/3 bg-black text-white p-2 rounded-md"
           >
             저장하기

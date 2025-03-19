@@ -17,31 +17,7 @@ const commentsData: Comment[] = [
       '평범한 여성 영혜가 육식을 거부하면서 시작되는 충격적이고 기괴한 변화의 과정을 그립니다. 가족과 사회의 압박 속에서 영혜는 점차 극단적인 선택을 하게 되며, 인간 본성과 욕망, 그리고 광기에 대한 깊은 통찰을 제공합니다. 이 소설은 아름다움과 잔혹함이 공존하는 강렬한 문체와 함께 독자를 끌어들입니다.',
     time: '3개월 전',
     profileImage: 'https://randomuser.me/api/portraits/men/20.jpg',
-  },
-  {
-    id: 2,
-    username: 'Username',
-    content:
-      '평범한 여성 영혜가 육식을 거부하면서 시작되는 충격적이고 기괴한 변화의 과정을 그립니다. 가족과 사회의 압박 속에서 영혜는 점차 극단적인 선택을 하게 되며, 인간 본성과 욕망, 그리고 광기에 대한 깊은 통찰을 제공합니다. 이 소설은 아름다움과 잔혹함이 공존하는 강렬한 문체와 함께 독자를 끌어들입니다.',
-    time: '3개월 전',
-    profileImage: 'https://randomuser.me/api/portraits/men/6.jpg',
-  },
-  {
-    id: 3,
-    username: 'Username',
-    content:
-      '평범한 여성 영혜가 육식을 거부하면서 시작되는 충격적이고 기괴한 변화의 과정을 그립니다. 가족과 사회의 압박 속에서 영혜는 점차 극단적인 선택을 하게 되며, 인간 본성과 욕망, 그리고 광기에 대한 깊은 통찰을 제공합니다. 이 소설은 아름다움과 잔혹함이 공존하는 강렬한 문체와 함께 독자를 끌어들입니다.',
-    time: '3개월 전',
-    profileImage: 'https://randomuser.me/api/portraits/men/20.jpg',
-  },
-  {
-    id: 4,
-    username: 'Username',
-    content:
-      '평범한 여성 영혜가 육식을 거부하면서 시작되는 충격적이고 기괴한 변화의 과정을 그립니다. 가족과 사회의 압박 속에서 영혜는 점차 극단적인 선택을 하게 되며, 인간 본성과 욕망, 그리고 광기에 대한 깊은 통찰을 제공합니다. 이 소설은 아름다움과 잔혹함이 공존하는 강렬한 문체와 함께 독자를 끌어들입니다.',
-    time: '3개월 전',
-    profileImage: 'https://randomuser.me/api/portraits/men/6.jpg',
-  },
+  }
 ];
 
 export default function CommentPage() {

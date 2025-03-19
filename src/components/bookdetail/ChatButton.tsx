@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ChatButtonProps {
-  memberId: number;
+  memberId: string;
   bookName: string;
   bookId: string;
 }

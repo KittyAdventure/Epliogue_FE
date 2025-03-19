@@ -11,7 +11,6 @@ interface Book {
 
 const BookPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
-  const [page, setPage] = useState(1);
   const [sort, setSort] = useState<'rating' | 'view' | 'date'>('date'); // 정렬 상태
   const [chosung, setChosung] = useState<string | null>(null);
   const [englishChosung, setEnglishChosung] = useState<string | null>(null);
@@ -23,13 +22,12 @@ const BookPage: React.FC = () => {
     const fetchBooks = async () => {
       try {
         const params: {
-          page: number;
           sort: string | null;
           chosung: string | null;
           rating: string | null;
           startDate: Date | null;
           endDate: Date | null;
-        } = { page, sort, chosung, rating, startDate, endDate };
+        } = { sort, chosung, rating, startDate, endDate };
 
         if (chosung) params.chosung = chosung;
         if (rating) params.rating = rating;
@@ -50,7 +48,7 @@ const BookPage: React.FC = () => {
     };
 
     fetchBooks();
-  }, [page, sort, chosung, rating, startDate, endDate]);
+  }, [sort, chosung, rating, startDate, endDate]); // page 제거
 
   const sortOptions: { value: 'rating' | 'view' | 'date'; label: string }[] = [
     { value: 'rating', label: '평점순' },

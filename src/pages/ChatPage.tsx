@@ -2,7 +2,7 @@ import { Client } from '@stomp/stompjs'; // STOMP 클라이언트
 import axios from 'axios';
 import { X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import SockJS from 'sockjs-client'; // SockJS 클라이언트
 
 const ChatPage: React.FC = () => {
@@ -13,7 +13,7 @@ const ChatPage: React.FC = () => {
   const [newMessage, setNewMessage] = useState(''); // 새로운 메시지 입력 상태
   const location = useLocation(); // ✅ state 가져오기
   const { memberId, bookId } = location.state || {}; // 기본값 처리
-   console.log('🔹 memberId:', memberId, 'bookId:', bookId);
+  console.log('🔹 memberId:', memberId, 'bookId:', bookId);
   const [profile, setProfile] = useState({
     username: 'My username',
     avatar: '/img/members/member6.jpg',
@@ -136,7 +136,9 @@ const ChatPage: React.FC = () => {
         // /api/eegimnt / chat / chat.sendMessage; (REST ATI (HTTP 요청) 단발성 요청, 요청-응답 방식)
         if (stompClient) {
           stompClient.publish({
-            destination: `${import.meta.env.VITE_API_URL_DEV}/meeting/chat/${roomId}`,
+            destination: `${
+              import.meta.env.VITE_API_URL_DEV
+            }/meeting/chat/${roomId}`,
             body: JSON.stringify(messagePayload),
           });
         }

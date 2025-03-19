@@ -19,7 +19,7 @@ interface Book {
 }
 
 interface BookDetailPageProps {
-  memberId: number;
+  memberId: string;
 }
 
 const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 interface CollectionProps {
   bookIsbn: string;
   bookTitle: string;
@@ -15,8 +13,6 @@ const Collection = ({
   selectedBooks,
   setSelectedBooks,
 }: CollectionProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-
   const collection = async (isbn: string) => {
     const isCollection = selectedBooks.has(isbn);
     const url = `${import.meta.env.VITE_API_URL_DEV}/collection${
@@ -31,7 +27,7 @@ const Collection = ({
     };
 
     try {
-      setIsLoading(true);
+      // fetch에서 'url' 사용
       const response = await fetch(url, {
         method,
         headers: {
@@ -58,7 +54,6 @@ const Collection = ({
       console.error('컬렉션 처리 중 오류 발생:', error);
       alert('컬렉션 처리 중 오류가 발생했습니다.');
     } finally {
-      setIsLoading(false);
     }
   };
 
