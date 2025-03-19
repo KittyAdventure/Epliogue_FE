@@ -7,12 +7,22 @@ import './assets/css/layout.css';
 import './assets/css/reset.css';
 
 // Import and start MSW for development
-if (process.env.NODE_ENV === 'development') {
+// if (process.env.NODE_ENV === 'development') {
+//   // Dynamically import the MSW worker to avoid including it in production builds
+//   import('../mocks/browser.js')
+//     .then(({ worker }) => worker.start())
+//     .catch((err) => console.error('Failed to start MSW', err));
+// }
+if (
+  process.env.NODE_ENV === 'development' &&
+  import.meta.env.VITE_ENABLE_MSW === 'true'
+) {
   // Dynamically import the MSW worker to avoid including it in production builds
   import('../mocks/browser.js')
     .then(({ worker }) => worker.start())
     .catch((err) => console.error('Failed to start MSW', err));
 }
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
