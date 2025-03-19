@@ -50,8 +50,8 @@ const ReviewSection: React.FC = () => {
 
       <div>
         <Slider {...settings}>
-          {reviews.map((review) => (
-            <div className="w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300">
+          {reviews.map((review, idx) => (
+            <div key={idx} className="w-full bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300">
               {/* 유저 정보 */}
               <div className="flex justify-between items-center mb-2">
                 <div className="user flex items-center gap-2">

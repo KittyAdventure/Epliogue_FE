@@ -7,6 +7,7 @@ import { mypageHandler } from './mypageHandlers/mypageHandler';
 import { reviewHandler } from './mypageHandlers/reviewHandler';
 import { meetingHandler } from './mypageHandlers/meetingHandler';
 import { commentHandler } from './mypageHandlers/commentHandler';
+import { collectionHandler } from "./mypageHandlers/collectionHandler"
 
 export const worker = setupWorker(
   ...bookHandler,
@@ -16,4 +17,5 @@ export const worker = setupWorker(
   ...reviewHandler,
   ...meetingHandler,
   ...commentHandler,
+  ...collectionHandler
 );
