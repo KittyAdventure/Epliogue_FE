@@ -1,10 +1,11 @@
 // 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios"
 import '../../assets/css/checkbox.css';
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
+import {useAuth} from "../../utility/useAuth"
 
 interface LoginActions {
   name: string;
@@ -13,14 +14,12 @@ interface LoginActions {
 const loginOptions: LoginActions[] = [
   { name: '아이디 찾기', path: '#' },
   { name: '비밀번호 찾기', path: '#' },
-  { name: '회원가입', path: '/login/signup' },
+  { name: '회원가입', path: '/login/register' },
 ];
-interface LoginCheck {
-  setLoggedIn: (loggedIn: boolean) => void;
-}
 
-const LoginForm: React.FC<LoginCheck> = ({ setLoggedIn }) => {
+const LoginForm = (): React.JSX.Element => { 
   const navigate = useNavigate(); //다른 페이지로 이동시켜줌
+  const { setLoggedIn, setMemberId } = useAuth(); //apicontext
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
 
@@ -32,23 +31,30 @@ const LoginForm: React.FC<LoginCheck> = ({ setLoggedIn }) => {
     return null;
   };
 
+  // 로그인 버튼을 클릭하면 실행
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     // prevents form's default behavior(refresh) upon submitting
     e.preventDefault();
-    // json-server는 POST가 안되서 test할려면 middleware필요-지금은 안함
     try {
-      const response = await axios.get("http://localhost:5000/members")
-      const user = response.data
-      if (user) {
-        console.log('Login Success', user);
-        setLoggedIn(true);
-        navigate('/mypage');
-        // Redirect to MyPage if setLoggedIn true
+      const apiUrl =
+        import.meta.env.NODE === 'production'
+          ? import.meta.env.VITE_API_URL_PROD
+          : import.meta.env.VITE_API_URL_DEV;
+      const response = await axios.post(`${apiUrl}/member/login`, {
+        loginName: loginName,
+        password: password,
+      });
+      
+      if (response.data.token) {
+        localStorage.setItem('jwt', response.data.token); // Save the JWT in localStorage
+        setMemberId(response.data.memberId); //memberId contextAPI 저장
+        setLoggedIn(true); // Update login status
+        navigate('/mypage'); // Redirect user to the desired page
       } else {
         console.error('Wrong Info');
       }
     } catch (error) {
-      console.error('Error during login', error);
+      console.error('LoginError', error);
     }
   };
 

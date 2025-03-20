@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
+import { AuthProvider} from "../src/utility/AuthProvider"
 
 import './assets/css/index.css';
 import './assets/css/layout.css';
@@ -17,8 +18,12 @@ import './assets/css/reset.css';
 //     .catch((err) => console.error('Failed to start MSW', err));
 // }
 
+// WRAP <App> with <AuthProvider> to allow <AuthContext> available throughout app
+// <AuthContext> handles authentication status (logged in or not)
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <AuthProvider>
     <App />
+    </AuthProvider>
   </StrictMode>,
 );

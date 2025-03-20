@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 // Layout
 import Footer from '../components/footer/Footer';
@@ -25,17 +25,16 @@ import ChatPage from '../pages/ChatPage';
 
 const AppRouter = (): React.JSX.Element => {
   // 로그인 상태, Header로 전달
-  const [loggedIn, setLoggedIn] = useState(true);
+  // const [loggedIn, setLoggedIn] = useState(true);
+  // Conntext API, 로그인 상태 props로 전달 안해도됨
   const memberId = String(localStorage.getItem('memberId') || '1');
+
   return (
     <Router>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      <Header />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route
-          path="/login"
-          element={<LoginForm setLoggedIn={setLoggedIn} />}
-        />
+        <Route path="/login" element={<LoginForm />} />
         <Route path="/login/signup" element={<SignupForm />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/project" element={<ProjectPage />} />

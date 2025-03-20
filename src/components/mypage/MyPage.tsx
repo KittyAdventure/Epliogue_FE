@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate} from "react-router-dom"
 
 import Calendar from './Calendar';
 import UserInfo from './UserInfo';
@@ -32,6 +33,7 @@ interface UserInfo {
 
 // 마이페이지 클릭 -> 로그인 되어있음 -> 이 페이지로 온다
 const MyPage = (): React.JSX.Element => {
+  const navigate = useNavigate();
   const [nickName, setNickName] = useState<string>('');
   const [loginId, setLoginId] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -60,12 +62,15 @@ const MyPage = (): React.JSX.Element => {
           : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.get(`${apiUrl}/mypage`, {
         params: { id: loginId },
-      });
+      }
+    );
+    if (!response.data || !response.data.nickname){
+      console.warn("user info is missing or incomplete");
+      navigate("/login")
+    }
       // 메인갔다가 마이페이지로 오면 정보업데이트
-      console.log('===========================X');
+      console.log('==========MYPAGE RESPONSE==========');
       console.log(response);
-      console.log(response.data);
-      console.log('============================X');
       // response 데이터 각 아이템을 할당
       setNickName(response.data.nickname);
       setLoginId(response.data.loginId);

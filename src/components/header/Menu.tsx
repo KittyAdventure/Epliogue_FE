@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchModal from '../modal/SearchModal';
+import { useAuth } from "../../utility/useAuth"
 
 interface MenuItem {
   name: string;
@@ -12,14 +13,15 @@ const menuDatas: MenuItem[] = [
   { name: 'mypage', path: '/mypage', icon: 'fas fa-user' },
   { name: 'search', path: '/', icon: 'fas fa-search' },
 ];
+// ContextAPI 를 활용함으로써 하드코딩한 props 더이상 필요없다
+// interface MenuProps {
+//   loggedIn: boolean;
+//   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+// }
 
-interface MenuProps {
-  loggedIn: boolean;
-  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const Menu: React.FC<MenuProps> = ({ loggedIn, setLoggedIn }) => {
+const Menu = (): React.JSX.Element => {
   const navigate = useNavigate();
+  const { loggedIn, setLoggedIn } = useAuth();
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false); // 🔹 모달 상태 추가
 
   const handleMenuClick = (
@@ -28,7 +30,7 @@ const Menu: React.FC<MenuProps> = ({ loggedIn, setLoggedIn }) => {
   ): void => {
     event.preventDefault();
     if (menuData.name === 'mypage') {
-      if (loggedIn) {
+      if (loggedIn) { //contextapi 값 적용
         navigate('/mypage');
       } else {
         navigate('/login');
