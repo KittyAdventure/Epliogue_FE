@@ -1,20 +1,31 @@
-import { useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 
-function UserFilterSection() {
-  const [filters, setFilters] = useState({
-    nickname: false,
-    loginId: false,
-    email: false,
-    hasProfileImage: false,
-    hasReviews: false,
-    isActive: false,
-  });
-  const handleFilterChange = (filter: keyof typeof filters) => {
-    setFilters((prev) => ({ ...prev, [filter]: !prev[filter] }));
+interface FilterProps {
+  filters: {
+    id: string; // 유저 닉네임
+    loginId: string; // 로그인 아이디
+    email: string;
+    profileUrl: string;
+    createAt: string;
   };
+  setFilters: React.Dispatch<React.SetStateAction<FilterProps['filters']>>;
+}
+
+const UserFilterSection: React.FC<FilterProps> = ({ filters, setFilters }) => {
+  const handleFilterChange = (filter: keyof typeof filters) => {
+    // Only allow one filter to be 'true' among id, loginId, email
+    const newFilters = {
+      ...filters,
+      id: 'false',
+      loginId: 'false',
+      email: 'false',
+      [filter]: filters[filter] === 'true' ? 'false' : 'true',
+    };
+    setFilters(newFilters);
+  };
+
   return (
-    <div className="w-72 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+    <div className="w-72 p-6 bg-white rounded-xl shadow-lg border border-gray-200 max-h-[40rem]">
       <h3 className="text-lg font-semibold flex items-center mb-4 text-gray-800">
         필터 <FaFilter className="ml-2 mt-1" />
       </h3>
@@ -28,8 +39,8 @@ function UserFilterSection() {
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={filters.nickname}
-                  onChange={() => handleFilterChange('nickname')}
+                  checked={filters.id === 'true'}
+                  onChange={() => handleFilterChange('id')}
                 />
                 <span>닉네임</span>
               </label>
@@ -42,7 +53,7 @@ function UserFilterSection() {
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={filters.loginId}
+                  checked={filters.loginId === 'true'}
                   onChange={() => handleFilterChange('loginId')}
                 />
                 <span>아이디</span>
@@ -56,7 +67,7 @@ function UserFilterSection() {
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={filters.email}
+                  checked={filters.email === 'true'}
                   onChange={() => handleFilterChange('email')}
                 />
                 <span>이메일</span>
@@ -76,8 +87,8 @@ function UserFilterSection() {
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={filters.hasProfileImage}
-                  onChange={() => handleFilterChange('hasProfileImage')}
+                  checked={filters.profileUrl === 'true'}
+                  onChange={() => handleFilterChange('profileUrl')}
                 />
                 <span>프로필 이미지</span>
               </label>
@@ -85,39 +96,11 @@ function UserFilterSection() {
                 프로필 이미지가 있는 유저만 검색합니다.
               </p>
             </div>
-
-            <div>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={filters.hasReviews}
-                  onChange={() => handleFilterChange('hasReviews')}
-                />
-                <span>리뷰 작성 경험 있음</span>
-              </label>
-              <p className="text-sm text-gray-500">
-                리뷰를 작성한 경험이 있는 유저만 검색합니다.
-              </p>
-            </div>
-
-            <div>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={filters.isActive}
-                  onChange={() => handleFilterChange('isActive')}
-                />
-                <span>모임 활동 유저</span>
-              </label>
-              <p className="text-sm text-gray-500">
-                모임 참여 활동을 하는 유저만 검색합니다.
-              </p>
-            </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default UserFilterSection;

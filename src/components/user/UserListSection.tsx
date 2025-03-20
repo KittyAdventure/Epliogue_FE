@@ -1,81 +1,59 @@
-const users = Array(12).fill({
-  nickname: 'bird',
-  loginId: 'test123',
-  email: 'test@naver.com',
-  follower: '20',
-  following: '30',
-  reviewCount: '22',
-  meetingCount: '10',
-  collectionCount: '100',
-  birthDate: 'YYYY-MM-DD',
-  profileUrl: '/img/members/member6.jpg', // 이미지 경로를 변경하세요.
-});
+interface UserListProps {
+  users: {
+    id: string; // 유저 닉네임
+    loginId: string; // 로그인 아이디
+    email: string;
+    profileUrl: string;
+    createAt: string;
+  }[]; // 배열 형태로 정의
+  isLoading: boolean;
+}
 
-function UserListSection() {
+const UserListSection: React.FC<UserListProps> = ({ users, isLoading }) => {
+  if (isLoading) {
+    return <div className="mx-auto mt-20 text-xl h-[40vh]">Loading...</div>;
+  }
+
+  // users가 없거나 빈 배열일 경우 처리
+  if (!users || users.length === 0) {
+    return (
+      <div className="mx-auto mt-20 text-xl h-[40vh]">
+        검색 결과가 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div
-      className="w-6/7 pl-12 pr-11 pt-5 pb-[4rem]"
+      className="w-6/7 pl-12 pr-7 pt-5 pb-[4rem]"
       style={{ maxHeight: '80vh', overflowY: 'auto' }}
     >
-      {/* 유저 카드 리스트 */}
-      <div className="grid grid-cols-3 gap-12">
+      {/* User Card List */}
+      <div className="grid grid-cols-3 gap-4 cursor-pointer">
         {users.map((user, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all duration-300 hover:scale-105"
+            className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all duration-400 hover:scale-103 hover:bg-gray-100 mb-7 py-5"
           >
-            <div className="relative mx-auto p-4">
-              <img
-                src={user.profileUrl}
-                alt={user.nickname}
-                className="w-32 h-32 object-cover rounded-full mx-auto"
-              />
-            </div>
-
             <div className="p-4 text-black space-y-1 pt-0">
-              {/* User Information */}
               <h3 className="text-center font-semibold text-xl">
-                {user.nickname}
-              </h3>
-              <p className="text-center text-sm text-gray-500">
                 {user.loginId}
-              </p>
+              </h3>
               <p className="text-center text-sm text-gray-500">{user.email}</p>
-              <p className="text-center text-xs text-gray-400">
-                가입일: {user.birthDate}
+              <p className="text-center text-sm text-gray-400">
+                {user.id ? `Nickname: ${user.id}` : 'No nickname'}
               </p>
-
-              {/* Follower/Following count */}
-              <div className="flex justify-center items-center text-xs text-gray-500 mt-2 gap-4">
-                <span className="flex items-center gap-1">
-                  팔로워: {user.follower}
-                </span>
-                <span className="flex items-center gap-1">
-                  팔로잉: {user.following}
-                </span>
-              </div>
-
-              {/* Stats for Reviews, Meetings, Collections */}
-              <div className="grid grid-cols-3 gap-4 text-xs text-gray-500 mt-3">
-                <div className="flex justify-center items-center flex-col">
-                  <span>리뷰</span>
-                  <span>{user.reviewCount}</span>
-                </div>
-                <div className="flex justify-center items-center flex-col">
-                  <span>모임</span>
-                  <span>{user.meetingCount}</span>
-                </div>
-                <div className="flex justify-center items-center flex-col">
-                  <span>컬렉션</span>
-                  <span>{user.collectionCount}</span>
-                </div>
-              </div>
+              <p className="text-center text-sm text-gray-400">
+                {user.profileUrl === 'true'
+                  ? 'Has Profile Image'
+                  : 'No Profile Image'}
+              </p>
             </div>
           </div>
         ))}
       </div>
     </div>
   );
-}
+};
 
 export default UserListSection;

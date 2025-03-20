@@ -38,6 +38,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    // 컬렉션
     const fetchCollection = async () => {
       try {
         const response = await fetch(
@@ -57,6 +58,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
       }
     };
 
+    // 별점
     const fetchRating = async () => {
       try {
         const response = await fetch(
@@ -78,6 +80,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
     fetchRating();
   }, [book.isbn]);
 
+  // 공유
   const handleShareClick = (shareData: {
     shareUrl: string;
     kakaoShareUrl: string;

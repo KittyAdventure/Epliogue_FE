@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -9,22 +10,15 @@ interface SearchModalProps {
 }
 
 const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [popularSearches] = useState<string[]>([
-    '한강',
-    '채식주의자',
-    '작별하지 않는다',
-    '불변의 법칙',
-    '당신이 누군가를 죽였다',
-    '히가시노 게이고',
-    '데일 카네기 인간관계론',
-    '인간 실격',
-    '불편한 편의점',
-    '데미안',
-  ]);
+  const [popularSearches, setPopularSearches] = useState<string[]>([]); // API에서 가져올 인기 검색어 상태
+  const [books, setBooks] = useState<any[]>([]); // 책 검색 결과 상태
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState(''); // 필터 상태 (기본값 없음)
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [errorMessage, setErrorMessage] = useState(''); // 검색어가 비었을 때 표시할 에러 메시지 상태
+  const navigate = useNavigate();
 
   const options = [
     { value: 'title', label: '제목' },
@@ -32,34 +26,107 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     { value: 'user', label: '유저' },
   ];
 
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const navigate = useNavigate();
-
-  const handleSearch = () => {
-    if (searchTerm) {
-      const newRecentSearches = [searchTerm, ...recentSearches.slice(0, 4)];
-      setRecentSearches(newRecentSearches);
-      localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));
-      setSearchTerm('');
-      onClose();
-
-      // 필터에 따라 다른 페이지로 이동
-      if (filter === 'user') {
-        navigate(`/user-search/${searchTerm}`);
-      } else {
-        navigate(`/search/${searchTerm}`);
+  // ✨ 인기 검색어 API 호출
+  useEffect(() => {
+    const fetchPopularSearches = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL_DEV}/keywords`,
+        );
+        const data = await response.json();
+        setPopularSearches(data);
+      } catch (error) {
+        console.error('Error:', error);
       }
+    };
+    fetchPopularSearches();
+  }, []);
+
+  // ✨ 책 검색 API 호출
+  useEffect(() => {
+    if (searchTerm) {
+      const fetchBooks = async () => {
+        try {
+          const params: {
+            query: string;
+            sort: string | null;
+            display: string;
+            start: string;
+          } = {
+            query: searchTerm || '', // 검색어가 없다면 빈 문자열로 설정
+            sort: 'sim', // 기본적으로 정확도순으로 설정
+            display: '10', // 한 번에 표시할 책의 수
+            start: '1', // 시작 페이지 (페이지 번호)
+          };
+
+          // axios를 사용하여 API 요청
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_URL_DEV}/books`,
+            { params },
+          );
+
+          // 책 목록을 상태에 저장
+          setBooks(response.data.books || []);
+        } catch (error) {
+          console.error('Error loading books:', error);
+          setBooks([]); // 오류 발생 시 빈 배열로 설정
+        }
+      };
+
+      fetchBooks();
+    } else {
+      setBooks([]);
+    }
+  }, [searchTerm]);
+
+  // SearchModal.tsx
+  const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      setErrorMessage('검색어를 입력해주세요.');
+      return;
+    }
+
+    let searchQuery = '';
+
+    if (filter === 'author' || filter === 'title') {
+      searchQuery = searchTerm; // 'author'나 'title' 필터일 경우, searchTerm 사용
+    } else if (filter === 'user') {
+      searchQuery = searchTerm; // 'user' 필터일 경우, usearchTerm 사용
+    } else {
+      searchQuery = searchTerm; // 기본적으로 searchTerm 사용
+    }
+
+    // 에러 메시지 초기화
+    setErrorMessage('');
+
+    const newRecentSearches = [searchTerm, ...recentSearches.slice(0, 4)];
+    setRecentSearches(newRecentSearches);
+    localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));
+    setSearchTerm(''); // 검색 후 검색어 초기화
+    onClose();
+
+    const sort = filter || 'sim'; // 필터 값이 없다면 기본값은 'sim'
+
+    // 필터가 'user'일 때 UserSearchPage로 이동
+    if (filter === 'user') {
+      navigate(`/members/search/${encodeURIComponent(searchQuery)}`); // usersearchTerm 사용하여 유저 검색 페이지로 이동
+    } else {
+      // 그렇지 않으면 기존의 책 검색 페이지로 이동
+      navigate(
+        `/books/${encodeURIComponent(
+          searchQuery,
+        )}?sort=${sort}&display=10&start=1`,
+      );
     }
   };
-
-  // 엔터키로 검색 처리
+  // ⌨️ 엔터키로 검색 실행
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
   };
 
+  // 인기 검색어 애니메이션 효과 (2초마다 변경)
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % popularSearches.length);
@@ -123,7 +190,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                 <div className="relative flex-1">
                   <input
                     type="text"
-                    placeholder="검색어를 입력하세요..."
+                    placeholder="검색어를 입력하세요."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={handleKeyPress} // 엔터키 이벤트 추가
@@ -139,6 +206,13 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                   </button>
                 </div>
               </div>
+
+              {/* 에러 메시지 표시 */}
+              {errorMessage && (
+                <div className="text-red-500 text-sm mb-4 ml-[10.5rem] -mt-4">
+                  <strong>{errorMessage}</strong>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-40">
                 <div>

@@ -6,7 +6,10 @@ interface ReviewModalProps {
   bookId: string;
 }
 
-export default function ReviewModal({ setReviewModalOpen }: ReviewModalProps) {
+export default function ReviewModal({
+  setReviewModalOpen,
+  bookId,
+}: ReviewModalProps) {
   const [text, setText] = useState('');
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -41,39 +44,50 @@ export default function ReviewModal({ setReviewModalOpen }: ReviewModalProps) {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // const handleSave = async () => {
-  //   if (!text.trim()) {
-  //     alert('리뷰 내용을 입력해야 합니다.');
-  //     return;
-  //   }
+  const handleSave = async () => {
+    if (!text.trim()) {
+      alert('리뷰 내용을 입력해야 합니다.');
+      return;
+    }
 
-  //   try {
-  //     // 가짜 이미지 URL을 생성하는 부분 (실제 서버 호출 대신)
-  //     const imageUrls = await uploadImages(images);
+    const formData = new FormData();
 
-  //     // 가짜 서버 응답 시뮬레이션
-  //     const fakeResponse = {
-  //       ok: true,
-  //       json: () => ({ message: '리뷰 저장되었습니다.' }),
-  //     };
-  //     const data = await fakeResponse.json();
+    // JSON 데이터를 Blob 형식으로 변환해서 추가
+    const reviewData = {
+      content: text,
+    };
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
+    );
 
-  //     if (fakeResponse.ok) {
-  //       alert(data.message); // 가짜 서버 응답 처리
-  //       setReviewModalOpen(false); // 모달 닫기
-  //     } else {
-  //       alert(data.message || '리뷰 저장 실패');
-  //     }
-  //   } catch (error) {
-  //     alert('리뷰 저장 중 오류가 발생했습니다.');
-  //   }
-  // };
+    // 이미지 파일 추가
+    images.forEach((image) => formData.append('images', image));
 
-  // const uploadImages = async (files: File[]) => {
-  //   // 가짜 이미지 업로드: 이미지 파일을 object URL로 변환하여 반환
-  //   const imageUrls = files.map((file) => URL.createObjectURL(file));
-  //   return imageUrls;
-  // };
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL_DEV}/books/${bookId}/reviews`,
+        {
+          method: 'POST',
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // 필요한 경우 인증 추가
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('리뷰 등록 실패');
+      }
+
+      // const responseData = await response.json();  // 이 줄을 삭제합니다.
+      alert('리뷰가 성공적으로 등록되었습니다.');
+      setReviewModalOpen(false); // 모달 닫기
+    } catch (error) {
+      alert('리뷰 저장 중 오류가 발생했습니다.');
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
@@ -84,7 +98,7 @@ export default function ReviewModal({ setReviewModalOpen }: ReviewModalProps) {
         >
           <X size={24} />
         </button>
-        <h2 className="text-xl font-bold mb-4">채식주의자</h2>
+        <h2 className="text-xl font-bold mb-4">리뷰 작성</h2>
         <textarea
           className="w-full h-40 rounded-md resize-none"
           placeholder="이 작품에 대한 리뷰 작성하기."
@@ -127,6 +141,7 @@ export default function ReviewModal({ setReviewModalOpen }: ReviewModalProps) {
             </div>
           ))}
         </div>
+
         {/* 버튼 영역 */}
         <div className="flex justify-between mt-4">
           {/* 초기화 버튼 */}
@@ -142,7 +157,7 @@ export default function ReviewModal({ setReviewModalOpen }: ReviewModalProps) {
 
           {/* 저장 버튼 */}
           <button
-            // onClick={handleSave}
+            onClick={handleSave}
             className="w-1/3 bg-black text-white p-2 rounded-md"
           >
             저장하기

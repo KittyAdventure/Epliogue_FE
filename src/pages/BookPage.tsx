@@ -40,7 +40,7 @@ const BookPage: React.FC = () => {
             params,
           },
         );
-        console.log(response); // 전체 응답 로그를 찍어 봅니다.
+        // console.log(response); // 전체 응답 로그를 찍어 봅니다.
         setBooks(response.data.books || []);
       } catch (error) {
         console.error('Error loading books:', error);

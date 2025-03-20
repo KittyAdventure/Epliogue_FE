@@ -181,7 +181,7 @@ const FilterSection: React.FC<FilterProps> = ({
   };
 
   return (
-    <div className="w-72 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+    <div className="w-72 max-w-[15rem] p-6 bg-white rounded-xl shadow-lg border border-gray-200">
       <h3 className="text-lg font-semibold flex items-center mb-4 text-gray-800">
         필터 <FaFilter className="ml-2 mt-1" />
       </h3>

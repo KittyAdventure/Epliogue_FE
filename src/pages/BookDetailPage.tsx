@@ -26,23 +26,47 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [book, setBook] = useState<Book | null>(null);
   const { isbn } = useParams();
-
+  // const data = {
+  //   query: isbn,
+  //   type:"d_isbn"
+  // }
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL_DEV}/books/detail`)
-      .then((response) => {
+    if (!isbn) return;
+
+    const url = `${
+      import.meta.env.VITE_API_URL_DEV
+    }/books/detail?query=${isbn}&type=d_isbn`;
+    console.log('📌 요청 URL 확인:', url);
+
+    fetch(url, {
+      method: 'GET', // ✅ GET 요청으로 변경
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      // body:JSON.stringify(data)
+    })
+      .then(async (response) => {
+        console.log('🔄 응답 상태 코드:', response.status);
+
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          const errorText = await response.text();
+          throw new Error(
+            `❌ 서버 응답 오류: ${response.status} - ${errorText}`,
+          );
         }
+
         return response.json();
       })
-      .then((data) => {
-        setBooks(data);
+      .then((jsonData) => {
+        console.log('✅ 서버 응답 데이터:', jsonData);
+        setBook(jsonData);
       })
       .catch((error) => {
-        console.error('Error loading books:', error);
-        setBooks([]);
+        console.error('🚨 Error loading book details:', error.message);
+        setBook(null);
       });
-  }, []);
+  }, [isbn]);
 
   useEffect(() => {
     if (isbn && books.length > 0) {

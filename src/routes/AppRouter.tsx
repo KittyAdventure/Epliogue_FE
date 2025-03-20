@@ -46,8 +46,11 @@ const AppRouter = (): React.JSX.Element => {
         />
         <Route path="/review" element={<ReviewDetailSection />} />
         <Route path="/reviews/:id" element={<ReviewPage />} />
-        <Route path="/search/:searchTerm" element={<SearchPage />} />
-        <Route path="/user-search/:term" element={<UserSearchPage />} />
+        <Route path="/books/:searchTerm" element={<SearchPage />} />
+        <Route
+          path="/members/search/:searchTerm"
+          element={<UserSearchPage />}
+        />
         <Route path="/ChatPage/:roomId" element={<ChatPage />} />
       </Routes>
       <Footer />

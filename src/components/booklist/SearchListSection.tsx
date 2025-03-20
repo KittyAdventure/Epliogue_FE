@@ -1,16 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 
-interface Book {
-  thumbnail: string;
+interface Books {
+  image: string;
   bookTitle: string;
   bookId: string;
+  author: string;
+  price: string;
+  description: string;
+  pubDate: string;
 }
 
 interface ListSectionProps {
-  books: Book[];
+  books: Books[];
 }
 
-const ListSection: React.FC<ListSectionProps> = ({ books }) => {
+const SearchListSection: React.FC<ListSectionProps> = ({ books }) => {
   const navigate = useNavigate();
 
   // books 배열이 비어있다면 "검색 결과가 없습니다." 메시지 출력
@@ -32,7 +36,7 @@ const ListSection: React.FC<ListSectionProps> = ({ books }) => {
         >
           <div className="relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
             <img
-              src={book.thumbnail}
+              src={book.image}
               alt={book.bookTitle}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-450 ease-in-out transform hover:scale-105"
             />
@@ -46,4 +50,4 @@ const ListSection: React.FC<ListSectionProps> = ({ books }) => {
   );
 };
 
-export default ListSection;
+export default SearchListSection;
