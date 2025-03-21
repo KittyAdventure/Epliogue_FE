@@ -1,7 +1,8 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../utility/useAuth';
 import SearchModal from '../modal/SearchModal';
-import { useAuth } from "../../utility/useAuth"
 
 interface MenuItem {
   name: string;
@@ -30,10 +31,9 @@ const Menu = (): React.JSX.Element => {
   ): void => {
     event.preventDefault();
     if (menuData.name === 'mypage') {
-      if (loggedIn) { //contextapi 값 적용
-        navigate('/mypage');
-      } else {
-        navigate('/login');
+      //contextapi 값 적용
+      if (!loggedIn) { //private route으로 전달
+        navigate('/members/login');
       }
     } else if (menuData.name === 'search') {
       setIsSearchModalOpen(true); // 🔹 모달 열기
@@ -42,9 +42,29 @@ const Menu = (): React.JSX.Element => {
     }
   };
 
-  const handleLogout = (): void => {
-    setLoggedIn(false);
-    navigate('/');
+  const handleLogout = async (): Promise<void> => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL_PROD;
+      const response = await axios.post(`${apiUrl}/logout`, {}, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      console.log("Logout Response")
+      console.log(response)
+      if (response.status === 200) {
+        console.log(response.data.message);
+        console.log('Logout successful on click');
+        setLoggedIn(false);
+        localStorage.removeItem('token');
+        navigate('/');
+      } else {
+        console.error('logout failed: ', response.statusText);
+      }
+    } catch (error) {
+      console.error('Logout Error', error);
+    }
   };
 
   return (
