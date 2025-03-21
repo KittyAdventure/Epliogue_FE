@@ -14,7 +14,7 @@ import MainPage from '../pages/MainPage';
 import LoginForm from '../components/login/LoginForm';
 import SignupForm from '../components/login/SignupForm';
 import MyPage from '../components/mypage/MyPage';
-// Nav
+// Nav (서브 페이지)
 import BookPage from '../pages/BookPage';
 import GatheringPage from '../pages/GatheringPage';
 import ProjectPage from '../pages/ProjectPage';
