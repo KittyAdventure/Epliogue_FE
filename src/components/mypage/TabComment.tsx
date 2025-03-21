@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination';
 interface HeaderRow {
   id: number;
@@ -21,6 +22,7 @@ interface Comment {
 }
 
 const TabComment = (): React.JSX.Element => {
+  const navigate = useNavigate();
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState<number>(1); //pagination
   const [totalPages, setTotalPages] = useState<number>(1); //pagination total page #
@@ -34,12 +36,17 @@ const TabComment = (): React.JSX.Element => {
       const response = await axios.get(`${apiUrl}/mypage/comment`, {
         params: { page },
       });
-      console.log(response);
-      console.log(response.data);
+      if (!response.data || !response.data.nickname) {
+        console.warn('No response in mypage/comment');
+        // navigate('/login');
+      }
+      // console.log(response);
+      // console.log(response.data);
       const { totalPage, comments = [] } = response.data; //mypage 각 가져오기
 
-      console.log('=============================undefined/nan');
+      console.log('Comments ================');
       console.log(comments);
+      console.log(totalPage);
       setComments(comments);
       setTotalPages(Number(totalPage));
     } catch (error) {
@@ -54,9 +61,9 @@ const TabComment = (): React.JSX.Element => {
     <div className="mt-20">
       <h3 className="text-2xl">나의 댓글</h3>
 
-      <div>
+      <div className='mt-10'>
         {comments.length > 0 ? (
-          <table className="w-full mt-10 ">
+          <table className="w-full mt-10">
             <thead className="headerTitle w-full border-y-1">
               <tr>
                 {hdrRowTitle.map((rowTitle, idx) => (
@@ -69,7 +76,10 @@ const TabComment = (): React.JSX.Element => {
 
             <tbody>
               {comments.map((comment, idx) => (
-                <tr key={idx} className="text-center leading-10 border-b-1 border-gray-300">
+                <tr
+                  key={idx}
+                  className="text-center leading-10 border-b-1 border-gray-300"
+                >
                   <td className="leading-10">{comment.postDateTime}</td>
                   <td className="leading-10">{comment.bookTitle}</td>
                   <td className="leading-10">{comment.content}</td>
@@ -78,14 +88,18 @@ const TabComment = (): React.JSX.Element => {
             </tbody>
           </table>
         ) : (
-          '리뷰에 댓글을 남겨보세요'
+          <p>리뷰에 댓글을 남겨보세요</p>
         )}
       </div>
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={(newPage) => setPage(newPage)}
-      />
+      {comments.length > 0 ? (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={(newPage) => setPage(newPage)}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

@@ -57,15 +57,20 @@ const TabCollection = (): React.JSX.Element => {
             </div>
           ))
         ) : (
-          <div>false</div>
+          <div>나만의 컬렉션을 만들어보세요</div>
         )}
       </div>
-
+      {collections.length > 0 ? (
+        
       <Pagination
         currentPage={page}
         totalPages={totalPages}
         onPageChange={(newPage) => setPage(newPage)}
       />
+      ):(
+        <></>
+      )}
+
     </div>
   );
 };

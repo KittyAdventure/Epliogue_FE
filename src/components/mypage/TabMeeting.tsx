@@ -29,9 +29,14 @@ const TabMeeting = (): React.JSX.Element => {
         params: { memberId, page },
       });
 
-      console.log(response.data);
-      setTotalPages(response.data.totalPages);
-      setMeetings(response.data.meetings);
+      if (!response) {
+        console.log("TabMeeting No Response")
+      }else{
+        console.log('Meeting Response');
+        console.log(response.data);
+        setTotalPages(response.data.totalPages);
+        setMeetings(response.data.meetings);
+      }
     } catch (error) {
       console.error('Failed to fetch meetings', error);
     }
@@ -80,12 +85,15 @@ const TabMeeting = (): React.JSX.Element => {
           <p>모임에 한번 참여해보세요</p>
         )}
       </div>
-
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={(newPage) => setPage(newPage)}
-      />
+      {meetings.length > 0 ? (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={(newPage) => setPage(newPage)}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

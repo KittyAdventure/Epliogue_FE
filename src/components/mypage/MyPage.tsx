@@ -12,7 +12,7 @@ import TabPoints from './TabPoints';
 import TabReview from './TabReview';
 
 interface Tab {
-  id: string;
+  tabId: string;
   name: string;
   value: string;
 }
@@ -46,11 +46,10 @@ const MyPage = (): React.JSX.Element => {
   const [collectionCount, setCollectionCount] = useState<string>('');
   const [point, setPoint] = useState<string>('');
 
-  const [activeTab, setActiveTab] = useState<string>('Comment');
+  const [activeTab, setActiveTab] = useState<string>('Review');
 
   const handleTabClick = (tabName: string) => {
-    //set active TAB
-    setActiveTab(tabName);
+    setActiveTab(tabName); //set active tab
   };
 
   // Get user info upon visintg mypage while logged in
@@ -65,7 +64,7 @@ const MyPage = (): React.JSX.Element => {
       }
     );
     if (!response.data || !response.data.nickname){
-      console.warn("user info is missing or incomplete");
+      console.warn("No response in /mypage");
       navigate("/login")
     }
       // 메인갔다가 마이페이지로 오면 정보업데이트
@@ -93,11 +92,11 @@ const MyPage = (): React.JSX.Element => {
 
   // Values must be called from User's Data
   const tabs: Tab[] = [
-    { id: '1', name: 'Review', value: reviewCount },
-    { id: '2', name: 'Meeting', value: meetingCount },
-    { id: '3', name: 'Collection', value: collectionCount },
-    { id: '4', name: 'Comment', value: commentCount },
-    { id: '5', name: 'Points', value: point },
+    { tabId: '1', name: 'Review', value: reviewCount },
+    { tabId: '2', name: 'Meeting', value: meetingCount },
+    { tabId: '3', name: 'Collection', value: collectionCount },
+    { tabId: '4', name: 'Comment', value: commentCount },
+    { tabId: '5', name: 'Points', value: point },
   ];
 
   return (
@@ -121,7 +120,7 @@ const MyPage = (): React.JSX.Element => {
         <div className="content w-4/5 ml-20">
           <div className="mypage flex">
             {tabs.map((tab) => (
-              <div key={tab.id} className="flex flex-col text-center">
+              <div key={tab.tabId} className="flex flex-col text-center">
                 <button
                   onClick={() => handleTabClick(tab.name)}
                   className={`${
