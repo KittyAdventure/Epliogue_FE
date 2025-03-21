@@ -98,9 +98,9 @@ export default function ReviewPage() {
   if (!review) {
     return (
       <div className="mx-auto mt-36 text-xl h-[75vh] text-center">
-        리뷰가 없습니다.
+        리뷰를 불러오는 중입니다.
       </div>
-    ); // 리뷰가 없을 경우
+    );
   }
 
   return (
@@ -118,6 +118,7 @@ export default function ReviewPage() {
       {/* Comment Section */}
       <CommentSection
         comments={comments}
+        reviewId={reviewId}
         newComment={newComment}
         onNewCommentChange={handleNewCommentChange}
         onAddComment={handleAddComment}

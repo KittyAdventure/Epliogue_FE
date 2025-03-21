@@ -168,7 +168,7 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
 
           {editMode ? (
             <textarea
-              className="w-full border p-2 mt-5"
+              className="w-full border p-2 mt-5 resize-none"
               value={updatedContent}
               onChange={(e) => setUpdatedContent(e.target.value)}
             />
