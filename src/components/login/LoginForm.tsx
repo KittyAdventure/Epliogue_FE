@@ -14,10 +14,10 @@ interface LoginActions {
 const loginOptions: LoginActions[] = [
   { name: '아이디 찾기', path: '#' },
   { name: '비밀번호 찾기', path: '#' },
-  { name: '회원가입', path: '/login/register' },
+  { name: '회원가입', path: '/members/register' },
 ];
 
-const LoginForm = (): React.JSX.Element => { 
+const LoginForm = (): React.JSX.Element => {
   const navigate = useNavigate(); //다른 페이지로 이동시켜줌
   const { setLoggedIn, setMemberId } = useAuth(); //apicontext
   const [loginName, setLoginName] = useState('');
@@ -44,7 +44,7 @@ const LoginForm = (): React.JSX.Element => {
         loginName: loginName,
         password: password,
       });
-      
+
       if (response.data.token) {
         localStorage.setItem('jwt', response.data.token); // Save the JWT in localStorage
         setMemberId(response.data.memberId); //memberId contextAPI 저장
@@ -72,7 +72,7 @@ const LoginForm = (): React.JSX.Element => {
           type="text"
           id="loginId"
           name="loginId"
-          placeholder="user1~user5"
+          placeholder="User ID"
           value={loginName}
           onChange={(e) => setLoginName(e.target.value)}
           // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -83,7 +83,7 @@ const LoginForm = (): React.JSX.Element => {
           type="password"
           id="password"
           name="password"
-          placeholder="암호: password"
+          placeholder="암호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -115,7 +115,7 @@ const LoginForm = (): React.JSX.Element => {
             </Link>
           ))}
         </div>
-        <ButtonBig name="로그인" arialabel="로그인" />
+        <ButtonBig name="로그인" arialabel="로그인" type="submit" />
         <p className="mt-[80px]">다른 방법으로 로그인하기</p>
         <ButtonBig
           provider="kakao"

@@ -9,12 +9,17 @@
 interface ButtonInfo {
   name: string;
   arialabel: string;
+  type?: "submit",
   provider?: 'kakao' | 'google';
+  classname?: string;
+  onClick?: ()=> void;
 }
 const ButtonBig: React.FC<ButtonInfo> = ({
   name,
   arialabel,
+  type="submit",
   provider = '',
+  classname = ''
 }) => {
 
   const providerColor: Record<
@@ -75,8 +80,8 @@ const ButtonBig: React.FC<ButtonInfo> = ({
   );
   return (
     <button
-      className="block w-[400px] h-[60px] border mx-[auto] mt-[20px] rounded-xl"
-      type="submit"
+      className={`block w-[400px] h-[60px] border mx-[auto] mt-[20px] rounded-xl ${classname}`}
+      type={type}
       aria-label={arialabel}
       style={providerStyles}
     >

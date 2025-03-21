@@ -3,23 +3,28 @@ import { useState } from 'react';
 
 interface InputInfo {
   className?: string;
-  type: string;
+  type: 'text' | 'email' | 'password' | 'tel' | 'date';
   id: string;
   name: string;
   placeholder: string;
   value?: string;
   disabled?: boolean;
+  maxLength?: number;
+  required?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   validate?: (value: string) => string | null;
 }
 
 const InputBox: React.FC<InputInfo> = ({
+  // 기본값 설정
   type,
   id,
   name,
   placeholder,
   value,
   disabled,
+  maxLength,
+  required=false,
   onChange,
   validate,
 }) => {
@@ -44,11 +49,12 @@ const InputBox: React.FC<InputInfo> = ({
         placeholder={placeholder}
         autoComplete="off"
         value={value}
+        maxLength={maxLength}
         onChange={handleChange}
         disabled={disabled}
-        // required
+        required={required}
       />
-      {error && <p className="">{error}</p>}
+      {error && <p className="leading-10 text-left text-sm ml-3">{error}</p>}
     </div>
   );
 };
