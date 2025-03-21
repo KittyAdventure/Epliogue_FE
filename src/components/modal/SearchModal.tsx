@@ -13,7 +13,6 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [popularSearches, setPopularSearches] = useState<string[]>([]); // API에서 가져올 인기 검색어 상태
-  const [books, setBooks] = useState<any[]>([]); // 책 검색 결과 상태
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [filter, setFilter] = useState(''); // 필터 상태 (기본값 없음)
   const [activeIndex, setActiveIndex] = useState(0);
@@ -60,22 +59,15 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
           };
 
           // axios를 사용하여 API 요청
-          const response = await axios.get(
-            `${import.meta.env.VITE_API_URL_DEV}/books`,
-            { params },
-          );
-
-          // 책 목록을 상태에 저장
-          setBooks(response.data.books || []);
+          await axios.get(`${import.meta.env.VITE_API_URL_DEV}/books`, {
+            params,
+          });
         } catch (error) {
           console.error('Error loading books:', error);
-          setBooks([]); // 오류 발생 시 빈 배열로 설정
         }
       };
 
       fetchBooks();
-    } else {
-      setBooks([]);
     }
   }, [searchTerm]);
 

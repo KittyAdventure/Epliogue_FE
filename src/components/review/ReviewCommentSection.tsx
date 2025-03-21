@@ -43,7 +43,7 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
     }
   };
 
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const handleUpdateReview = async () => {
     const formData = new FormData();
@@ -57,9 +57,9 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
       new Blob([reviewData], { type: 'application/json' }),
     );
 
-    selectedFiles.forEach((file) => {
-      formData.append('images', file);
-    });
+    // selectedFiles.forEach((file) => {
+    //   formData.append('images', file);
+    // });
 
     try {
       const response = await axios.put(

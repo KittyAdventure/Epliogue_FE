@@ -23,20 +23,15 @@ interface BookDetailPageProps {
 }
 
 const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
-  const [books, setBooks] = useState<Book[]>([]);
   const [book, setBook] = useState<Book | null>(null);
   const { isbn } = useParams();
-  // const data = {
-  //   query: isbn,
-  //   type:"d_isbn"
-  // }
+
   useEffect(() => {
     if (!isbn) return;
 
     const url = `${
       import.meta.env.VITE_API_URL_DEV
     }/books/detail?query=${isbn}&type=d_isbn`;
-    // console.log('📌 요청 URL 확인:', url);
 
     fetch(url, {
       method: 'GET', // ✅ GET 요청으로 변경
@@ -44,22 +39,17 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      // body:JSON.stringify(data)
     })
       .then(async (response) => {
-        // console.log('🔄 응답 상태 코드:', response.status);
-
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(
             `❌ 서버 응답 오류: ${response.status} - ${errorText}`,
           );
         }
-
         return response.json();
       })
       .then((jsonData) => {
-        // console.log('✅ 서버 응답 데이터:', jsonData);
         setBook(jsonData);
       })
       .catch((error) => {
@@ -67,13 +57,6 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
         setBook(null);
       });
   }, [isbn]);
-
-  useEffect(() => {
-    if (isbn && books.length > 0) {
-      const selectedBook = books.find((b) => b.isbn === isbn);
-      setBook(selectedBook || null);
-    }
-  }, [isbn, books]);
 
   if (!book) {
     return <div>Loading...</div>;

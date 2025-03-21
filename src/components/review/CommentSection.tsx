@@ -12,7 +12,7 @@ interface CommentSectionProps {
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({
-  comments,
+  // comments,
   newComment,
   reviewId,
   onNewCommentChange,
@@ -63,8 +63,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     },
   ]); // 로컬 상태로 더미 댓글 데이터 설정
   const [filter, setFilter] = useState<string>(''); // 정렬 기준
-  const [page, setPage] = useState(1); // 페이지 번호
-  const [totalPages, setTotalPages] = useState<number>(0); // 총 페이지 수
+  // const [page, setPage] = useState(1); // 페이지 번호
+  // const [totalPages, setTotalPages] = useState<number>(0); // 총 페이지 수
   const [isOpen, setIsOpen] = useState(false); // 정렬 옵션 펼치기/접기
   const [editMode, setEditMode] = useState(false); // 수정 모드 여부
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null); // 수정 중인 댓글 ID
