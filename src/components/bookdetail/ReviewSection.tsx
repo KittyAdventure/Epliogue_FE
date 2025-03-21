@@ -168,7 +168,7 @@ function ReviewSection() {
         </div>
       </div>
 
-      <div className="review-box grid grid-cols-3 md:grid-cols-2 gap-20 mt-10">
+      <div className="review-box grid grid-cols-3 gap-20 mt-10">
         {reviews.map((review, index) => (
           // 리뷰 상세 페이지로 이동
           <div
