@@ -1,7 +1,7 @@
 import React from 'react';
 import BookListSection from '../components/main/BooklistSection';
 import GatheringSection from '../components/main/GatheringSection';
-import ReviewSection from '../components/main/ReviewSection';
+import ReviewSection from '../components/main/MainReviewSection';
 
 const sections = [
   { id: 'booklist', component: <BookListSection /> },

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import BookDetailSection from '../components/bookdetail/BookDetailSection';
-import ReviewDetailSection from '../components/bookdetail/ReviewDetailSection';
+import ReviewDetailSection from '../components/bookdetail/ReviewSection';
 import SameAuthorSection from '../components/bookdetail/SameAuthorSection';
 
 // Book 인터페이스 정의
@@ -36,7 +36,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
     const url = `${
       import.meta.env.VITE_API_URL_DEV
     }/books/detail?query=${isbn}&type=d_isbn`;
-    console.log('📌 요청 URL 확인:', url);
+    // console.log('📌 요청 URL 확인:', url);
 
     fetch(url, {
       method: 'GET', // ✅ GET 요청으로 변경
@@ -47,7 +47,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
       // body:JSON.stringify(data)
     })
       .then(async (response) => {
-        console.log('🔄 응답 상태 코드:', response.status);
+        // console.log('🔄 응답 상태 코드:', response.status);
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -59,7 +59,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
         return response.json();
       })
       .then((jsonData) => {
-        console.log('✅ 서버 응답 데이터:', jsonData);
+        // console.log('✅ 서버 응답 데이터:', jsonData);
         setBook(jsonData);
       })
       .catch((error) => {

@@ -15,7 +15,8 @@ import ProjectPage from '../pages/ProjectPage';
 // Book
 import BookDetailPage from '../pages/BookDetailPage';
 // Review
-import ReviewDetailSection from '../components/bookdetail/ReviewDetailSection';
+import MainReviewSection from '../components/main/MainReviewSection';
+import ReviewSection from '../components/bookdetail/ReviewSection';
 import ReviewPage from '../pages/ReviewPage';
 // Search
 import SearchPage from '../pages/SearchPage';
@@ -44,7 +45,8 @@ const AppRouter = (): React.JSX.Element => {
           path="/book/:isbn"
           element={<BookDetailPage memberId={memberId} />}
         />
-        <Route path="/review" element={<ReviewDetailSection />} />
+        <Route path="/review" element={<ReviewSection />} />
+        <Route path="/review" element={<MainReviewSection />} />
         <Route path="/reviews/:id" element={<ReviewPage />} />
         <Route path="/books/:searchTerm" element={<SearchPage />} />
         <Route

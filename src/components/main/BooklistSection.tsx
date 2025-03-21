@@ -64,12 +64,15 @@ const BookListSection: React.FC = () => {
       {/* 왼쪽 텍스트 영역 */}
       <div className="w-1/3 mt-[8%] flex flex-col">
         <h2 className="text-4xl font-bold mb-11">인기 책 리스트</h2>
-        <div className="flex gap-4 items-end">
-          <h3 className="text-xl font-semibold">{books[currentIndex].title}</h3>
+        <div className="flex gap-1 items-end flex-wrap">
+          <h3 className="text-xl font-semibold w-full sm:w-auto">
+            {books[currentIndex].title}
+          </h3>
           <p>{books[currentIndex].author}</p>
         </div>
+
         <div className="inline-block w-full border-solid border-1 mt-4"></div>
-        <p className="mt-4 text-sm leading-relaxed text-gray-700">
+        <p className="mt-4 text-sm leading-relaxed text-gray-700 line-clamp-10">
           {books[currentIndex].description}
         </p>
       </div>
