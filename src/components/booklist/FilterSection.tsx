@@ -113,40 +113,33 @@ const FilterSection: React.FC<FilterProps> = ({
 
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false); // 드롭다운 상태 추가
 
-  const FilterButton = ({
-    letters,
-    selected,
-    setSelected,
-    setOtherSelected,
-  }: {
-    letters: string[];
-    selected: string | null;
-    setSelected: (value: string | null) => void;
-    otherSelected: string | null;
-    setOtherSelected: (value: string | null) => void;
-  }) => (
-    <div className="flex flex-wrap gap-2">
-      {letters.map((letter) => (
-        <button
-          key={letter}
-          className={`w-10 h-10 flex items-center justify-center text-sm rounded-md transition-colors duration-300 ${
-            selected === letter
-              ? 'bg-black text-white font-bold'
-              : 'bg-white border text-gray-800 hover:bg-gray-300'
-          }`}
-          onClick={() => {
-            // 선택된 항목이 다른 항목이라면, 그 항목을 null로 설정
-            setSelected(selected === letter ? null : letter);
-            if (selected !== letter) {
-              setOtherSelected(null); // 반대편 항목을 초기화
-            }
-          }}
-        >
-          {letter}
-        </button>
-      ))}
-    </div>
-  );
+const FilterButton = ({
+  letters,
+  selected,
+  setSelected,
+}: {
+  letters: string[];
+  selected: string | null;
+  setSelected: (value: string | null) => void;
+}) => (
+  <div className="flex flex-wrap gap-2">
+    {letters.map((letter) => (
+      <button
+        key={letter}
+        className={`w-10 h-10 flex items-center justify-center text-sm rounded-md transition-colors duration-300 ${
+          selected === letter
+            ? 'bg-black text-white font-bold'
+            : 'bg-white border text-gray-800 hover:bg-gray-300'
+        }`}
+        onClick={() => setSelected(selected === letter ? null : letter)}
+      >
+        {letter}
+      </button>
+    ))}
+  </div>
+);
+
+
 
   const CustomInput = ({
     value,
@@ -180,6 +173,8 @@ const FilterSection: React.FC<FilterProps> = ({
     setIsDropdownOpen(false); // 드롭다운 닫기
   };
 
+  
+
   return (
     <div className="w-72 max-w-[15rem] p-6 bg-white rounded-xl shadow-lg border border-gray-200">
       <h3 className="text-lg font-semibold flex items-center mb-4 text-gray-800">
@@ -193,18 +188,22 @@ const FilterSection: React.FC<FilterProps> = ({
       <FilterButton
         letters={koreanLetters}
         selected={chosung}
-        setSelected={setChosung}
-        otherSelected={englishChosung}
-        setOtherSelected={setEnglishChosung}
+        setSelected={(value) => {
+          console.log('✅ 한글 초성 선택됨:', value);
+          setChosung(value);
+          setEnglishChosung(null);
+        }}
       />
 
       <h5 className="font-medium mt-5 mb-2 text-gray-600 text-sm">영문</h5>
       <FilterButton
         letters={englishLetters}
         selected={englishChosung}
-        setSelected={setEnglishChosung}
-        otherSelected={chosung}
-        setOtherSelected={setChosung}
+        setSelected={(value) => {
+          console.log('✅ 영어 초성 선택됨:', value);
+          setEnglishChosung(value);
+          setChosung(null);
+        }}
       />
 
       {/* 별점 필터 */}

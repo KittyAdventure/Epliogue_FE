@@ -33,14 +33,15 @@ const SearchPage: React.FC = () => {
         } = {
           query: searchTerm || '',
           sort: sort,
-          display: '10~100',
-          start: '1~100',
+          display: '10',
+          start: '1',
         };
 
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL_DEV}/books`,
           { params },
         );
+        console.log(response);
 
         setBooks(response.data.books || []);
       } catch (error) {

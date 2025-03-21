@@ -23,7 +23,7 @@ const ListSection: React.FC<ListSectionProps> = ({ books }) => {
   }
 
   return (
-    <div className="w-6/7 overflow-y-auto max-h-[95vh] grid grid-cols-3 gap-12 ml-12 pr-11 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+    <div className="w-6/7 grid grid-cols-3 gap-12 ml-12 pr-11">
       {books.map((book) => (
         <div
           key={book.bookId} // 각 항목에 고유한 key prop 추가

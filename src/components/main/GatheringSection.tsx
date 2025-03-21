@@ -20,7 +20,7 @@ const GatheringSection: React.FC = () => {
   const [isNextDisabled, setIsNextDisabled] = useState(false);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL_DEV}/gathering`)
+    fetch(`${import.meta.env.VITE_API_URL_DEV}/gatherings`)
       .then((response) => response.json())
       .then((data) => setGathering(data))
       .catch((error) => console.error('Error loading gathering:', error));
