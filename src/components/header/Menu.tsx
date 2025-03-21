@@ -32,8 +32,10 @@ const Menu = (): React.JSX.Element => {
     event.preventDefault();
     if (menuData.name === 'mypage') {
       //contextapi 값 적용
-      if (!loggedIn) { //private route으로 전달
-        navigate('/members/login');
+      if (loggedIn) { //private route으로 전달
+        navigate("/mypage");
+      }else {
+        navigate("/members/login")
       }
     } else if (menuData.name === 'search') {
       setIsSearchModalOpen(true); // 🔹 모달 열기

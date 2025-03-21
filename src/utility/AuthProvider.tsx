@@ -9,6 +9,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(()=>{
     // retrieve initial state from localstorage
+    return true //임시용
     const storedToken = localStorage.getItem("token")
     return !!storedToken
   }); // Initial login status
