@@ -32,7 +32,10 @@ const SearchListSection: React.FC<ListSectionProps> = ({ books }) => {
         <div
           key={book.bookId} // 각 항목에 고유한 key prop 추가
           className="relative cursor-pointer book-card"
-          onClick={() => navigate(`/book/${book.bookId}`)}
+          onClick={() => {
+            window.scrollTo(0, 0);
+            navigate(`/book/${book.bookId}`);
+          }}
         >
           <div className="relative w-full aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
             <img

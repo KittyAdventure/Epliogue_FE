@@ -82,7 +82,7 @@ const GatheringSection: React.FC = () => {
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const navigate = useNavigate();
-
+  const [participated, setParticipated] = useState<Record<number, boolean>>({}); // Tracks participation for each gathering
   const GatheringPage = () => {
     navigate(`/gathering`);
   };
@@ -155,6 +155,13 @@ const GatheringSection: React.FC = () => {
     );
   };
 
+  const handleParticipateClick = (meetingId: number) => {
+    setParticipated((prevState) => ({
+      ...prevState,
+      [meetingId]: true,
+    }));
+  };
+
   return (
     <div className="section-wrap flex gap-16 mb-[200px]">
       <div className="w-1/4">
@@ -174,7 +181,10 @@ const GatheringSection: React.FC = () => {
         </p>
         <button
           className="mt-6 flex items-center text-blue-600 font-semibold hover:text-blue-800 transition-all duration-200"
-          onClick={GatheringPage}
+          onClick={() => {
+            window.scrollTo(0, 0);
+            GatheringPage();
+          }}
         >
           <span className="mr-2">전체 모임 리스트 보러가기</span>
           <MdNavigateNext size={20} />
@@ -215,11 +225,22 @@ const GatheringSection: React.FC = () => {
                       <span className="font-semibold">장소 :</span>{' '}
                       {gathering.location}
                     </p>
-                    <p className="text-sm font-medium mt-6">
+                    <p className="text-sm font-medium mt-6 mb-6">
                       현재 인원: {gathering.nowPeople}/{gathering.total} 명
                     </p>
-                    <button className="transition-all duration-300 ease-in-out mt-2 bg-white text-black px-6 py-2 rounded-lg font-bold shadow-md hover:bg-black hover:text-white">
-                      참여하기
+                    <button
+                      className={`transition-all duration-300 ease-in-out mt-2 px-6 py-2 rounded-full font-bold shadow-md ${
+                        participated[gathering.meetingId]
+                          ? 'bg-blue-500 text-white hover:bg-blue-700'
+                          : 'bg-white text-black hover:bg-black hover:text-white'
+                      }`}
+                      onClick={() =>
+                        handleParticipateClick(gathering.meetingId)
+                      }
+                    >
+                      {participated[gathering.meetingId]
+                        ? '참여완료'
+                        : '참여하기'}
                     </button>
                   </div>
                 </div>

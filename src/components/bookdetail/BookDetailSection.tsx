@@ -5,6 +5,7 @@ import ChatButton from './ChatButton';
 import Collection from './Collection';
 import Rating from './Rating';
 import Share from './Share';
+import GatheringModal from '../modal/GatheringModal'; // Import GatheringModal
 
 interface Book {
   isbn: string;
@@ -36,9 +37,9 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
     kakaoShareUrl: string;
   } | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
+  const [gatheringModalOpen, setGatheringModalOpen] = useState<boolean>(false); // State for GatheringModal visibility
 
   useEffect(() => {
-    // 컬렉션
     const fetchCollection = async () => {
       try {
         const response = await fetch(
@@ -58,7 +59,6 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
       }
     };
 
-    // 별점
     const fetchRating = async () => {
       try {
         const response = await fetch(
@@ -80,7 +80,6 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
     fetchRating();
   }, [book.isbn]);
 
-  // 공유
   const handleShareClick = (shareData: {
     shareUrl: string;
     kakaoShareUrl: string;
@@ -104,7 +103,6 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
         if (response.status === 404) {
           throw new Error('해당 책에 대한 별점이 존재하지 않습니다.');
         }
-        // 삭제 후 상태 초기화
         setRating(0);
         console.log('별점 삭제 성공');
       } catch (error) {
@@ -192,8 +190,11 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
             bookName={book.title}
             bookId={book.isbn}
           />
-          <button className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg">
-            모임하기
+          <button
+            className="bg-white hover:bg-black/10 text-black font-bold py-3 px-7 rounded-lg shadow-lg"
+            onClick={() => setGatheringModalOpen(true)} // Open the GatheringModal
+          >
+            모임생성
           </button>
         </div>
       </div>
@@ -210,6 +211,14 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
         <ShareModal
           shareOptions={shareOptions}
           setShareModalOpen={setShareModalOpen}
+        />
+      )}
+
+      {/* 모임 생성 모달창 */}
+      {gatheringModalOpen && (
+        <GatheringModal
+          isOpen={gatheringModalOpen}
+          closeModal={() => setGatheringModalOpen(false)} // Close the GatheringModal
         />
       )}
     </div>
