@@ -28,11 +28,11 @@ const Collection = ({
 
     try {
       // fetch에서 'url' 사용
+      const accessToken = localStorage.getItem('accesstoken');
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
         },
         body: isCollection ? null : JSON.stringify(dataToSend),
       });

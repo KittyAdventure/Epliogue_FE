@@ -1,11 +1,12 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
+import GatheringModal from '../modal/GatheringModal'; // Import GatheringModal
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
 import ChatButton from './ChatButton';
 import Collection from './Collection';
 import Rating from './Rating';
 import Share from './Share';
-import GatheringModal from '../modal/GatheringModal'; // Import GatheringModal
 
 interface Book {
   isbn: string;
@@ -42,16 +43,23 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   useEffect(() => {
     const fetchCollection = async () => {
       try {
-        const response = await fetch(
+        const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
+        // console.log(accessToken);
+
+        const response = await axios.post(
           `${import.meta.env.VITE_API_URL_DEV}/collection`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
+            },
+          },
         );
+        console.log(response);
+        console.log(response.data.data.accessToken);
+        localStorage.setItem('accesstoken', response.data.data.accessToken); // data 객체에서 accesstoken을 가져옵니다.
 
-        if (!response.ok)
-          throw new Error('컬렉션 정보를 가져오는 데 실패했습니다.');
-
-        const data = await response.json();
         const bookIds: Set<string> = new Set(
-          data.map((item: { bookId: number }) => item.bookId),
+          response.data.map((item: { bookId: number }) => item.bookId),
         );
         setSelectedBooks(bookIds);
       } catch (error) {
@@ -61,15 +69,19 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
 
     const fetchRating = async () => {
       try {
-        const response = await fetch(
+        const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
+        // console.log(accessToken);
+        const response = await axios.post(
           `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
+            },
+          },
         );
-        if (!response.ok)
-          throw new Error('별점 정보를 가져오는 데 실패했습니다.');
 
-        const data = await response.json();
-        if (data && data.score) {
-          setRating(data.score);
+        if (response.data && response.data.score) {
+          setRating(response.data.score); // response.data에서 score를 추출하여 상태에 설정
         }
       } catch (error) {
         console.error('별점 정보 로딩 오류:', error);
