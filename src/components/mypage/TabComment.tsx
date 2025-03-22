@@ -38,7 +38,7 @@ const TabComment = (): React.JSX.Element => {
       });
       if (!response.data || !response.data.nickname) {
         console.warn('No response in mypage/comment');
-        // navigate('/login');
+        navigate('/login');
       }
       // console.log(response);
       // console.log(response.data);

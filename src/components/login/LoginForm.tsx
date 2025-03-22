@@ -20,12 +20,12 @@ const loginOptions: LoginActions[] = [
 const LoginForm = (): React.JSX.Element => {
   const navigate = useNavigate(); //다른 페이지로 이동시켜줌
   const { setLoggedIn, setMemberId } = useAuth(); //apicontext
-  const [loginName, setLoginName] = useState('');
+  const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
 
   // 암호 길이 확인 (refactor 필요)
   const validatePassword = (valPW: string): string | null => {
-    if (valPW.length <= 6) {
+    if (valPW.length <= 5) {
       return '암호는 6자 이상이어야 합니다';
     }
     return null;
@@ -41,7 +41,7 @@ const LoginForm = (): React.JSX.Element => {
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.post(`${apiUrl}/member/login`, {
-        loginName: loginName,
+        loginId: loginId,
         password: password,
       });
 
@@ -73,8 +73,8 @@ const LoginForm = (): React.JSX.Element => {
           id="loginId"
           name="loginId"
           placeholder="User ID"
-          value={loginName}
-          onChange={(e) => setLoginName(e.target.value)}
+          value={loginId}
+          onChange={(e) => setLoginId(e.target.value)}
           // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           //   setLoginName(e.target.value)
           // }

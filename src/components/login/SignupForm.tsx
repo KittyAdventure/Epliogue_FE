@@ -1,5 +1,5 @@
+import axios from 'axios';
 import { useState } from 'react';
-// import axios from "axios"
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
 
@@ -12,17 +12,14 @@ const SignupForm = (): React.JSX.Element => {
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-  const [birthDate, setBirthDate] = useState<string>("")
+  const [birthDate, setBirthDate] = useState<string>('');
   // 요청관련 메세지
-  // const [errorMsg, setErrorMsg] = useState<string>('');
-  // const [successMsg, setSuccessMsg] = useState<string>('');
 
-  
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.currentTarget.value);
   };
   const validatePassword = (valPW: string): string | null => {
-    if (valPW.length <= 6) {
+    if (valPW.length <= 5) {
       return '암호는 6자 이상이어야 합니다';
     }
     return null;
@@ -38,35 +35,40 @@ const SignupForm = (): React.JSX.Element => {
     setPhone(input.slice(0, 13)); // Limit to 13 characters
   };
 
-  // const handleSubmit = async (e: React.FormEvent<>) => {
-  //   e.preventDefault();
-  //   try {
-  //     const apiUrl = import.meta.env.VITE_API_URL_PROD
-  //     const payload = {
-  //       memberId, email, password, phone
-  //     }
-  //     const response = await axios.post(`${apiUrl}/member/register`, payload, {
-  //       headers:{
-  //         "Content-Type":"application/json"
-  //       }
-  //     })
-  //     console.log("Register Response")
-  //     console.log(response)
-  //   }catch(error:){
-  //     console.error("Error during reg:",error)
-  //     setErrorMsg(
-  //       error.response?.data?.message || "Please try again"
-  //     )
-  //   }
-  // }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL_PROD;
+      const payload = {
+        loginId,
+        email,
+        password,
+        birthDate,
+        nickname,
+        name,
+        phone,
+      };
+      const response = await axios.post(`${apiUrl}/member/register`, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Register Response');
+      console.log(response);
+    } catch (error) {
+      console.error("Error in signup form:", error)
+    }
+  };
 
   return (
     <div id="signupForm" className="p-[120px]">
+
       <form
         action=""
         id="signupWrap"
         className="max-w-[400px] mx-[auto] text-center"
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <h2 className="text-4xl font-medium">회원가입</h2>
         <div>Avatar</div>
@@ -74,6 +76,7 @@ const SignupForm = (): React.JSX.Element => {
           type="text"
           id="loginId"
           name="loginId"
+          value={loginId}
           placeholder="아이디*"
           required
           onChange={(e) => setLoginId(e.target.value)}
@@ -92,6 +95,7 @@ const SignupForm = (): React.JSX.Element => {
           type="email"
           id="email"
           name="email"
+          value={email}
           placeholder="이메일*"
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -99,6 +103,7 @@ const SignupForm = (): React.JSX.Element => {
           type="text"
           id="nickname"
           name="nickname"
+          value={nickname}
           placeholder="닉네임*"
           onChange={(e) => setNickname(e.target.value)}
         />
@@ -106,6 +111,7 @@ const SignupForm = (): React.JSX.Element => {
           type="text"
           id="name"
           name="name"
+          value={name}
           placeholder="이름*"
           onChange={(e) => setName(e.target.value)}
         />
@@ -114,6 +120,7 @@ const SignupForm = (): React.JSX.Element => {
           id="birthDate"
           name="birthDate"
           placeholder="생년월일 YYYY/MM/DD*"
+          value={birthDate}
           required
           onChange={(e) => setBirthDate(e.target.value)}
         />

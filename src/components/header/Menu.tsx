@@ -68,6 +68,11 @@ const Menu = (): React.JSX.Element => {
       console.error('Logout Error', error);
     }
   };
+  // const handleLogout = () => {
+  //   setLoggedIn(false);
+  //   localStorage.removeItem('token');
+  //   navigate('/');
+  // }
 
   return (
     <>

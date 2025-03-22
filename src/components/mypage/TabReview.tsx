@@ -28,20 +28,22 @@ const TabReview = (): React.JSX.Element => {
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.get(`${apiUrl}/mypage/review`, {
-        //query parameter
-        params: { id: memberId, page },
+        params: { id: memberId, page }, //query parameter
         // headers 필요 (인증)
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // },
       });
-      // console.log(response);
-      // console.log(response.data);
-      const { userNickname, totalPage, reviews = [] } = response.data; //mypage 각 가져오기
-
-      setUserNickname(userNickname);
-      setReviews(reviews);
-      setTotalPages(Number(totalPage));
+      if (!response) {
+        console.log('TabReview No Response');
+      } else {
+        console.log('Meeting Response');
+        const { userNickname, totalPage, reviews = [] } = response.data; //mypage 각 가져오기
+        console.log(response.data);
+        setUserNickname(userNickname);
+        setReviews(reviews);
+        setTotalPages(Number(totalPage));
+      }
     } catch (error) {
       console.error('Failed to fetch reviews:', error);
     }
@@ -102,4 +104,3 @@ const TabReview = (): React.JSX.Element => {
   );
 };
 export default TabReview;
-
