@@ -1,7 +1,7 @@
 // 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../assets/css/checkbox.css';
 // import { useAuth } from '../../utility/useAuth';
 import ButtonBig from './ButtonBig';
@@ -18,7 +18,7 @@ const loginOptions: LoginActions[] = [
 ];
 
 const LoginForm = (): React.JSX.Element => {
-  // const navigate = useNavigate(); //다른 페이지로 이동시켜줌
+  const navigate = useNavigate(); //다른 페이지로 이동시켜줌
   // const { setLoggedIn, setMemberId } = useAuth(); //apicontext
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
@@ -52,6 +52,9 @@ const LoginForm = (): React.JSX.Element => {
         { headers: { 'Content-Type': 'application/json' } },
       );
       console.log(response);
+      console.log(response.data.data.accessToken);
+      localStorage.setItem('accesstoken', response.data.data.accessToken);
+      navigate('/mypage');
     } catch (error) {
       console.error('error', error);
     }
