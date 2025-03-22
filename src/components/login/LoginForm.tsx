@@ -1,9 +1,9 @@
 // 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../../assets/css/checkbox.css';
-import { useAuth } from '../../utility/useAuth';
+// import { useAuth } from '../../utility/useAuth';
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
 
@@ -18,13 +18,16 @@ const loginOptions: LoginActions[] = [
 ];
 
 const LoginForm = (): React.JSX.Element => {
-  const navigate = useNavigate(); //다른 페이지로 이동시켜줌
-  const { setLoggedIn, setMemberId } = useAuth(); //apicontext
+  // const navigate = useNavigate(); //다른 페이지로 이동시켜줌
+  // const { setLoggedIn, setMemberId } = useAuth(); //apicontext
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  // const [useSocialLogin, setUseSocialLogin] = useState<boolean>(false); // State to toggle login method
+  // const [selectedProvider, setSelectedProvider] = useState<string>('kakao'); // Example provider
+  // const [socialLoginToken, setSocialLoginToken] = useState<string>('');
 
-  const [errorMsg, setErrorMsg] = useState<string | null>(null); // Error message state
-  const [successMsg, setSuccessMsg] = useState<string | null>(null); // Success message state
+  // const [errorMsg, setErrorMsg] = useState<string | null>(null); // Error message state
+  // const [successMsg, setSuccessMsg] = useState<string | null>(null); // Success message state
 
   // 암호 길이 확인 (refactor 필요)
   const validatePassword = (valPW: string): string | null => {
@@ -38,58 +41,22 @@ const LoginForm = (): React.JSX.Element => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     // prevents form's default behavior(refresh) upon submitting
     e.preventDefault();
-    setErrorMsg(null);
-    setSuccessMsg(null);
     try {
       const apiUrl =
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.post(`${apiUrl}/members/login`, {
-        userId: userId,
-        password: password,
-      });
-
-      if (response.data?.accesstoken && response.data?.user) {
-        setMemberId(response.data.user.id); // 나중에 memberId수정
-        console.log("User Info:", response.data.user)
-        setLoggedIn(true);
-        setSuccessMsg(response.data.message || "Login Successful!");
-        alert(successMsg)
-        setTimeout(() => navigate('/mypage'), 1500); // Redirect after success
-      } else {
-        setErrorMsg('Invalid login credentials or unexpected server response.');
-        console.error('Unexpected server response:', response.data);
-        alert(errorMsg);
-      }
-      // alternative method above
-      // if (response.data.token) {
-      //   // localStorage.setItem('jwt', response.data.token); // Save the JWT in localStorage
-      //   setMemberId(response.data.memberId); //memberId contextAPI 저장
-      //   setLoggedIn(true); // Update login status
-      //   navigate('/mypage'); // Redirect user to the desired page
-      // } else {
-      //   console.error('Wrong Info');
-      // }
+      const response = await axios.post(
+        `${apiUrl}/members/login`,
+        { loginId: userId, password: password },
+        { headers: { 'Content-Type': 'application/json' } },
+      );
+      console.log(response);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setErrorMsg(
-          error.response?.data?.message || 'Invalid login credentials.',
-        );
-        console.error('AxiosError:', error.response);
-        alert(errorMsg)
-      } else if (error instanceof Error) {
-        setErrorMsg(error.message || 'Error Type2 occurred. Please try again.');
-        console.error('Error:', error);
-        alert(errorMsg);
-      } else {
-        setErrorMsg('Error Type3 occurred/unknown');
-        console.error('Error Type3: Unknown', error);
-        alert(errorMsg);
-      }
+      console.error('error', error);
     }
   };
- 
+
   return (
     <div id="loginForm" className="p-[120px]">
       <form

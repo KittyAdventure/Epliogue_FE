@@ -10,7 +10,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(()=>{
     // retrieve initial state from localstorage
     // return true //임시용
-    const storedToken = localStorage.getItem("token")
+    const storedToken = localStorage.getItem("accesstoken")
     return !!storedToken
   }); // Initial login status
   const [memberId, setMemberId] = useState<string>(''); // Initial member ID
