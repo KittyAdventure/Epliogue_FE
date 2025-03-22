@@ -15,14 +15,11 @@ interface Books {
 
 const SearchPage: React.FC = () => {
   const { searchTerm } = useParams();
+  console.log(searchTerm);
   const [books, setBooks] = useState<Books[]>([]);
   const [sort, setSort] = useState<'sim' | 'date'>('sim');
 
   useEffect(() => {
-    if (!searchTerm) {
-      return; // searchTerm이 없으면 API 요청을 하지 않음
-    }
-
     const fetchBooks = async () => {
       try {
         const params: {
@@ -43,7 +40,7 @@ const SearchPage: React.FC = () => {
         );
         console.log(response);
 
-        setBooks(response.data.books || []);
+        setBooks(response.data.items || []);
       } catch (error) {
         console.error('Error loading books:', error);
         setBooks([]);

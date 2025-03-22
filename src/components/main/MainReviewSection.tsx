@@ -197,7 +197,10 @@ const MainReviewSection: React.FC = () => {
             <div
               key={review.id}
               className="relative cursor-pointer w-full h-60 bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300"
-              onClick={() => navigate(`/reviews/${review.id}`)}
+              onClick={() => {
+                window.scrollTo(0, 0);
+                navigate(`/reviews/${review.id}`);
+              }}
             >
               <div className="flex justify-between items-center mb-2">
                 {/* 유저 프로필 */}

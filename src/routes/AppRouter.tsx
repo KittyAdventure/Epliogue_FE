@@ -44,6 +44,14 @@ const AppRouter = (): React.JSX.Element => {
     // Render protected component if authenticated
     return <>{children}</>
   };
+  const ReviewPage = () => (
+    <>
+      <ReviewSection />
+      <MainReviewSection />
+    </>
+  );
+
+ 
 
   return (
     <Router>
@@ -68,8 +76,7 @@ const AppRouter = (): React.JSX.Element => {
           path="/book/:isbn"
           element={<BookDetailPage memberId={memberId} />}
         />
-        <Route path="/review" element={<ReviewSection />} />
-        <Route path="/review" element={<MainReviewSection />} />
+        <Route path="/review" element={<ReviewPage />} />;
         <Route path="/reviews/:id" element={<ReviewPage />} />
         <Route path="/books/:searchTerm" element={<SearchPage />} />
         <Route

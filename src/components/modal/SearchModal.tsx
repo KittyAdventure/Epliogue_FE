@@ -43,7 +43,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 
   // ✨ 책 검색 API 호출
   useEffect(() => {
-    if (searchTerm) {
+    if (!searchTerm) {
       const fetchBooks = async () => {
         try {
           const params: {
@@ -105,13 +105,14 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     } else {
       // 그렇지 않으면 기존의 책 검색 페이지로 이동
       navigate(
-        `/books/${encodeURIComponent(
+        `/books/${encodeURIComponent(searchQuery)}?query=${encodeURIComponent(
           searchQuery,
-        )}?sort=${sort}&display=10&start=1`,
+        )}&sort=${sort}`,
       );
+
     }
   };
-  // ⌨️ 엔터키로 검색 실행
+  // 엔터키로 검색 실행
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearch();
