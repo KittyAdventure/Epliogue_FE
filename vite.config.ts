@@ -6,15 +6,16 @@ export default defineConfig({
     global: {},
     'process.env': {},
   },
-  // server: {
-  //   proxy: {
-  //     '/api': {
-  //       target: 'https://epilogue.p-e.kr',
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/api/, ''),
-  //       secure: false,
-  //       ws: true,
-  //     },
-  //   },
-  // },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://epilogue.p-e.kr',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
+        ws: true,
+        followRedirects: true,
+      },
+    },
+  },
 });

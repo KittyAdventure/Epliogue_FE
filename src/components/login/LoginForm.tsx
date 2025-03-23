@@ -47,7 +47,7 @@ const LoginForm = (): React.JSX.Element => {
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.post(
-        `${apiUrl}/members/login`,
+        `${apiUrl}/api/members/login`,
         { loginId: userId, password: password },
         { headers: { 'Content-Type': 'application/json' } },
       );

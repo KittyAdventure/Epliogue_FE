@@ -10,32 +10,70 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
   const [message, setMessage] = useState('');
 
 
-  const addToCollection = async () => {
-    try {
-      const accessToken = localStorage.getItem('accesstoken');
-      console.log(accessToken);
+  // const addToCollection = async () => {
+  //   try {
+  //     const accessToken = localStorage.getItem('accesstoken');
+  //     console.log(accessToken);
       
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
-        { bookId },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+  //     const response = await axios.post(
+  //       `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
+  //       { bookId },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       },
+  //     );
 
-      if (response.data.message === '컬렉션에 추가 되었습니다.') {
-        setIsInCollection(true);
-        setMessage(response.data.message);
-      }
-    } catch (error: any) {
-      console.error('Error occurred at URL:', error.config?.url);
-      console.error('Error details:', error);
+  //     if (response.data.message === '컬렉션에 추가 되었습니다.') {
+  //       setIsInCollection(true);
+  //       setMessage(response.data.message);
+  //     }
+  //   } catch (error: any) {
+  //     console.error('Error occurred at URL:', error.config?.url);
+  //     console.error('Error details:', error);
 
-      setMessage('Error adding to collection.');
-    }
-  };
+  //     setMessage('Error adding to collection.');
+  //   }
+  // };
+
+   const addToCollection = async () => {
+
+     const formData = new FormData();
+
+     // JSON 데이터를 Blob 형식으로 변환해서 추가
+     const reviewData = {
+       content: bookId,
+     };
+     formData.append(
+       'data',
+       new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
+     );
+
+     try {
+       const response = await axios.post(
+         `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
+         formData,
+         {
+           headers: {
+             Authorization: `Bearer ${localStorage.getItem('accesstoken')}`, // 필요한 경우 인증 추가
+           },
+         },
+       );
+
+       console.log(response);
+
+       if (response.status !== 200) {
+         throw new Error('컬렉션 등록 실패');
+       }
+
+       alert('컬렉션에 추가 되었습니다.');
+       setIsInCollection(true);
+     } catch (error) {
+       alert('컬렉션에 추가 오류가 발생했습니다.');
+       console.error('Error:', error);
+     }
+   };
 
 
   const removeFromCollection = async () => {

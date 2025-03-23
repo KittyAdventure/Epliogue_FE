@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { X } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FaLink } from 'react-icons/fa';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 
@@ -11,19 +12,48 @@ declare global {
 
 interface ShareOption {
   shareUrl: string;
-  kakaoShareUrl: string;
 }
 
 interface ShareModalProps {
-  shareOptions: ShareOption;
+  type: string;
+  id: string;
   setShareModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ShareModal: React.FC<ShareModalProps> = ({
-  shareOptions,
+  type,
+  id,
   setShareModalOpen,
 }) => {
+  const [shareOptions, setShareOptions] = useState<ShareOption>({
+    shareUrl: '',
+  });
   const JAVASCRIPT_KEY = import.meta.env.VITE_APP_JAVASCRIPT_KEY;
+
+  useEffect(() => {
+    if (!type || !id) {
+      console.error('공유할 리소스의 타입과 ID가 필요합니다.');
+      return;
+    }
+
+    // API 요청을 통해 kakaoShareUrl만 가져오고, shareUrl은 직접 생성
+    axios
+      .get(`${import.meta.env.VITE_API_URL_DEV}/api/share`, {
+        params: { type, id },
+      })
+      .then((response) => {
+        const baseUrl = import.meta.env.VITE_API_URL_DEV; // API URL
+        setShareOptions({
+          shareUrl: `${baseUrl}/api/share?type=${type}&id=${id}`, // 원하는 URL 형식
+        });
+
+        // 예시로 response 데이터를 사용하려면 여기에서 처리할 수 있습니다.
+        console.log(response.data); // API 응답 데이터 출력
+      })
+      .catch((error) =>
+        console.error('공유 링크를 가져오는 데 실패했습니다.', error),
+      );
+  }, [type, id]);
 
   useEffect(() => {
     if (!JAVASCRIPT_KEY) {
@@ -40,22 +70,18 @@ const ShareModal: React.FC<ShareModalProps> = ({
     script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
     script.async = true;
     script.onload = () => {
-      console.log('Kakao SDK 로드 완료');
       if (window.Kakao) {
         window.Kakao.init(JAVASCRIPT_KEY);
-        console.log('Kakao SDK 초기화 여부:', window.Kakao.isInitialized());
       }
     };
     document.body.appendChild(script);
   }, [JAVASCRIPT_KEY]);
 
-  // 링크 복사
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareOptions.shareUrl);
     alert('링크가 복사되었습니다!');
   };
 
-  // 카카오톡으로 공유
   const handleKakaoShare = () => {
     if (!window.Kakao || !window.Kakao.Share) {
       alert('Kakao SDK가 로드되지 않았습니다.');
@@ -86,7 +112,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-100">
-      <div className="bg-white p-8 rounded-lg w-96 shadow-lg scale-100">
+      <div className="bg-white p-8 rounded-lg w-96 shadow-lg relative">
         <h3 className="text-2xl text-center font-bold text-gray-800 mb-8">
           공유하기
         </h3>
@@ -114,7 +140,6 @@ const ShareModal: React.FC<ShareModalProps> = ({
             </span>
           </div>
         </div>
-        {/* 닫기 버튼 */}
         <button
           onClick={() => setShareModalOpen(false)}
           className="absolute top-4 right-4"

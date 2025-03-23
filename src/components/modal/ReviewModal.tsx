@@ -1,5 +1,6 @@
 import { Image, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import axios from 'axios'; // axios import
 
 interface ReviewModalProps {
   setReviewModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,19 +12,19 @@ export default function ReviewModal({
   bookId,
 }: ReviewModalProps) {
   const [text, setText] = useState('');
-  const [images, setImages] = useState<File[]>([]);
+  const [imageUrls, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const maxChars = 10000;
   const maxImages = 5;
 
   useEffect(() => {
-    const newPreviews = images.map((img) => URL.createObjectURL(img));
+    const newPreviews = imageUrls.map((img) => URL.createObjectURL(img));
     setImagePreviews(newPreviews);
 
     return () => {
       newPreviews.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [images]);
+  }, [imageUrls]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length <= maxChars) {
@@ -31,63 +32,69 @@ export default function ReviewModal({
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
-    if (images.length + files.length <= maxImages) {
-      setImages((prev) => [...prev, ...files]);
-    } else {
-      alert(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
-    }
-  };
+const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files ? Array.from(e.target.files) : [];
+  if (imageUrls.length + files.length <= maxImages) {
+    setImages((prev) => [...prev, ...files]); // 실제 File 객체를 추가
+  } else {
+    alert(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
+  }
+};
+
 
   const handleRemoveImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSave = async () => {
-    if (!text.trim()) {
-      alert('리뷰 내용을 입력해야 합니다.');
-      return;
+const handleSave = async () => {
+  if (!text.trim()) {
+    alert('리뷰 내용을 입력해야 합니다.');
+    return;
+  }
+
+  const formData = new FormData();
+
+  // 리뷰 데이터 추가
+  const reviewData = {
+    content: text,
+  };
+  formData.append(
+    'data',
+    new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
+  );
+
+  // 이미지 파일 추가
+  imageUrls.forEach((image) => {
+    if (image instanceof File) {
+      formData.append('images', image);
     }
+  });
 
-    const formData = new FormData();
-
-    // JSON 데이터를 Blob 형식으로 변환해서 추가
-    const reviewData = {
-      content: text,
-    };
-    formData.append(
-      'data',
-      new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+        },
+      },
     );
 
-    // 이미지 파일 추가
-    images.forEach((image) => formData.append('images', image));
+    console.log(response);
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
-        {
-          method: 'POST',
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`, // 필요한 경우 인증 추가
-          },
-        },
-      );
-      console.log(response);
-      if (!response.ok) {
-        throw new Error('리뷰 등록 실패');
-      }
-
-      // const responseData = await response.json();  // 이 줄을 삭제합니다.
-      alert('리뷰가 성공적으로 등록되었습니다.');
-      setReviewModalOpen(false); // 모달 닫기
-    } catch (error) {
-      alert('리뷰 저장 중 오류가 발생했습니다.');
-      console.error('Error:', error);
+    if (response.status !== 200) {
+      throw new Error('리뷰 등록 실패');
     }
-  };
+
+    alert('리뷰가 성공적으로 등록되었습니다.');
+    setReviewModalOpen(false); // 모달 닫기
+  } catch (error) {
+    alert('리뷰 저장 중 오류가 발생했습니다.');
+    console.error('Error:', error);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
