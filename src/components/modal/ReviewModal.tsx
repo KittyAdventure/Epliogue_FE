@@ -66,16 +66,16 @@ export default function ReviewModal({
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL_DEV}/books/${bookId}/reviews`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
         {
           method: 'POST',
           body: formData,
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // 필요한 경우 인증 추가
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`, // 필요한 경우 인증 추가
           },
         },
       );
-
+      console.log(response);
       if (!response.ok) {
         throw new Error('리뷰 등록 실패');
       }

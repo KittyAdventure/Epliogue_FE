@@ -31,7 +31,7 @@ const UserSearchPage: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL_DEV}/members/search`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/members/search`,
       );
       setUsers(response.data.member);
     } catch (error) {

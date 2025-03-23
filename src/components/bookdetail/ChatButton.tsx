@@ -21,7 +21,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     try {
       // 1. 채팅방 목록 조회
       const chatroomsResponse = await axios.get(
-        `${import.meta.env.VITE_API_URL_DEV}/meeting/chatrooms`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chatrooms`,
         {
           params: { page: 1, limit: 10 },
         },
@@ -51,7 +51,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   const joinChatRoom = async (roomId: number) => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL_DEV}/meeting/chat/participates`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chat/participates`,
         {
           roomId,
           memberId,
@@ -69,7 +69,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   const createChatRoom = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL_DEV}/meeting/chatrooms`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chatrooms`,
         {
           memberId,
           bookname: bookName,

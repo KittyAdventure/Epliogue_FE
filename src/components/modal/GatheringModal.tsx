@@ -15,7 +15,7 @@ const createMeeting = async (data: {
 }) => {
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL_DEV}/meetings/gatherings`,
+      `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
       data,
       {
         headers: {
@@ -40,7 +40,7 @@ const searchBooks = async (
 ) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL_DEV}/books`,
+      `${import.meta.env.VITE_API_URL_DEV}/api/books`,
       {
         params: {
           query: query, // 책 제목 검색

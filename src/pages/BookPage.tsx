@@ -48,7 +48,7 @@ const BookPage: React.FC = () => {
         console.log('📡 API 요청 Params:', params);
 
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_DEV}/books/main-page`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/books/main-page`,
           { params },
         );
 

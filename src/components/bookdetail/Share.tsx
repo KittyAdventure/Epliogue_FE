@@ -14,7 +14,9 @@ const Share = ({ bookIsbn, onShareClick }: ShareProps) => {
   const handleShareClick = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL_DEV}/share?type=book&id=${bookIsbn}`,
+        `${
+          import.meta.env.VITE_API_URL_DEV
+        }/api/share?type=book&id=${bookIsbn}`,
       );
 
       if (!response.ok) {

@@ -6,7 +6,15 @@ export default defineConfig({
     global: {},
     'process.env': {},
   },
-  server: {
-    port: 5174,
-  },
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://epilogue.p-e.kr',
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, ''),
+  //       secure: false,
+  //       ws: true,
+  //     },
+  //   },
+  // },
 });

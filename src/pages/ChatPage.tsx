@@ -79,7 +79,7 @@ const ChatPage: React.FC = () => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL_DEV
-        }/meeting/chatrooms?page=${page}&limit=${limit}`,
+        }/api/meeting/chatrooms?page=${page}&limit=${limit}`,
       );
       setChatRoom(response.data); // 채팅방 정보 저장
     } catch (error) {
@@ -94,7 +94,7 @@ const ChatPage: React.FC = () => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL_DEV
-        }/meeting/chat/message?roomId=${roomId}&page=${page}&limit=${limit}`,
+        }/api/meeting/chat/message?roomId=${roomId}&page=${page}&limit=${limit}`,
       );
       setMessages(response.data.messages); // 메시지 목록 업데이트
     } catch (error) {
@@ -109,7 +109,7 @@ const ChatPage: React.FC = () => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL_DEV
-        }/meeting/chat/participates?roomId=${roomId}`,
+        }/api/meeting/chat/participates?roomId=${roomId}`,
       );
       const participants = response.data.participants.map(
         (participant: any) => participant.username,
@@ -138,7 +138,7 @@ const ChatPage: React.FC = () => {
           stompClient.publish({
             destination: `${
               import.meta.env.VITE_API_URL_DEV
-            }/meeting/chat/${roomId}`,
+            }/api/meeting/chat/${roomId}`,
             body: JSON.stringify(messagePayload),
           });
         }
@@ -175,7 +175,7 @@ const ChatPage: React.FC = () => {
     // 모임(채팅방) 나가기 처리 함수
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_URL_DEV}/meeting/chat/participates`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chat/participates`,
         {
           data: { roomId, memberId: memberId }, // 현재 로그인된 사용자 ID (예시: 10)
         },

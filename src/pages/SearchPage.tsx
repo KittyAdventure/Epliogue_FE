@@ -35,7 +35,7 @@ const SearchPage: React.FC = () => {
         };
 
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_DEV}/books`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/books`,
           { params },
         );
         console.log(response);

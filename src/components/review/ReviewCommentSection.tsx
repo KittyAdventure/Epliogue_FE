@@ -63,7 +63,7 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
 
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL_DEV}/reviews/${review.id}`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${review.id}`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -79,7 +79,7 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
   const handleDeleteReview = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL_DEV}/reviews/${review.id}`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${review.id}`,
       );
       console.log('리뷰 삭제 성공:', response.data);
     } catch (error) {
@@ -95,14 +95,14 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
       if (liked) {
         // 좋아요 취소
         await axios.delete(
-          `${import.meta.env.VITE_API_URL_DEV}/reviews/${review.id}/likes`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${review.id}/likes`,
         );
         setLiked(false);
         setLikeCount(likeCount - 1);
       } else {
         // 좋아요 추가
         await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/reviews/${review.id}/likes`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${review.id}/likes`,
         );
         setLiked(true);
         setLikeCount(likeCount + 1);

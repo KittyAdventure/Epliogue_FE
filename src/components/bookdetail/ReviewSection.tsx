@@ -26,7 +26,7 @@ function ReviewSection() {
   const navigate = useNavigate();
   const location = useLocation(); // ✅ state 가져오기
   const { bookId } = location.state || {}; // 기본값 처리
-  // console.log(`🔹'bookId:', ${bookId}`);
+
   const [likedReviews, setLikedReviews] = useState<Set<number>>(new Set()); // 좋아요한 리뷰 ID를 추적
 
   // 좋아요 클릭 처리 함수
@@ -38,7 +38,7 @@ function ReviewSection() {
       if (isLiked) {
         // 좋아요 취소
         await axios.delete(
-          `${import.meta.env.VITE_API_URL_DEV}/reviews/${reviewId}/likes`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
         );
         setLikedReviews(
           new Set([...likedReviews].filter((id) => id !== reviewId)),
@@ -53,7 +53,7 @@ function ReviewSection() {
       } else {
         // 좋아요 추가
         await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/reviews/${reviewId}/likes`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
         );
         setLikedReviews(new Set(likedReviews.add(reviewId)));
         setReviews((prevReviews) =>
@@ -74,31 +74,18 @@ function ReviewSection() {
     { value: 'likes', label: '좋아요순' },
   ];
 
-  const fakeReview: Review = {
-    id: 999,
-    content: '재미있어요',
-    nickname: '책읽는고양이',
-    memberId: 'user123',
-    memberProfileImage:
-      'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg', // 더미 프로필 이미지
-    likeCount: 42,
-    commentsCount: '5',
-    bookTitle: '감동적인 책',
-    createdAt: '2024-03-21T12:00:00Z',
-    imageUrls: [
-      'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-    ],
-  };
-
-  // 기존 리뷰 목록에 가짜 리뷰 추가
+  // 리뷰 목록을 가져오는 useEffect
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_DEV}/books/${bookId}/reviews`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
           {
-            params: { page: 1, size: 10, sortType: sortType },
+            params: {
+              page: currentPage,
+              size: reviewsPerPage,
+              sortType: sortType,
+            },
           },
         );
 
@@ -116,9 +103,6 @@ function ReviewSection() {
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
           );
         }
-
-        // 가짜 리뷰 데이터 추가
-        sortedReviews.unshift(fakeReview);
 
         const startIndex = (currentPage - 1) * reviewsPerPage;
         const paginatedReviews = sortedReviews.slice(
@@ -170,7 +154,6 @@ function ReviewSection() {
 
       <div className="review-box grid grid-cols-3 gap-20 mt-10">
         {reviews.map((review, index) => (
-          // 리뷰 상세 페이지로 이동
           <div
             key={index}
             className="bg-white p-6 rounded-lg shadow-md relative h-[360px] hover:bg-black/5 cursor-pointer transition-all duration-300"
@@ -185,7 +168,6 @@ function ReviewSection() {
               <span className="font-semibold">{review.nickname}</span>
             </div>
 
-            {/* 이미지 렌더링 */}
             <div className="mb-3">
               <div className="grid grid-cols-5 gap-2">
                 {(review.imageUrls || []).slice(0, 5).map((image, idx) => (
@@ -211,7 +193,6 @@ function ReviewSection() {
                   {review.commentsCount}
                 </span>
               </span>
-              {/* 좋아요 버튼 */}
               <button
                 onClick={(e) => {
                   e.stopPropagation(); // 클릭 이벤트 전파 방지
@@ -231,7 +212,6 @@ function ReviewSection() {
         ))}
       </div>
 
-      {/* 페이지네이션 */}
       <div className="flex justify-center mt-16">
         {Array.from({ length: totalPages }, (_, i) => (
           <button

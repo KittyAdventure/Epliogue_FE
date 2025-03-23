@@ -31,7 +31,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
 
     const url = `${
       import.meta.env.VITE_API_URL_DEV
-    }/books/detail?query=${isbn}&type=d_isbn`;
+    }/api/books/detail?query=${isbn}&type=d_isbn`;
 
     fetch(url, {
       method: 'GET', // ✅ GET 요청으로 변경

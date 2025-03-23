@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+// import axios from 'axios';
+import { useState } from 'react';
 import GatheringModal from '../modal/GatheringModal'; // Import GatheringModal
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
@@ -31,7 +31,7 @@ interface BookDetailSectionProps {
 function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
-  const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
+  // const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
   const [shareModalOpen, setShareModalOpen] = useState<boolean>(false);
   const [shareOptions, setShareOptions] = useState<{
     shareUrl: string;
@@ -47,7 +47,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   //       console.log(accessToken);
 
   //       const response = await axios.post(
-  //         `${import.meta.env.VITE_API_URL_DEV}/collection/${book.isbn}`,
+  //         `${import.meta.env.VITE_API_URL_DEV}/api/collection/${book.isbn}`,
   //         {
   //           headers: {
   //             Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
@@ -72,7 +72,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   //       const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
   //       // console.log(accessToken);
   //       const response = await axios.post(
-  //         `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+  //         `${import.meta.env.VITE_API_URL_DEV}/api/books/${book.isbn}/ratings`,
   //         {
   //           headers: {
   //             Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
@@ -106,7 +106,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
     if (rating === newRating) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/books/${book.isbn}/ratings`,
           {
             method: 'DELETE',
           },
@@ -123,7 +123,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
     } else {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/books/${book.isbn}/ratings`,
           {
             method: 'POST',
             headers: {
@@ -150,13 +150,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   return (
     <div className="pt-6 flex gap-14">
       <div className="w-1/3 relative">
-        <Collection
-          bookIsbn={book.isbn}
-          bookTitle={book.title}
-          bookImage={book.image}
-          selectedBooks={selectedBooks}
-          setSelectedBooks={setSelectedBooks}
-        />
+        <Collection bookId={book.isbn} />
         <img
           src={book.image}
           alt={book.title}

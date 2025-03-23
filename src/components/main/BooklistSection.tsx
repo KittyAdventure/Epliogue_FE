@@ -22,7 +22,7 @@ const BookListSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL_DEV}/trending-books`)
+    fetch(`${import.meta.env.VITE_API_URL_DEV}/api/trending-books`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

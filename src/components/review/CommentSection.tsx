@@ -101,7 +101,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const fetchComments = async () => {
     try {
       // const response = await axios.get(
-      //   `${import.meta.env.VITE_API_URL_DEV}/comments/view`,
+      //   `${import.meta.env.VITE_API_URL_DEV}/api/comments/view`,
       //   {
       //     params: {
       //       reviewId,
@@ -141,7 +141,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const submitComment = async (content: string, reviewId: number) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL_DEV}/comments`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/comments`,
         { content, reviewId },
       );
 
@@ -165,7 +165,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const handleDeleteComment = async (commentId: string) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL_DEV}/comments`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/comments`,
         { params: { commentId } },
       );
 
@@ -199,7 +199,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL_DEV}/comments`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/comments`,
         {
           commentId,
           content: newContent, // 수정된 댓글 내용
@@ -240,7 +240,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     const isLiked = likedComments[commentId];
     const url = `${
       import.meta.env.VITE_API_URL_DEV
-    }/comments/${commentId}/likes`;
+    }/api/comments/${commentId}/likes`;
 
     try {
       if (isLiked) {

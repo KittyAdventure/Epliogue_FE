@@ -30,7 +30,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     const fetchPopularSearches = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL_DEV}/keywords`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/keywords`,
         );
         const data = await response.json();
         setPopularSearches(data);
@@ -59,7 +59,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   //         };
 
   //         // axios를 사용하여 API 요청
-  //         await axios.get(`${import.meta.env.VITE_API_URL_DEV}/books`, {
+  //         await axios.get(`${import.meta.env.VITE_API_URL_DEV}/api/books`, {
   //           params,
   //         });
   //       } catch (error) {
@@ -109,7 +109,6 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
           searchQuery,
         )}&sort=${sort}`,
       );
-
     }
   };
   // 엔터키로 검색 실행

@@ -92,7 +92,7 @@ const MainReviewSection: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL_DEV}/reviews/latest`, {
+      .get(`${import.meta.env.VITE_API_URL_DEV}/api/reviews/latest`, {
         params: { page: 1, size: 2 },
       })
       .then((response) => {
@@ -155,7 +155,7 @@ const MainReviewSection: React.FC = () => {
       if (isLiked) {
         // 좋아요 취소
         await axios.delete(
-          `${import.meta.env.VITE_API_URL_DEV}/reviews/${reviewId}/likes`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
         );
         setLikedReviews(
           new Set([...likedReviews].filter((id) => id !== reviewId)),
@@ -170,7 +170,7 @@ const MainReviewSection: React.FC = () => {
       } else {
         // 좋아요 추가
         await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/reviews/${reviewId}/likes`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
         );
         setLikedReviews(new Set(likedReviews.add(reviewId)));
         setReviews((prevReviews) =>

@@ -91,7 +91,7 @@ const GatheringSection: React.FC = () => {
     // const fetchGatherings = async () => {
     //   try {
     //     const response = await axios.get(
-    //       `${import.meta.env.VITE_API_URL_DEV}/meetings/gatherings`,
+    //       `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
     //       {
     //         params: { page: 1, limit: 10 },
     //       },

@@ -32,7 +32,7 @@ export default function ReviewPage() {
     // const fetchReviewData = async () => {
     //   try {
     //     const response = await fetch(
-    //       `${import.meta.env.VITE_API_URL_DEV}/reviews/${reviewId}`,
+    //       `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}`,
     //     );
     //     if (response.ok) {
     //       const data = await response.json();
@@ -50,7 +50,7 @@ export default function ReviewPage() {
     const fetchReviewData = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL_DEV}/reviews/${reviewId}`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}`,
         );
 
         if (!response.ok) {
