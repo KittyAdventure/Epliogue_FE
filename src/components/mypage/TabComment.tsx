@@ -3,7 +3,6 @@
  */
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination';
 interface HeaderRow {
   id: number;
@@ -22,26 +21,26 @@ interface Comment {
 }
 
 const TabComment = (): React.JSX.Element => {
-  const navigate = useNavigate();
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState<number>(1); //pagination
   const [totalPages, setTotalPages] = useState<number>(1); //pagination total page #
 
+  const accessToken = localStorage.getItem('accesstoken'); //REQUIRED FOR COMMENT
   const fetchComments = async (page: number) => {
     try {
       const apiUrl =
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}/mypage/comment`, {
+      const response = await axios.get(`${apiUrl}/api/mypage/comments`, {
         params: { page },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
-      if (!response.data || !response.data.nickname) {
-        console.warn('No response in mypage/comment');
-        navigate('/login');
-      }
-      // console.log(response);
-      // console.log(response.data);
+      console.log(response);
+      console.log(response.data);
       const { totalPage, comments = [] } = response.data; //mypage 각 가져오기
 
       console.log('Comments ================');
@@ -50,7 +49,7 @@ const TabComment = (): React.JSX.Element => {
       setComments(comments);
       setTotalPages(Number(totalPage));
     } catch (error) {
-      console.error('Failed to fetch reviews:', error);
+      console.error('Failed to fetch comments:', error);
     }
   };
   useEffect(() => {
@@ -61,7 +60,7 @@ const TabComment = (): React.JSX.Element => {
     <div className="mt-20">
       <h3 className="text-2xl">나의 댓글</h3>
 
-      <div className='mt-10'>
+      <div className="mt-10">
         {comments.length > 0 ? (
           <table className="w-full mt-10">
             <thead className="headerTitle w-full border-y-1">

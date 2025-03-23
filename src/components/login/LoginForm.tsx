@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../assets/css/checkbox.css';
-// import { useAuth } from '../../utility/useAuth';
+import { useAuth } from '../../utility/useAuth';
 import ButtonBig from './ButtonBig';
 import InputBox from './InputBox';
 
@@ -19,7 +19,7 @@ const loginOptions: LoginActions[] = [
 
 const LoginForm = (): React.JSX.Element => {
   const navigate = useNavigate(); //다른 페이지로 이동시켜줌
-  // const { setLoggedIn, setMemberId } = useAuth(); //apicontext
+  const { setLoggedIn } = useAuth(); //apicontext
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   // const [useSocialLogin, setUseSocialLogin] = useState<boolean>(false); // State to toggle login method
@@ -51,10 +51,16 @@ const LoginForm = (): React.JSX.Element => {
         { loginId: userId, password: password },
         { headers: { 'Content-Type': 'application/json' } },
       );
-      console.log(response);
-      console.log(response.data.data.accessToken);
-      localStorage.setItem('accesstoken', response.data.data.accessToken);
-      navigate('/mypage');
+      if (response.status === 200) {
+        console.log(response);
+        console.log(response.data.message); //logout success
+        localStorage.setItem('accesstoken', response.data.data.accessToken);
+        localStorage.setItem('memberId', response.data.data.user.userId);
+        setLoggedIn(true);
+        navigate('/mypage');
+      } else {
+        console.error('Logout failed: ', response.statusText);
+      }
     } catch (error) {
       console.error('error', error);
     }

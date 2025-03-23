@@ -7,22 +7,21 @@ interface AuthProviderProps {
 // Create a provider component
 //used at higher level (main.tsx) to wrap entire app
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(()=>{
+  const [loggedIn, setLoggedIn] = useState<boolean>(() => {
     // retrieve initial state from localstorage
     // return true //임시용
-    const storedToken = localStorage.getItem("accesstoken")
-    return !!storedToken
+    const storedToken = localStorage.getItem('accesstoken');
+    return !!storedToken;
   }); // Initial login status
-  const [memberId, setMemberId] = useState<string>(''); // Initial member ID
 
-  useEffect( ()=> {
-    if (!loggedIn){
-      localStorage.removeItem("token")
+  useEffect(() => {
+    if (!loggedIn) {
+      localStorage.removeItem('accesstoken');
     }
-  }, [loggedIn])
+  }, [loggedIn]);
   return (
     <AuthContext.Provider
-      value={{ loggedIn, setLoggedIn, memberId, setMemberId }}
+      value={{ loggedIn, setLoggedIn }}
     >
       {children}
     </AuthContext.Provider>

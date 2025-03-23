@@ -16,27 +16,32 @@ interface Review {
 }
 
 const TabReview = (): React.JSX.Element => {
-  const [reviews, setReviews] = useState<Review[]>([]); //intial empty Review[]
   const [page, setPage] = useState<number>(1); //pagination
+  const [reviews, setReviews] = useState<Review[]>([]); //intial empty Review[]
   const [totalPages, setTotalPages] = useState<number>(1); //pagination total page #
   const [userNickname, setUserNickname] = useState<string>('');
 
+  const accessToken = localStorage.getItem('accesstoken');
+  const memberId = localStorage.getItem('memberId');
   const fetchReviews = async (memberId: string, page: number) => {
     try {
       const apiUrl = //env production 인지 development 인지 확인 후 url 할당
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}/mypage/review`, {
-        params: { id: memberId, page }, //query parameter
+      const response = await axios.get(`${apiUrl}/api/mypage/reviews`, {
+        params: { memberId, page }, //query parameter
         // headers 필요 (인증)
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
       if (!response) {
         console.log('TabReview No Response');
       } else {
+        console.log(response);
+        console.log(response.data);
         console.log('Meeting Response');
         const { userNickname, totalPage, reviews = [] } = response.data; //mypage 각 가져오기
         console.log(response.data);
@@ -51,8 +56,10 @@ const TabReview = (): React.JSX.Element => {
 
   // useEffect needed to automatically trigger API call when 'page' state updates
   useEffect(() => {
-    fetchReviews('test123', page);
-  }, [page]); //run the code when [something] changes
+    if (memberId) {
+      fetchReviews(memberId, page);
+    }
+  }, [memberId, page]); //run the code when [something] changes
 
   return (
     <div className="mt-20">
@@ -95,11 +102,15 @@ const TabReview = (): React.JSX.Element => {
         )}
       </div>
 
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={(newPage) => setPage(newPage)}
-      />
+      {reviews.length > 0 ? (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={(newPage) => setPage(newPage)}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

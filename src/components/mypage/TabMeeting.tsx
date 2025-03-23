@@ -19,14 +19,20 @@ const TabMeeting = (): React.JSX.Element => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  const accessToken = localStorage.getItem('accesstoken');
+  const memberId = localStorage.getItem('memberId');
   const fetchMeetings = async (memberId: string, page: number) => {
     try {
       const apiUrl =
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}/mypage/meeting`, {
+      const response = await axios.get(`${apiUrl}/api/mypage/meeting`, {
         params: { memberId, page },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (!response) {
@@ -43,8 +49,8 @@ const TabMeeting = (): React.JSX.Element => {
   };
 
   useEffect(() => {
-    fetchMeetings('test111', page);
-  }, [page]);
+    fetchMeetings(memberId!, page);
+  }, [memberId,page]);
 
   return (
     <div className="mt-20">

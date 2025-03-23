@@ -15,17 +15,22 @@ const TabCollection = (): React.JSX.Element => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  const accessToken = localStorage.getItem('accesstoken');
   const fetchCollections = async (page: number) => {
     try {
       const apiUrl =
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}/collection`, {
+      const response = await axios.get(`${apiUrl}api/collection`, {
         params: { page },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
-      const { totalPages, collections=[] } = response.data
-      
+      const { totalPages, collections = [] } = response.data;
+
       setTotalPages(Number(totalPages));
       setCollections(collections);
     } catch (error) {
@@ -61,16 +66,14 @@ const TabCollection = (): React.JSX.Element => {
         )}
       </div>
       {collections.length > 0 ? (
-        
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={(newPage) => setPage(newPage)}
-      />
-      ):(
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={(newPage) => setPage(newPage)}
+        />
+      ) : (
         <></>
       )}
-
     </div>
   );
 };

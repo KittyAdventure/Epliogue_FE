@@ -14,7 +14,7 @@ const menuDatas: MenuItem[] = [
   { name: 'mypage', path: '/mypage', icon: 'fas fa-user' },
   { name: 'search', path: '/', icon: 'fas fa-search' },
 ];
-// ContextAPI 를 활용함으로써 하드코딩한 props 더이상 필요없다
+// ContextAPI 를 활용함으로써 아래에 하드코딩한 props 더이상 필요없다
 // interface MenuProps {
 //   loggedIn: boolean;
 //   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,6 +23,7 @@ const menuDatas: MenuItem[] = [
 const Menu = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { loggedIn, setLoggedIn } = useAuth();
+  // const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false) //Logout Feedback spinner,msg, 시간 되면 추가
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false); // 🔹 모달 상태 추가
 
   const handleMenuClick = (
@@ -32,10 +33,11 @@ const Menu = (): React.JSX.Element => {
     event.preventDefault();
     if (menuData.name === 'mypage') {
       //contextapi 값 적용
-      if (loggedIn) { //private route으로 전달
-        navigate("/mypage");
-      }else {
-        navigate("/members/login")
+      if (loggedIn) {
+        //private route으로 전달
+        navigate('/mypage');
+      } else {
+        navigate('/login');
       }
     } else if (menuData.name === 'search') {
       setIsSearchModalOpen(true); // 🔹 모달 열기
@@ -47,32 +49,36 @@ const Menu = (): React.JSX.Element => {
   const handleLogout = async (): Promise<void> => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL_PROD;
-      const response = await axios.post(`${apiUrl}/logout`, {}, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      console.log("Logout Response")
-      console.log(response)
-      if (response.status === 200) {
-        console.log(response.data.message);
-        console.log('Logout successful on click');
+      const accessToken = localStorage.getItem('accesstoken');
+      if (!accessToken) {
+        console.warn('Token missing. User may already be logged out');
         setLoggedIn(false);
-        localStorage.removeItem('token');
-        navigate('/');
+        localStorage.removeItem('memberId');
+      }
+      const response = await axios.post(
+        `${apiUrl}/api/members/logout`,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      console.log('Logout Response', response);
+      if (response.status === 200) {
+        console.log(response.data.message); //logout success
+        setLoggedIn(false);
+        localStorage.removeItem('memberId');
+        localStorage.removeItem('accesstoken');
+        navigate('/'); //not working properly
       } else {
-        console.error('logout failed: ', response.statusText);
+        console.error('Logout failed: ', response.statusText);
       }
     } catch (error) {
       console.error('Logout Error', error);
     }
   };
-  // const handleLogout = () => {
-  //   setLoggedIn(false);
-  //   localStorage.removeItem('token');
-  //   navigate('/');
-  // }
 
   return (
     <>

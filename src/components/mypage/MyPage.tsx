@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate} from "react-router-dom"
+// import { useNavigate } from 'react-router-dom';
 
 import Calendar from './Calendar';
 import UserInfo from './UserInfo';
@@ -33,85 +33,105 @@ interface UserInfo {
 
 // 마이페이지 클릭 -> 로그인 되어있음 -> 이 페이지로 온다
 const MyPage = (): React.JSX.Element => {
-  const navigate = useNavigate();
-  const [nickName, setNickName] = useState<string>('');
-  const [loginId, setLoginId] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [follower, setFollower] = useState<string>('');
-  const [following, setFollowing] = useState<string>('');
-
-  const [reviewCount, setReviewCount] = useState<string>('');
-  const [commentCount, setCommentCount] = useState<string>('');
-  const [meetingCount, setMeetingCount] = useState<string>('');
-  const [collectionCount, setCollectionCount] = useState<string>('');
-  const [point, setPoint] = useState<string>('');
-
+  // const navigate = useNavigate();
+  // Robust way to handle multiple useState from same source
+  const [userInfo, setUserInfo] = useState({
+    nickName: '',
+    loginId: '',
+    email: '',
+    follower: '',
+    following: '',
+    reviewCount: '',
+    commentCount: '',
+    meetingCount: '',
+    collectionCount: '',
+    point: '',
+  });
   const [activeTab, setActiveTab] = useState<string>('Review');
-
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName); //set active tab
   };
 
   // Get user info upon visintg mypage while logged in
-  const fetchUserInfo = async (loginId: string) => {
+  const accessToken = localStorage.getItem('accesstoken');
+  const memberId = localStorage.getItem('memberId');
+  console.log("MYPAGE")
+  console.log(typeof memberId)
+  console.log(memberId)
+  const fetchUserInfo = async (memberId: string) => {
     try {
       const apiUrl =
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}/mypage`, {
-        params: { id: loginId },
-      }
-    );
-    if (!response.data || !response.data.nickname){
-      console.warn("No response in /mypage");
-      navigate("/login")
-    }
-      // 메인갔다가 마이페이지로 오면 정보업데이트
-      console.log('==========MYPAGE RESPONSE==========');
-      console.log(response);
-      // response 데이터 각 아이템을 할당
-      setNickName(response.data.nickname);
-      setLoginId(response.data.loginId);
-      setEmail(response.data.email);
-      setFollower(response.data.follower);
-      setFollowing(response.data.following);
+      const response = await axios.get(`${apiUrl}/api/mypage/user-info/${memberId}`, {
+        params: { memberId },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-      setReviewCount(response.data.reviewCount);
-      setCommentCount(response.data.commentCount);
-      setMeetingCount(response.data.meetingCount);
-      setCollectionCount(response.data.collectionCount);
-      setPoint(response.data.point);
+      // 메인갔다가 마이페이지로 오면 정보업데이트
+      if (!response) {
+        console.log('No Response MyPage User-Info');
+      } else {
+        console.log('==========MYPAGE RESPONSE==========');
+        console.log(response);
+        console.log(response.status);
+        console.log(response.data);
+        // response 데이터 각 아이템을 할당
+        setUserInfo({
+          nickName: response.data.nickname,
+          loginId: response.data.loginId,
+          email: response.data.email,
+          follower: response.data.follower,
+          following: response.data.following,
+          reviewCount: response.data.reviewCount,
+          commentCount: response.data.commentCount,
+          meetingCount: response.data.meetingCount,
+          collectionCount: response.data.collectionCount,
+          point: response.data.point,
+        });
+      }
     } catch (error) {
-      console.error('Failed to fetch user info', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Axios Network Error:', error.message);
+        console.error('Error Details:', error.response?.data);
+        console.error('Error Details:', error.response?.data.error);
+      } else {
+        console.error('Unexpected Error:', error);
+      }
     }
   };
   useEffect(() => {
-    fetchUserInfo('test123');
+    // safeguard
+    if (memberId) {
+      fetchUserInfo(memberId);
+    }
   }, []);
 
   // Values must be called from User's Data
   const tabs: Tab[] = [
-    { tabId: '1', name: 'Review', value: reviewCount },
-    { tabId: '2', name: 'Meeting', value: meetingCount },
-    { tabId: '3', name: 'Collection', value: collectionCount },
-    { tabId: '4', name: 'Comment', value: commentCount },
-    { tabId: '5', name: 'Points', value: point },
+    { tabId: '1', name: 'Review', value: userInfo.reviewCount },
+    { tabId: '2', name: 'Meeting', value: userInfo.meetingCount },
+    { tabId: '3', name: 'Collection', value: userInfo.collectionCount },
+    { tabId: '4', name: 'Comment', value: userInfo.commentCount },
+    { tabId: '5', name: 'Points', value: userInfo.point },
   ];
 
   return (
     <div className="mypage ">
       <h2 className="title my-0 mx-[auto] max-w-[1440px] py-20 text-4xl font-medium">
-        {nickName}의 페이지
+        {userInfo.nickName}의 페이지
       </h2>
       <div className="contentWrap flex justify-between my-0 mx-[auto] max-w-[1440px]">
         <aside className="border border-red-500 text-center w-1/5">
           <UserInfo
-            nickname={nickName}
-            loginId={loginId}
-            email={email}
-            follower={follower}
-            following={following}
+            nickname={userInfo.nickName}
+            loginId={userInfo.loginId}
+            email={userInfo.email}
+            follower={userInfo.follower}
+            following={userInfo.following}
           />
           <div className="calendar mt-20 w-auto h-96 border border-green-500">
             <Calendar />

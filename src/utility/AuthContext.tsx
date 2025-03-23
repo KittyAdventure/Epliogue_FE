@@ -4,8 +4,8 @@ import { createContext } from 'react';
 interface AuthContextProps {
   loggedIn: boolean;
   setLoggedIn: (status: boolean) => void;
-  memberId: string;
-  setMemberId: (id: string) => void;
+  // memberId: string;
+  // setMemberId: (id: string) => void;
 }
 
 // Create the AuthContext with default values

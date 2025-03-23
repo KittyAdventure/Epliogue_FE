@@ -31,18 +31,16 @@ import UserSearchPage from '../pages/UserSearchPage';
 import ChatPage from '../pages/ChatPage';
 
 const AppRouter = (): React.JSX.Element => {
-  // 로그인 상태, Header로 전달 -> contextapi 활용, prop drilling 불필요
-  // const [loggedIn, setLoggedIn] = useState(true);
   const memberId = String(localStorage.getItem('memberId') || '1');
 
-  const { loggedIn } = useAuth(); //로그인&token 상태 확인, 확인 되면 route, 안되면 redirect
-  // 보안 차원에서 private route 를 사용해준다. 방문 할 수 없는 페이지를 접근 할 수 없게 1차적으로 해줌
+  // 로그인 상태 하드코딩없이, Header로 전달 -> contextapi 활용, prop drilling 불필요
+  const { loggedIn } = useAuth(); //로그인&token 상태 확인, 확인 되면 private route, 안되면 redirect(navigate)
+  // 보안 차원에서 private route 를 사용해준다. 로그인 없이 방문 할 수 없는 페이지를 접근 못하게 1차적으로 해줌
   const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
     if (!loggedIn) {
-      return <Navigate to="/members/login" replace />;
+      return <Navigate to="/login" replace />;
     }
-    // Render protected component if authenticated
-    return <>{children}</>
+    return <>{children}</>; // Render protected component if authenticated
   };
 
   return (
@@ -50,8 +48,8 @@ const AppRouter = (): React.JSX.Element => {
       <Header />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/members/login" element={<LoginForm />} />
-        <Route path="/members/register" element={<SignupForm />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<SignupForm />} />
         {/* private route 적용 */}
         <Route
           path="/mypage"
