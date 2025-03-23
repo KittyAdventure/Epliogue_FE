@@ -1,6 +1,5 @@
 // import axios from 'axios';
-import axios from 'axios'; // axios import
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import GatheringModal from '../modal/GatheringModal'; // Import GatheringModal
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
@@ -40,30 +39,30 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   } | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
   const [gatheringModalOpen, setGatheringModalOpen] = useState<boolean>(false); // State for GatheringModal visibility
+  // 별점
+  // useEffect(() => {
+  //   const fetchRating = async () => {
+  //     try {
+  //       // const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
+  //       // console.log(accessToken);
+  //       const response = await axios.post(
+  //         `${import.meta.env.VITE_API_URL_DEV}/api/books/${book.isbn}/ratings`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+  //           },
+  //         },
+  //       );
 
-  useEffect(() => {
-    const fetchRating = async () => {
-      try {
-        const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
-        // console.log(accessToken);
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/api/books/${book.isbn}/ratings`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
-            },
-          },
-        );
-
-        if (response.data && response.data.score) {
-          setRating(response.data.score); // response.data에서 score를 추출하여 상태에 설정
-        }
-      } catch (error) {
-        console.error('별점 정보 로딩 오류:', error);
-      }
-    };
-    fetchRating();
-  }, [book.isbn]);
+  //       if (response.data && response.data.score) {
+  //         setRating(response.data.score); // response.data에서 score를 추출하여 상태에 설정
+  //       }
+  //     } catch (error) {
+  //       // console.error('별점 정보 로딩 오류:', error);
+  //     }
+  //   };
+  //   fetchRating();
+  // }, [book.isbn]);
 
   // 공유
   const handleShareClick = (shareData: {
@@ -192,6 +191,7 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
           type="book" // 책 공유임을 명시
           id={book.isbn} // 책의 ISBN을 ID로 사용
           setShareModalOpen={setShareModalOpen}
+          book={book}
         />
       )}
 

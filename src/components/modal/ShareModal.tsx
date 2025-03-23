@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { FaLink } from 'react-icons/fa';
 import { RiKakaoTalkFill } from 'react-icons/ri';
+import { Book } from '../review/type'; 
 
 declare global {
   interface Window {
@@ -18,12 +19,14 @@ interface ShareModalProps {
   type: string;
   id: string;
   setShareModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  book: Book; // 책 정보 전달
 }
 
 const ShareModal: React.FC<ShareModalProps> = ({
   type,
   id,
   setShareModalOpen,
+  book
 }) => {
   const [shareOptions, setShareOptions] = useState<ShareOption>({
     shareUrl: '',
@@ -44,7 +47,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       .then((response) => {
         const baseUrl = import.meta.env.VITE_API_URL_DEV; // API URL
         setShareOptions({
-          shareUrl: `${baseUrl}/api/share?type=${type}&id=${id}`, // 원하는 URL 형식
+          shareUrl: `${baseUrl}/api/books/detail?query=${id}&type=d_isbn`, // 원하는 URL 형식
         });
 
         // 예시로 response 데이터를 사용하려면 여기에서 처리할 수 있습니다.
@@ -88,26 +91,26 @@ const ShareModal: React.FC<ShareModalProps> = ({
       return;
     }
 
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: '공유할 내용 제목',
-        description: '공유할 내용 설명',
-        imageUrl: '이미지 URL',
-        link: {
-          webUrl: shareOptions.shareUrl,
-          mobileWebUrl: shareOptions.shareUrl,
-        },
-      },
-      buttons: [
-        {
-          title: '웹에서 보기',
-          link: {
-            webUrl: shareOptions.shareUrl,
-          },
-        },
-      ],
-    });
+ window.Kakao.Share.sendDefault({
+   objectType: 'feed',
+   content: {
+     title: `${book.title}`, // 책 제목
+     description: `${book.description}`, // 책 설명
+     imageUrl: book.image, // 책 이미지 URL
+     link: {
+       webUrl: shareOptions?.shareUrl || '', // 공유 링크
+       mobileWebUrl: shareOptions?.shareUrl || '', // 모바일 공유 링크
+     },
+   },
+   buttons: [
+     {
+       title: '웹에서 보기',
+       link: {
+         webUrl: shareOptions?.shareUrl || '',
+       },
+     },
+   ],
+ });
   };
 
   return (

@@ -3,16 +3,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ChatButtonProps {
-  memberId: string;
-  bookName: string;
-  bookId: string;
+  roomId: number;
 }
 
-const ChatButton: React.FC<ChatButtonProps> = ({
-  memberId,
-  bookName,
-  bookId,
-}) => {
+const ChatButton: React.FC<ChatButtonProps> = ({ roomId }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -23,22 +17,27 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       const chatroomsResponse = await axios.get(
         `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chatrooms`,
         {
-          params: { page: 1, limit: 10 },
+          params: { page: 1, size: 10 },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+          },
         },
       );
-
-      // 2. 해당 책 제목과 bookId에 맞는 채팅방 찾기
+ 
+      // 2. roomId가 존재하는지 확인
       const existingRoom = chatroomsResponse.data.rooms.find(
-        (room: { bookname: string; bookid: string }) =>
-          room.bookname === bookName && room.bookid === bookId,
+        (room: { roomId: number }) => room.roomId === roomId,
       );
 
       if (existingRoom) {
         // 3. 채팅방이 있다면 참여
         await joinChatRoom(existingRoom.roomId);
       } else {
-        // 4. 채팅방이 없다면 새로 생성
-        await createChatRoom();
+        // 4. 채팅방이 없다면 새로 생성 후 해당 채팅방 입장
+        const newRoom = await createChatRoom();
+        if (newRoom?.roomId) {
+          await joinChatRoom(newRoom.roomId);
+        }
       }
     } catch (error) {
       console.error('채팅방 조회 또는 생성 중 오류 발생', error);
@@ -54,11 +53,14 @@ const ChatButton: React.FC<ChatButtonProps> = ({
         `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chat/participates`,
         {
           roomId,
-          memberId,
-          bookId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+          },
         },
       );
-      navigate(`/ChatPage/${roomId}`, { state: { memberId, bookId } }); // ✅ state로 데이터 전달
+      navigate(`/ChatPage/${roomId}`); // ✅ roomId만 전달
     } catch (error) {
       console.error('채팅방 참여 중 오류 발생', error);
       alert('채팅방 참여 중 오류가 발생했습니다.');
@@ -70,13 +72,14 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chatrooms`,
+        {},
         {
-          memberId,
-          bookname: bookName,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+          },
         },
       );
-      const roomId = response.data.roomId;
-      navigate(`/ChatPage/${roomId}`, { state: { memberId, bookId } }); // ✅ state로 데이터 전달
+      return response.data;
     } catch (error) {
       console.error('채팅방 생성 중 오류 발생', error);
       alert('채팅방 생성 중 오류가 발생했습니다.');

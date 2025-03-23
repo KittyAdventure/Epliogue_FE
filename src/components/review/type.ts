@@ -37,3 +37,17 @@ export interface LatestReview {
   commentsCount?: string;
   bookCoverUrl: string;
 }
+
+// Book 타입을 여기에서 정의
+export interface Book {
+  isbn: string;
+  title: string;
+  author: string;
+  description: string;
+  image: string;
+  price: string;
+  publisher: string;
+  pubDate: string;
+  avgRating: string;
+  sameAuthor: Array<{ title: string; isbn: string }>;
+}

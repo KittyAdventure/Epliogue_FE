@@ -1,6 +1,6 @@
+import axios from 'axios'; // axios import
 import { Image, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import axios from 'axios'; // axios import
 
 interface ReviewModalProps {
   setReviewModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,69 +32,71 @@ export default function ReviewModal({
     }
   };
 
-const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const files = e.target.files ? Array.from(e.target.files) : [];
-  if (imageUrls.length + files.length <= maxImages) {
-    setImages((prev) => [...prev, ...files]); // 실제 File 객체를 추가
-  } else {
-    alert(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
-  }
-};
-
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (imageUrls.length + files.length <= maxImages) {
+      setImages((prev) => [...prev, ...files]); // 실제 File 객체를 추가
+    } else {
+      alert(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
+    }
+  };
 
   const handleRemoveImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-const handleSave = async () => {
-  if (!text.trim()) {
-    alert('리뷰 내용을 입력해야 합니다.');
-    return;
-  }
-
-  const formData = new FormData();
-
-  // 리뷰 데이터 추가
-  const reviewData = {
-    content: text,
-  };
-  formData.append(
-    'data',
-    new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
-  );
-
-  // 이미지 파일 추가
-  imageUrls.forEach((image) => {
-    if (image instanceof File) {
-      formData.append('images', image);
+  const handleSave = async () => {
+    if (!text.trim()) {
+      alert('리뷰 내용을 입력해야 합니다.');
+      return;
     }
-  });
 
-  try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
-        },
-      },
+    const formData = new FormData();
+
+    // 리뷰 데이터 (텍스트) 추가
+    const reviewData = {
+      content: text,
+    };
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
     );
 
-    console.log(response);
+    // 이미지 파일 (File[])을 FormData에 추가
+    imageUrls.forEach((image) => {
+      if (image instanceof File) {
+        formData.append('images', image); // 이미지 파일은 'images' 필드로 전송
+      }
+    });
 
-    if (response.status !== 200) {
-      throw new Error('리뷰 등록 실패');
+    // FormData 내부 확인
+    formData.forEach((value, key) => {
+      console.log(key, value); // key는 'data' 또는 'images'가 되고, value는 값
+    });
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+          },
+        },
+      );
+
+      console.log(response);
+
+      if (response.status !== 200) {
+        throw new Error('리뷰 등록 실패');
+      }
+
+      alert('리뷰가 성공적으로 등록되었습니다.');
+      setReviewModalOpen(false); // 모달 닫기
+    } catch (error) {
+      alert('리뷰 저장 중 오류가 발생했습니다.');
+      console.error('Error:', error);
     }
-
-    alert('리뷰가 성공적으로 등록되었습니다.');
-    setReviewModalOpen(false); // 모달 닫기
-  } catch (error) {
-    alert('리뷰 저장 중 오류가 발생했습니다.');
-    console.error('Error:', error);
-  }
-};
-
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">

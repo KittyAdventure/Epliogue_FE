@@ -1,3 +1,4 @@
+import axios from 'axios'; // axios 추가
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Link 추가
 import Slider from 'react-slick';
@@ -22,22 +23,19 @@ const BookListSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL_DEV}/api/trending-books`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setBooks(data);
-        }
-      })
-      .catch((error) => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL_DEV}/api/trending-books`,
+        );
+        setBooks(response.data || []);
+      } catch (error) {
         console.error('Error loading books:', error);
         setBooks([]);
-      });
+      }
+    };
+
+    fetchBooks();
   }, []);
 
   const settings = {
