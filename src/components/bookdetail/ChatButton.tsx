@@ -3,10 +3,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ChatButtonProps {
-  roomId: number;
+  roomId?: number;
+  bookName?:string;
+  bookId?:string;
+  memberId?:string;
 }
 
-const ChatButton: React.FC<ChatButtonProps> = ({ roomId }) => {
+const ChatButton: React.FC<ChatButtonProps> = ({ roomId,bookName,bookId,memberId }) => {
+  console.log(bookName)
+  console.log(memberId)
+  console.log(bookId)
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 

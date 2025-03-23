@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
