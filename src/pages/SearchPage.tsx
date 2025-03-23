@@ -5,8 +5,8 @@ import SearchListSection from '../components/booklist/SearchListSection';
 
 interface Books {
   image: string;
-  bookTitle: string;
-  bookId: string;
+  title: string;
+  isbn: string;
   author: string;
   price: string;
   description: string;

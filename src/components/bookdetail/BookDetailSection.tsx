@@ -40,57 +40,57 @@ function BookDetailSection({ book, memberId }: BookDetailSectionProps) {
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
   const [gatheringModalOpen, setGatheringModalOpen] = useState<boolean>(false); // State for GatheringModal visibility
 
-  useEffect(() => {
-    const fetchCollection = async () => {
-      try {
-        const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
-        // console.log(accessToken);
+  // useEffect(() => {
+  //   const fetchCollection = async () => {
+  //     try {
+  //       const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
+  //       console.log(accessToken);
 
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/collection`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
-            },
-          },
-        );
-        console.log(response);
-        console.log(response.data.data.accessToken);
-        localStorage.setItem('accesstoken', response.data.data.accessToken); // data 객체에서 accesstoken을 가져옵니다.
+  //       const response = await axios.post(
+  //         `${import.meta.env.VITE_API_URL_DEV}/collection/${book.isbn}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
+  //           },
+  //         },
+  //       );
+  //       console.log(response);
+  //       console.log(response.data.data.accessToken);
+  //       localStorage.setItem('accesstoken', response.data.data.accessToken); // data 객체에서 accesstoken을 가져옵니다.
 
-        const bookIds: Set<string> = new Set(
-          response.data.map((item: { bookId: number }) => item.bookId),
-        );
-        setSelectedBooks(bookIds);
-      } catch (error) {
-        console.error('컬렉션 로딩 오류:', error);
-      }
-    };
+  //       const bookIds: Set<string> = new Set(
+  //         response.data.map((item: { bookId: number }) => item.bookId),
+  //       );
+  //       setSelectedBooks(bookIds);
+  //     } catch (error) {
+  //       console.error('컬렉션 로딩 오류:', error);
+  //     }
+  //   };
 
-    const fetchRating = async () => {
-      try {
-        const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
-        // console.log(accessToken);
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
-            },
-          },
-        );
+  //   const fetchRating = async () => {
+  //     try {
+  //       const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
+  //       // console.log(accessToken);
+  //       const response = await axios.post(
+  //         `${import.meta.env.VITE_API_URL_DEV}/books/${book.isbn}/ratings`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
+  //           },
+  //         },
+  //       );
 
-        if (response.data && response.data.score) {
-          setRating(response.data.score); // response.data에서 score를 추출하여 상태에 설정
-        }
-      } catch (error) {
-        console.error('별점 정보 로딩 오류:', error);
-      }
-    };
+  //       if (response.data && response.data.score) {
+  //         setRating(response.data.score); // response.data에서 score를 추출하여 상태에 설정
+  //       }
+  //     } catch (error) {
+  //       console.error('별점 정보 로딩 오류:', error);
+  //     }
+  //   };
 
-    fetchCollection();
-    fetchRating();
-  }, [book.isbn]);
+  //   fetchCollection();
+  //   fetchRating();
+  // }, [book.isbn]);
 
   const handleShareClick = (shareData: {
     shareUrl: string;

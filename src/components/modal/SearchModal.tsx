@@ -42,34 +42,34 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   }, []);
 
   // ✨ 책 검색 API 호출
-  useEffect(() => {
-    if (!searchTerm) {
-      const fetchBooks = async () => {
-        try {
-          const params: {
-            query: string;
-            sort: string | null;
-            display: string;
-            start: string;
-          } = {
-            query: searchTerm || '', // 검색어가 없다면 빈 문자열로 설정
-            sort: 'sim', // 기본적으로 정확도순으로 설정
-            display: '10', // 한 번에 표시할 책의 수
-            start: '1', // 시작 페이지 (페이지 번호)
-          };
+  // useEffect(() => {
+  //   if (!searchTerm) {
+  //     const fetchBooks = async () => {
+  //       try {
+  //         const params: {
+  //           query: string;
+  //           sort: string | null;
+  //           display: string;
+  //           start: string;
+  //         } = {
+  //           query: searchTerm || '', // 검색어가 없다면 빈 문자열로 설정
+  //           sort: 'sim', // 기본적으로 정확도순으로 설정
+  //           display: '10', // 한 번에 표시할 책의 수
+  //           start: '1', // 시작 페이지 (페이지 번호)
+  //         };
 
-          // axios를 사용하여 API 요청
-          await axios.get(`${import.meta.env.VITE_API_URL_DEV}/books`, {
-            params,
-          });
-        } catch (error) {
-          console.error('Error loading books:', error);
-        }
-      };
+  //         // axios를 사용하여 API 요청
+  //         await axios.get(`${import.meta.env.VITE_API_URL_DEV}/books`, {
+  //           params,
+  //         });
+  //       } catch (error) {
+  //         console.error('Error loading books:', error);
+  //       }
+  //     };
 
-      fetchBooks();
-    }
-  }, [searchTerm]);
+  //     fetchBooks();
+  //   }
+  // }, [searchTerm]);
 
   // SearchModal.tsx
   const handleSearch = () => {
