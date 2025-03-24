@@ -98,7 +98,7 @@ const TabReview = (): React.JSX.Element => {
             </div>
           ))
         ) : (
-          <p>"새로 리뷰를 적어보세요"</p>
+          <p>나만의 리뷰를 남겨보세요</p>
         )}
       </div>
 
@@ -109,7 +109,7 @@ const TabReview = (): React.JSX.Element => {
           onPageChange={(newPage) => setPage(newPage)}
         />
       ) : (
-        <></>
+        null
       )}
     </div>
   );

@@ -71,9 +71,7 @@ const TabCollection = (): React.JSX.Element => {
           totalPages={totalPages}
           onPageChange={(newPage) => setPage(newPage)}
         />
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };

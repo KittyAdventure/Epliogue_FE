@@ -36,8 +36,8 @@ const TabMeeting = (): React.JSX.Element => {
       });
 
       if (!response) {
-        console.log("TabMeeting No Response")
-      }else{
+        console.log('TabMeeting No Response');
+      } else {
         console.log('Meeting Response');
         console.log(response.data);
         setTotalPages(response.data.totalPages);
@@ -50,7 +50,7 @@ const TabMeeting = (): React.JSX.Element => {
 
   useEffect(() => {
     fetchMeetings(memberId!, page);
-  }, [memberId,page]);
+  }, [memberId, page]);
 
   return (
     <div className="mt-20">
@@ -88,7 +88,7 @@ const TabMeeting = (): React.JSX.Element => {
             </div>
           ))
         ) : (
-          <p>모임에 한번 참여해보세요</p>
+          <p>모임에 한번 참석해보세요</p>
         )}
       </div>
       {meetings.length > 0 ? (
@@ -97,9 +97,7 @@ const TabMeeting = (): React.JSX.Element => {
           totalPages={totalPages}
           onPageChange={(newPage) => setPage(newPage)}
         />
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };
