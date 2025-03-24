@@ -1,99 +1,35 @@
-import axios from 'axios'; // axios 임포트
-import { MessageSquare, ThumbsUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { MessageSquare } from 'lucide-react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import { AuthContext } from '../../utility/AuthContext';
+import LikeButton from '../button/LikeButton';
 import { LatestReview } from '../review/type';
 
 const MainReviewSection: React.FC = () => {
   const [reviews, setReviews] = useState<LatestReview[]>([]);
-  const [likedReviews, setLikedReviews] = useState<Set<number>>(new Set()); // 좋아요한 리뷰 ID를 추적
+  const [likedReviews, setLikedReviews] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
 
-  const fakeReviews: LatestReview[] = [
-    {
-      id: 999,
-      content: '재미있어요',
-      nickname: '책읽는고양이',
-      memberId: 'user123',
-      memberProfileImage:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      likeCount: 42,
-      commentsCount: '5',
-      bookTitle: '감동적인 책',
-      createdAt: '2024-03-21T12:00:00Z',
-      modifiedAt: '2024-03-21T12:00:00Z',
-      bookCoverUrl:
-        'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788936434120.jpg',
-      bookId: 123,
-      imageUrls: [],
-    },
-    {
-      id: 1000,
-      content: '이 책은 정말 흥미진진해요!',
-      nickname: '독서매니아',
-      memberId: 'user456',
-      memberProfileImage:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      likeCount: 56,
-      commentsCount: '12',
-      bookTitle: '미스터리의 매력',
-      createdAt: '2024-03-22T15:00:00Z',
-      modifiedAt: '2024-03-22T15:00:00Z',
-      bookCoverUrl:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      bookId: 124,
-      imageUrls: [
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      ],
-    },
-    {
-      id: 1001,
-      content: '문학의 깊이를 느낄 수 있었습니다.',
-      nickname: '책벌레',
-      memberId: 'user789',
-      memberProfileImage:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      likeCount: 34,
-      commentsCount: '8',
-      bookTitle: '철학과 문학',
-      createdAt: '2024-03-23T18:00:00Z',
-      modifiedAt: '2024-03-23T18:00:00Z',
-      bookCoverUrl:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      bookId: 125,
-      imageUrls: [
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      ],
-    },
-    {
-      id: 1002,
-      content:
-        '책을 통해 삶의 진리를 배울 수 있었습니다.책을 통해 삶의 진리를 배울 수 있었습니다.책을 통해 삶의 진리를 배울 수 있었습니다.책을 통해 삶의 진리를 배울 수 있었습니다.책을 통해 삶의 진리를 배울 수 있었습니다.책을 통해 삶의 진리를 배울 수 있었습니다.',
-      nickname: '지혜로운사람',
-      memberId: 'user101',
-      memberProfileImage:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      likeCount: 62,
-      commentsCount: '9',
-      bookTitle: '인생의 철학',
-      createdAt: '2024-03-24T10:00:00Z',
-      modifiedAt: '2024-03-24T10:00:00Z',
-      bookCoverUrl:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      bookId: 126,
-      imageUrls: [
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      ],
-    },
-  ];
+  if (!authContext) {
+    // AuthContext가 없으면 기본값을 설정하거나 다른 처리를 합니다.
+    console.error('AuthContext가 제공되지 않았습니다.');
+    return null; // 또는 다른 처리
+  }
 
+  // 페이지가 로드될 때마다 리뷰 데이터 가져오기
   useEffect(() => {
+    // 최신 리뷰 가져오기
     axios
       .get(`${import.meta.env.VITE_API_URL_DEV}/api/reviews/latest`, {
         params: { page: 1, size: 2 },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+        },
       })
       .then((response) => {
         const data = response.data;
@@ -109,7 +45,7 @@ const MainReviewSection: React.FC = () => {
             nickname: review.nickname ?? '익명',
             memberId: review.memberId,
             memberProfileImage:
-              review.memberProfileImage ?? '/default-profile.png',
+              review.memberProfileImage || '/img/members/user.png',
             bookId: review.bookId,
             bookTitle: review.bookTitle ?? '제목 없음',
             content: review.content ?? '내용 없음',
@@ -118,14 +54,11 @@ const MainReviewSection: React.FC = () => {
             modifiedAt: review.modifiedAt,
             likeCount: review.likeCount ?? 0,
             commentsCount: review.commentsCount ?? '0',
-            bookCoverUrl: review.bookCoverUrl ?? '/default-book.png',
+            bookCoverUrl: review.bookCoverUrl ?? '/img/expected/silver.jpg',
           }),
         );
-        // 가짜 리뷰 데이터 추가
-        // 가짜 리뷰 데이터 추가
-        fetchedReviews.unshift(...fakeReviews);
 
-        setReviews((prevReviews) => [...fakeReviews, ...prevReviews]);
+        setReviews(fetchedReviews);
       })
       .catch((error) => {
         console.error('🚨 API 요청 실패:', error);
@@ -133,6 +66,32 @@ const MainReviewSection: React.FC = () => {
       });
   }, []);
 
+  if (reviews.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+  // 좋아요 토글 함수
+  const handleLikeToggle = (reviewId: number, newLikeCount: number) => {
+    setLikedReviews((prevLikes) => {
+      const updatedLikes = new Set(prevLikes);
+      if (updatedLikes.has(reviewId)) {
+        updatedLikes.delete(reviewId);
+      } else {
+        updatedLikes.add(reviewId);
+      }
+      return updatedLikes;
+    });
+
+    setReviews((prevReviews) =>
+      prevReviews.map((review) =>
+        review.id === reviewId
+          ? { ...review, likeCount: newLikeCount }
+          : review,
+      ),
+    );
+  };
+
+  // 슬라이드 설정
   const settings = {
     dots: true,
     infinite: false,
@@ -141,49 +100,6 @@ const MainReviewSection: React.FC = () => {
     slidesToScroll: 2,
     arrows: true,
     adaptiveHeight: true,
-  };
-
-  if (reviews.length === 0) {
-    return <div>Loading...</div>;
-  }
-
-  // 좋아요 클릭 처리 함수
-  const handleLike = async (reviewId: number, currentLikeCount: number) => {
-    try {
-      const isLiked = likedReviews.has(reviewId);
-
-      if (isLiked) {
-        // 좋아요 취소
-        await axios.delete(
-          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
-        );
-        setLikedReviews(
-          new Set([...likedReviews].filter((id) => id !== reviewId)),
-        );
-        setReviews((prevReviews) =>
-          prevReviews.map((review) =>
-            review.id === reviewId
-              ? { ...review, likeCount: currentLikeCount - 1 }
-              : review,
-          ),
-        );
-      } else {
-        // 좋아요 추가
-        await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
-        );
-        setLikedReviews(new Set(likedReviews.add(reviewId)));
-        setReviews((prevReviews) =>
-          prevReviews.map((review) =>
-            review.id === reviewId
-              ? { ...review, likeCount: currentLikeCount + 1 }
-              : review,
-          ),
-        );
-      }
-    } catch (error) {
-      console.error('좋아요 처리 실패:', error);
-    }
   };
 
   return (
@@ -198,6 +114,7 @@ const MainReviewSection: React.FC = () => {
               key={review.id}
               className="relative cursor-pointer w-full h-60 bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300"
               onClick={() => {
+                // Navigate to the review page with review id
                 window.scrollTo(0, 0);
                 navigate(`/reviews/${review.id}`);
               }}
@@ -243,22 +160,13 @@ const MainReviewSection: React.FC = () => {
                     {review.commentsCount}
                   </span>
                 </span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // 클릭 이벤트 전파 방지
-                    handleLike(review.id, review.likeCount);
-                  }}
-                  className={`flex items-center gap-1 text-sm ${
-                    likedReviews.has(review.id)
-                      ? 'text-red-500'
-                      : 'text-gray-600'
-                  } hover:text-gray-800`}
-                >
-                  <ThumbsUp className="w-5 h-5" />
-                  <span className="text-base text-gray-500">
-                    {review.likeCount}
-                  </span>
-                </button>
+                {/* 좋아요 버튼 */}
+                <LikeButton
+                  reviewId={review.id}
+                  likeCount={review.likeCount}
+                  isLiked={likedReviews.has(review.id)}
+                  onLikeToggle={handleLikeToggle}
+                />
               </div>
             </div>
           ))}

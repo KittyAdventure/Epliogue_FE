@@ -68,7 +68,7 @@ const AppRouter = (): React.JSX.Element => {
         />
         <Route path="/review" element={<ReviewSection />} />
         <Route path="/review" element={<MainReviewSection />} />
-        <Route path="/reviews/:id" element={<ReviewPage />} />
+        <Route path="/reviews/:reviewId" element={<ReviewPage />} />
         <Route path="/books/:searchTerm" element={<SearchPage />} />
         <Route
           path="/members/search/:searchTerm"

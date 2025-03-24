@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface CollectionProps {
   bookId: string;
@@ -8,13 +9,13 @@ interface CollectionProps {
 const Collection: React.FC<CollectionProps> = ({ bookId }) => {
   const [isInCollection, setIsInCollection] = useState(false);
   const [message, setMessage] = useState('');
-
+  const navigate = useNavigate();
 
   // const addToCollection = async () => {
   //   try {
   //     const accessToken = localStorage.getItem('accesstoken');
   //     console.log(accessToken);
-      
+
   //     const response = await axios.post(
   //       `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
   //       { bookId },
@@ -37,54 +38,67 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
   //   }
   // };
 
-   const addToCollection = async () => {
+  const addToCollection = async () => {
+    const formData = new FormData();
 
-     const formData = new FormData();
+    // JSON 데이터를 Blob 형식으로 변환해서 추가
+    const reviewData = {
+      content: bookId,
+    };
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
+    );
+    const token = localStorage.getItem('accesstoken');
 
-     // JSON 데이터를 Blob 형식으로 변환해서 추가
-     const reviewData = {
-       content: bookId,
-     };
-     formData.append(
-       'data',
-       new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
-     );
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      window.scroll(0, 0);
+      navigate('/login');
+      return;
+    }
 
-     try {
-       const response = await axios.post(
-         `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
-         formData,
-         {
-           headers: {
-             Authorization: `Bearer ${localStorage.getItem('accesstoken')}`, // 필요한 경우 인증 추가
-           },
-         },
-       );
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 필요한 경우 인증 추가
+          },
+        },
+      );
 
-       console.log(response);
+      console.log(response);
 
-       if (response.status !== 200) {
-         throw new Error('컬렉션 등록 실패');
-       }
+      if (response.status !== 200) {
+        throw new Error('컬렉션 등록 실패');
+      }
 
-       alert('컬렉션에 추가 되었습니다.');
-       setIsInCollection(true);
-     } catch (error) {
-       alert('컬렉션에 추가 오류가 발생했습니다.');
-       console.error('Error:', error);
-     }
-   };
-
+      alert('컬렉션에 추가 되었습니다.');
+      setIsInCollection(true);
+    } catch (error) {
+      alert('컬렉션에 추가 오류가 발생했습니다.');
+      console.error('Error:', error);
+    }
+  };
 
   const removeFromCollection = async () => {
+    const token = localStorage.getItem('accesstoken');
+
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      window.scroll(0, 0);
+      navigate('/login');
+      return;
+    }
     try {
-      const accessToken = localStorage.getItem('accesstoken'); // 저장된 accesstoken을 가져옵니다.
       const response = await axios.delete(
         `${import.meta.env.VITE_API_URL_DEV}/collection`,
         {
           data: { bookId },
           headers: {
-            Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 token을 포함시킵니다.
+            Authorization: `Bearer ${token}`, // Authorization 헤더에 token을 포함시킵니다.
           },
         },
       );

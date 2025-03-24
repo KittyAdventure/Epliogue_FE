@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ThumbsUp } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Comment } from './type'; // 타입 파일이 있으면 가져오기
 
 interface CommentSectionProps {
@@ -12,59 +12,14 @@ interface CommentSectionProps {
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({
-  // comments,
+  comments,
   newComment,
   reviewId,
   onNewCommentChange,
   onAddComment,
 }) => {
-  const [localComments, setLocalComments] = useState<Comment[]>([
-    // 더미 댓글 데이터
-    {
-      commentId: '1',
-      memberNickname: '홍길동',
-      memberProfile: 'https://cdn.ibos.kr/og-BD2109-23201.gif?v=1705626538',
-      commentPostDateTime: '2025-03-21 10:30:00',
-      commentContent:
-        '이 리뷰 정말 유익했어요! 감사합니다! 리뷰 정말 유익했어요! 감사합니다! 리뷰 정말 유익했어요! 감사합니다! 리뷰 정말 유익했어요! 감사합니다! 리뷰 정말 유익했어요! 감사합니다! 리뷰 정말 유익했어요! 감사합니다! 리뷰 정말 유익했어요! 감사합니다!',
-      commentsLike: '10',
-    },
-    {
-      commentId: '2',
-      memberNickname: '김영희',
-      memberProfile: 'https://cdn.ibos.kr/og-BD2109-23201.gif?v=1705626538',
-      commentPostDateTime: '2025-03-20 15:45:00',
-      commentContent: '정말 도움이 많이 되었어요. 좋은 정보 감사합니다!',
-      commentsLike: '7',
-    },
-    {
-      commentId: '3',
-      memberNickname: '이민호1',
-      memberProfile: 'https://cdn.ibos.kr/og-BD2109-23201.gif?v=1705626538',
-      commentPostDateTime: '2025-03-19 18:00:00',
-      commentContent: '이 리뷰가 너무 좋네요! 잘 사용하고 있어요.',
-      commentsLike: '5',
-    },
-    {
-      commentId: '4',
-      memberNickname: '이민호2',
-      memberProfile: 'https://cdn.ibos.kr/og-BD2109-23201.gif?v=1705626538',
-      commentPostDateTime: '2025-03-19 18:00:00',
-      commentContent: '이 리뷰가 너무 좋네요! 잘 사용하고 있어요.',
-      commentsLike: '5',
-    },
-    {
-      commentId: '5',
-      memberNickname: '이민호3',
-      memberProfile: 'https://cdn.ibos.kr/og-BD2109-23201.gif?v=1705626538',
-      commentPostDateTime: '2025-03-19 18:00:00',
-      commentContent: '이 리뷰가 너무 좋네요! 잘 사용하고 있어요.',
-      commentsLike: '5',
-    },
-  ]); // 로컬 상태로 더미 댓글 데이터 설정
+  const [localComments, setLocalComments] = useState<Comment[]>(comments); // 부모에서 받은 댓글을 상태로 설정
   const [filter, setFilter] = useState<string>(''); // 정렬 기준
-  // const [page, setPage] = useState(1); // 페이지 번호
-  // const [totalPages, setTotalPages] = useState<number>(0); // 총 페이지 수
   const [isOpen, setIsOpen] = useState(false); // 정렬 옵션 펼치기/접기
   const [editMode, setEditMode] = useState(false); // 수정 모드 여부
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null); // 수정 중인 댓글 ID
@@ -73,47 +28,22 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     {},
   );
 
-  // 수정 버튼 클릭 시 실행될 함수
-  const handleEditClick = (commentId: string) => {
-    setEditMode(true);
-    setEditingCommentId(commentId);
-
-    // 현재 댓글 내용을 수정할 내용으로 설정
-    const commentToEdit = localComments.find((c) => c.commentId === commentId);
-    if (commentToEdit) {
-      setUpdatedContent(commentToEdit.commentContent);
-    }
-  };
-
-  // 수정 저장 버튼 클릭 시 실행될 함수
-  const handleSaveClick = async () => {
-    if (!editingCommentId) return;
-
-    await handleEditComment(editingCommentId, updatedContent);
-  };
-
-  const options = [
-    { value: 'latest', label: '최신순' },
-    { value: 'likes', label: '좋아요순' },
-  ];
-
-  // 댓글 불러오기 함수 (여기서는 실제 API 호출을 하지 않으므로 주석 처리)
+  // 댓글 불러오기 함수
   const fetchComments = async () => {
     try {
-      // const response = await axios.get(
-      //   `${import.meta.env.VITE_API_URL_DEV}/api/comments/view`,
-      //   {
-      //     params: {
-      //       reviewId,
-      //       page,
-      //       sort: filter || null, // 정렬 기준
-      //     },
-      //   },
-      // );
-      // if (response.data) {
-      //   setLocalComments(response.data.comments || []); // 댓글 목록 업데이트
-      //   setTotalPages(Number(response.data.totalPages)); // 총 페이지 수 업데이트
-      // }
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL_DEV}/api/comments/view`,
+        {
+          params: {
+            reviewId,
+            sort: filter || null, // 정렬 기준
+          },
+        },
+      );
+
+      if (response.data) {
+        setLocalComments(response.data.comments || []); // 댓글 목록 업데이트
+      }
     } catch (error) {
       console.error('댓글을 불러오는 중 오류 발생', error);
       alert('댓글을 불러오는 중 오류가 발생했습니다.');
@@ -189,6 +119,30 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       }
     }
   };
+
+  // 수정 버튼 클릭 시 실행될 함수
+  const handleEditClick = (commentId: string) => {
+    setEditMode(true);
+    setEditingCommentId(commentId);
+
+    // 현재 댓글 내용을 수정할 내용으로 설정
+    const commentToEdit = localComments.find((c) => c.commentId === commentId);
+    if (commentToEdit) {
+      setUpdatedContent(commentToEdit.commentContent);
+    }
+  };
+
+  // 수정 저장 버튼 클릭 시 실행될 함수
+  const handleSaveClick = async () => {
+    if (!editingCommentId) return;
+
+    await handleEditComment(editingCommentId, updatedContent);
+  };
+
+  const options = [
+    { value: 'latest', label: '최신순' },
+    { value: 'likes', label: '좋아요순' },
+  ];
 
   // 댓글 수정 함수
   const handleEditComment = async (commentId: string, newContent: string) => {
@@ -285,6 +239,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     }
   };
 
+
+  // 컴포넌트 마운트 시 댓글 불러오기
+  useEffect(() => {
+    fetchComments();
+  }, [filter, reviewId]); // filter나 reviewId가 변경될 때마다 댓글을 다시 불러옵니다.
+
   return (
     <div>
       {/* 댓글 달기 */}
@@ -345,7 +305,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       <div className="mt-20 max-h-[60vh] overflow-y-auto">
         {localComments && localComments.length > 0 ? (
           localComments.map((comment) => (
-            // 선
             <div
               key={comment.commentId}
               className="border-b border-gray-200 py-6"
@@ -399,40 +358,42 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     )}
                   </div>
                 </div>
-                {editMode && editingCommentId === comment.commentId ? (
-                  <textarea
-                    className="w-full border p-2 mt-3 resize-none"
-                    value={updatedContent}
-                    onChange={(e) => setUpdatedContent(e.target.value)}
-                  />
-                ) : (
-                  <p className="text-gray-700 mt-3">{comment.commentContent}</p>
-                )}
-              </div>
 
-              {/* 좋아요 버튼 */}
-              <div className="flex items-center mt-4">
-                <button
-                  onClick={() => handleToggleLike(comment.commentId)}
-                  className={`flex items-center gap-1 text-sm transition duration-200 mr-1.5 ${
-                    likedComments[comment.commentId]
-                      ? 'text-red-500'
-                      : 'text-gray-600'
-                  } hover:text-gray-800'
-                  }`}
-                >
-                  <ThumbsUp className="w-4 h-4 inline-block" />
-                  <span className="text-sm text-gray-500">
+                {/* 댓글 내용 */}
+                <div>
+                  {editMode && editingCommentId === comment.commentId ? (
+                    <textarea
+                      value={updatedContent}
+                      onChange={(e) => setUpdatedContent(e.target.value)}
+                      className="w-full h-24 p-2 mt-2"
+                    />
+                  ) : (
+                    <p>{comment.commentContent}</p>
+                  )}
+                </div>
+
+                {/* 좋아요 버튼 */}
+                <div className="flex items-center gap-2 mt-2">
+                  <button
+                    onClick={() => handleToggleLike(comment.commentId)}
+                    className="flex items-center gap-1 text-sm text-gray-600 hover:text-black"
+                  >
+                    <ThumbsUp
+                      size={20}
+                      className={`${
+                        likedComments[comment.commentId]
+                          ? 'text-blue-500'
+                          : 'text-gray-500'
+                      }`}
+                    />
                     {comment.commentsLike}
-                  </span>
-                </button>
+                  </button>
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="block w-[110px] mx-auto mt-20 h-[10vh]">
-            댓글이 없습니다.
-          </div>
+          <p>댓글이 없습니다.</p>
         )}
       </div>
     </div>

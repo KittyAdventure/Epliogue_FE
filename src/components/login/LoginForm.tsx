@@ -39,30 +39,31 @@ const LoginForm = (): React.JSX.Element => {
 
   // 로그인 버튼을 클릭하면 실행
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    // prevents form's default behavior(refresh) upon submitting
     e.preventDefault();
     try {
       const apiUrl =
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
+
       const response = await axios.post(
         `${apiUrl}/api/members/login`,
         { loginId: userId, password: password },
         { headers: { 'Content-Type': 'application/json' } },
       );
+
       if (response.status === 200) {
-        console.log(response);
-        console.log(response.data.message); //logout success
+        console.log(response.data.message); // 로그인 성공 메시지
         localStorage.setItem('accesstoken', response.data.data.accessToken);
         localStorage.setItem('memberId', response.data.data.user.userId);
         setLoggedIn(true);
-        navigate('/mypage');
+        navigate(-1); // 이전 페이지로 이동
+        window.scroll(0, 0);
       } else {
-        console.error('Logout failed: ', response.statusText);
+        console.error('로그인 실패: ', response.statusText);
       }
     } catch (error) {
-      console.error('error', error);
+      console.error('로그인 요청 오류:', error);
     }
   };
 

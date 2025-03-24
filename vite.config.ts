@@ -8,6 +8,7 @@ export default defineConfig({
     'process.env': {},
   },
   server: {
+    port: 5173,
     proxy: {
       '/api': {
         target: 'https://epilogue.p-e.kr', // API 서버 주소
