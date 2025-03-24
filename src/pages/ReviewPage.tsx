@@ -11,7 +11,9 @@ export default function ReviewPage() {
   const [comments, setComments] = useState<Comment[]>([]); // 댓글 상태
   const [newComment, setNewComment] = useState(''); // 새 댓글 입력 상태
   const { reviewId } = useParams<{ reviewId: string }>();
-  const safeReviewId = reviewId || '';
+  // reviewId를 숫자로 변환
+  const safeReviewId = reviewId ? Number(reviewId) : 0;
+
   const getProfileImage = (imageUrl: string | null | undefined): string => {
     return imageUrl && imageUrl.trim() !== ''
       ? imageUrl
@@ -96,13 +98,13 @@ export default function ReviewPage() {
       />
 
       {/* Comment Section */}
-      {/* <CommentSection
+      <CommentSection
         comments={comments}
         reviewId={safeReviewId}
         newComment={newComment}
         onNewCommentChange={handleNewCommentChange}
         onAddComment={handleAddComment}
-      /> */}
+      />
     </div>
   );
 }
