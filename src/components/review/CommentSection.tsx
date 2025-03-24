@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ThumbsUp } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Comment } from './type'; // 타입 파일이 있으면 가져오기
 
 interface CommentSectionProps {
@@ -238,7 +238,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       }
     }
   };
-
 
   // 컴포넌트 마운트 시 댓글 불러오기
   useEffect(() => {

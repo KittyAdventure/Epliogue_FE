@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,8 +60,8 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
-        formData,
+        `${import.meta.env.VITE_API_URL_DEV}/api/collection?bookId=${bookId}`,
+        formData, // formData를 본문에 포함
         {
           headers: {
             Authorization: `Bearer ${token}`, // 필요한 경우 인증 추가
@@ -69,7 +69,7 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
         },
       );
 
-      console.log(response);
+      console.log('Response:', response); // 응답 객체 찍기
 
       if (response.status !== 200) {
         throw new Error('컬렉션 등록 실패');
@@ -78,8 +78,14 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
       alert('컬렉션에 추가 되었습니다.');
       setIsInCollection(true);
     } catch (error) {
+      // error가 AxiosError 타입일 경우 처리
+      if (error instanceof AxiosError) {
+        console.error('Response error:', error.response);
+      } else {
+        console.error('Error:', error); // AxiosError가 아닌 경우
+      }
+
       alert('컬렉션에 추가 오류가 발생했습니다.');
-      console.error('Error:', error);
     }
   };
 
@@ -94,9 +100,8 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
     }
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL_DEV}/collection`,
+        `${import.meta.env.VITE_API_URL_DEV}/collection?bookId=${bookId}`,
         {
-          data: { bookId },
           headers: {
             Authorization: `Bearer ${token}`, // Authorization 헤더에 token을 포함시킵니다.
           },
