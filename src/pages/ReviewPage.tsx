@@ -96,13 +96,13 @@ export default function ReviewPage() {
       />
 
       {/* Comment Section */}
-      <CommentSection
+      {/* <CommentSection
         comments={comments}
         reviewId={safeReviewId}
         newComment={newComment}
         onNewCommentChange={handleNewCommentChange}
         onAddComment={handleAddComment}
-      />
+      /> */}
     </div>
   );
 }
