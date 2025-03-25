@@ -12,16 +12,17 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 
 interface Gathering {
+  id?: number;
   meetingId: number;
-  hostId?: number;
+  bookId: string;
   title: string;
   content: string;
-  dateTime: string;
   location: string;
+  dateTime: string;
   nowPeople: number;
-  total?: number;
-  bookTitle: string;
+  maxPeople?: number;
   bookImage: string;
+  bookTitle: string;
 }
 
 const GatheringSection: React.FC = () => {
@@ -35,6 +36,7 @@ const GatheringSection: React.FC = () => {
     navigate(`/gathering`);
   };
 
+  // 모임 리스트
   useEffect(() => {
     const fetchGatherings = async () => {
       try {
@@ -44,7 +46,8 @@ const GatheringSection: React.FC = () => {
             params: { page: 1, size: 10 },
           },
         );
-        setGatherings(response.data);
+        console.log('API 응답 데이터:', response.data);
+        setGatherings(response.data.content);
       } catch (error) {
         console.error('Error loading gathering:', error);
       }
@@ -138,7 +141,6 @@ const GatheringSection: React.FC = () => {
           <MdNavigateNext size={20} />
         </button>
       </div>
-
       <div className="w-3/4 h-full relative pt-[90px]">
         {gatherings.length > 0 ? (
           <Slider
@@ -174,7 +176,7 @@ const GatheringSection: React.FC = () => {
                       {gathering.location}
                     </p>
                     <p className="text-sm font-medium mt-6 mb-6">
-                      현재 인원: {gathering.nowPeople}/{gathering.total} 명
+                      현재 인원: {gathering.nowPeople}/{gathering.maxPeople} 명
                     </p>
                     <button
                       className={`transition-all duration-300 ease-in-out mt-2 px-6 py-2 rounded-full font-bold shadow-md ${
