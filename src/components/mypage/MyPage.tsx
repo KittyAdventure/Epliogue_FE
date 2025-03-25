@@ -21,6 +21,8 @@ interface UserInfo {
   nickname: string;
   loginId: string;
   email: string;
+  phone:string;
+  profileUrl:string;
   follower: string;
   following: string;
 
@@ -41,6 +43,8 @@ const MyPage = (): React.JSX.Element => {
     email: '',
     follower: '',
     following: '',
+    phone:"",
+    profileUrl:"",
     reviewCount: '',
     commentCount: '',
     meetingCount: '',
@@ -55,9 +59,6 @@ const MyPage = (): React.JSX.Element => {
   // Get user info upon visintg mypage while logged in
   const accessToken = localStorage.getItem('accesstoken');
   const memberId = localStorage.getItem('memberId');
-  console.log("MYPAGE")
-  console.log(typeof memberId)
-  console.log(memberId)
   const fetchUserInfo = async (memberId: string) => {
     try {
       const apiUrl =
@@ -77,15 +78,15 @@ const MyPage = (): React.JSX.Element => {
       } else {
         console.log('==========MYPAGE RESPONSE==========');
         console.log(response);
-        console.log(response.status);
-        console.log(response.data);
         // response 데이터 각 아이템을 할당
         setUserInfo({
-          nickName: response.data.nickname,
+          nickName: response.data.nickName,
           loginId: response.data.loginId,
           email: response.data.email,
           follower: response.data.follower,
           following: response.data.following,
+          phone:response.data.phone,
+          profileUrl:response.data.profileUrl,
           reviewCount: response.data.reviewCount,
           commentCount: response.data.commentCount,
           meetingCount: response.data.meetingCount,
@@ -96,8 +97,6 @@ const MyPage = (): React.JSX.Element => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios Network Error:', error.message);
-        console.error('Error Details:', error.response?.data);
-        console.error('Error Details:', error.response?.data.error);
       } else {
         console.error('Unexpected Error:', error);
       }
@@ -108,7 +107,7 @@ const MyPage = (): React.JSX.Element => {
     if (memberId) {
       fetchUserInfo(memberId);
     }
-  }, []);
+  }, [memberId]);
 
   // Values must be called from User's Data
   const tabs: Tab[] = [
@@ -125,13 +124,15 @@ const MyPage = (): React.JSX.Element => {
         {userInfo.nickName}의 페이지
       </h2>
       <div className="contentWrap flex justify-between my-0 mx-[auto] max-w-[1440px]">
-        <aside className="border border-red-500 text-center w-1/5">
+        <aside className="text-center w-1/5">
           <UserInfo
-            nickname={userInfo.nickName}
+            nickName={userInfo.nickName}
             loginId={userInfo.loginId}
             email={userInfo.email}
             follower={userInfo.follower}
             following={userInfo.following}
+            phone={userInfo.phone}
+            profileUrl={userInfo.profileUrl}
           />
           <div className="calendar mt-20 w-auto h-96 border border-green-500">
             <Calendar />

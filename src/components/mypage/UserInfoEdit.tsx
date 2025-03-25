@@ -1,23 +1,29 @@
 // 정보수정 모달
+// import axios from "axios";
+// import { useNavigate } from 'react-router-dom';
+// import {useState} from "react"
 import ButtonBig from '../login/ButtonBig';
 import InputBox from '../login/InputBox';
 
 interface ModalProps {
+  nickName:string;
+  email:string;
+  phone?:string;
+  profileUrl?:string;
   showModal: boolean;
   onClose: () => void;
 }
 
-// 임시 user의 정보
-const loginId = "webdev247"
-const nickname = 'bookworm';
-const name = '홍길동';
-const email = 'webdev247@zerobase.com';
 
-const UserInfoEdit: React.FC<ModalProps> = ({ showModal, onClose }) => {
+const UserInfoEdit: React.FC<ModalProps> = ({ showModal, onClose,nickName, email, profileUrl, phone }) => {
   if (!showModal) return null;
-  const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const navigate = useNavigate()
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
   }
+  console.log(profileUrl)
+  console.log(phone)
+    
   return (
     <div className="flex justify-center items-center fixed top-0 left-0 bg-black/[0.7] w-full h-full z-[9999]">
       <form
@@ -32,38 +38,24 @@ const UserInfoEdit: React.FC<ModalProps> = ({ showModal, onClose }) => {
         </button>
         <h2 className="text-4xl font-medium">회원정보 수정</h2>
         <InputBox
-          type="text"
-          id="loginId"
-          name="name"
-          placeholder={loginId}
-          disabled={true}
-        />
-        <InputBox
           type="email"
           id="email"
           name="email"
-          placeholder={email}
-          disabled={true}
+          placeholder={`현재 이메일: ${email}`}
         />
-        <InputBox type="text" id="name" name="name" placeholder={name} />
         <InputBox
           type="text"
           id="nickname"
           name="nickname"
-          placeholder={nickname}
+          placeholder={`현재 닉네임: ${nickName}`}
         />
-        <InputBox
-          type="password"
-          id="password"
-          name="password"
-          placeholder="새 비밀번호"
-        />
-        <InputBox
-          type="password"
-          id="password"
-          name="password"
-          placeholder="새 비밀번호 확인"
-        />
+        {/* <InputBox 
+        type='file'
+        accept="image/*"
+        className='hidden'
+        onChange={handleImageUpload}
+        /> */}
+        
         <ButtonBig name="수정하기" arialabel="edit info" />
       </form>
     </div>

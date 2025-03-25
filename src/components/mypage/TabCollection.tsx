@@ -53,14 +53,14 @@ const TabCollection = (): React.JSX.Element => {
           collections.map((col) => (
             <div
               key={col.bookId}
-              className="collectionPost w-[300px] overflow-hidden"
+              className="collectionPost w-[300px] h-[500px]"
             >
               <img
                 src={col.thumbnail}
                 alt="collection book"
-                className="block w-full h-[450px] shadow-md rounded-xl"
+                className="block w-full h-[450px] shadow-lg rounded-xl"
               />
-              <h4 className="font-semibold text-center leading-5">
+              <h4 className="font-semibold text-center mt-3 leading-5 text-ellipsis line-clamp-2">
                 {col.bookTitle}
               </h4>
             </div>

@@ -14,9 +14,12 @@ interface LoginActions {
 const loginOptions: LoginActions[] = [
   { name: '아이디 찾기', path: '#' },
   { name: '비밀번호 찾기', path: '#' },
-  { name: '회원가입', path: '/members/register' },
+  { name: '회원가입', path: '/register' },
 ];
 
+// RestAPI 611608caa57d197960e0a8fed39bdea4
+// Kakao.init('611608caa57d197960e0a8fed39bdea4');
+// console.log(Kakao.initialized())
 const LoginForm = (): React.JSX.Element => {
   const navigate = useNavigate(); //다른 페이지로 이동시켜줌
   const { setLoggedIn } = useAuth(); //apicontext

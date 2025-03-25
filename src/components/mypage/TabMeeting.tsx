@@ -39,7 +39,7 @@ const TabMeeting = (): React.JSX.Element => {
         console.log('TabMeeting No Response');
       } else {
         console.log('Meeting Response');
-        console.log(response.data);
+        console.log(response);
         setTotalPages(response.data.totalPages);
         setMeetings(response.data.meetings);
       }

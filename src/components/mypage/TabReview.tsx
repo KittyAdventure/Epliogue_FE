@@ -2,7 +2,7 @@
  * 마이페이지 콘텐츠 컴포넌트
  */
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Pagination from './Pagination';
 
 interface Review {
@@ -23,20 +23,24 @@ const TabReview = (): React.JSX.Element => {
 
   const accessToken = localStorage.getItem('accesstoken');
   const memberId = localStorage.getItem('memberId');
-  const fetchReviews = async (memberId: string, page: number) => {
+
+  const fetchReviews = useCallback(async (memberId: string, page: number) => {
     try {
       const apiUrl = //env production 인지 development 인지 확인 후 url 할당
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}/api/mypage/reviews`, {
-        params: { memberId, page }, //query parameter
-        // headers 필요 (인증)
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
+          console.log(`${apiUrl}/api/mypage/reviews`)
+      const response = await axios.get(
+        `${apiUrl}/api/mypage/reviews`,
+        {
+          params: { memberId, page },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      });
+      );
       if (!response) {
         console.log('TabReview No Response');
       } else {
@@ -52,14 +56,14 @@ const TabReview = (): React.JSX.Element => {
     } catch (error) {
       console.error('Failed to fetch reviews:', error);
     }
-  };
+  },[accessToken]);
 
   // useEffect needed to automatically trigger API call when 'page' state updates
   useEffect(() => {
     if (memberId) {
       fetchReviews(memberId, page);
     }
-  }, [memberId, page]); //run the code when [something] changes
+  }, [memberId, page, fetchReviews]); //run the code when [something] changes
 
   return (
     <div className="mt-20">

@@ -4,16 +4,22 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Pagination from './Pagination';
-interface HeaderRow {
-  id: number;
-  name: string;
-}
-const hdrRowTitle: HeaderRow[] = [
-  { id: 1, name: '작성일' },
-  { id: 2, name: '책 제목' },
-  { id: 3, name: '댓글 내용' },
-];
-
+// interface HeaderRow {
+//   id: number;
+//   name: string;
+// }
+// const hdrRowTitle: HeaderRow[] = [
+//   { id: 1, name: '작성일' },
+//   { id: 2, name: '책 제목' },
+//   { id: 3, name: '댓글 내용' },
+// ];
+// {
+//   hdrRowTitle.map((rowTitle, idx) => (
+//     <th key={idx} className=" font-medium leading-10 text-center">
+//       {rowTitle.name}
+//     </th>
+//   ));
+// }
 interface Comment {
   postDateTime: string;
   bookTitle: string;
@@ -65,11 +71,9 @@ const TabComment = (): React.JSX.Element => {
           <table className="w-full mt-10">
             <thead className="headerTitle w-full border-y-1">
               <tr>
-                {hdrRowTitle.map((rowTitle, idx) => (
-                  <th key={idx} className=" font-medium leading-10 text-center">
-                    {rowTitle.name}
-                  </th>
-                ))}
+                <th className='w-1/6'>작성일</th>
+                <th className='w-2/6'>책 제목</th>
+                <th className='w-3/6'>댓글 내용</th>
               </tr>
             </thead>
 

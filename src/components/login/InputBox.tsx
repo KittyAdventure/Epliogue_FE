@@ -3,13 +3,14 @@ import { useState } from 'react';
 
 interface InputInfo {
   className?: string;
-  type: 'text' | 'email' | 'password' | 'tel' | 'date';
+  type: 'text' | 'email' | 'password' | 'tel' | 'date' | "file";
   id: string;
   name: string;
   placeholder: string;
   value?: string;
   disabled?: boolean;
   maxLength?: number;
+  accept?:string;
   required?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   validate?: (value: string) => string | null;

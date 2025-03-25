@@ -49,7 +49,9 @@ const SignupForm = (): React.JSX.Element => {
         name,
         phone,
       };
-      const response = await axios.post(`${apiUrl}/member/register`, payload, {
+      console.log(`${apiUrl}/api/member/register`);
+      console.log(payload)
+      const response = await axios.post(`${apiUrl}/api/member/register`, payload, {
         headers: {
           'Content-Type': 'application/json',
         },
