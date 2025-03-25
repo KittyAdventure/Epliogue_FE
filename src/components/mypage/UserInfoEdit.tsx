@@ -70,7 +70,7 @@ const UserInfoEdit: React.FC<ModalProps> = ({
   // ensures profileUrl holds image file, not a url or string
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]; //file object
+      const file = e.target.files[0]; // assign file object
       // const blob = new Blob([file], { type: file.type }); // Convert to Blob if necessary
       setFormData((prev) => ({ ...prev, profileUrl: file })); // Store Blob in formData
     }
