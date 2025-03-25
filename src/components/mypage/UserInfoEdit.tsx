@@ -8,7 +8,7 @@ interface ModalProps {
   nickName: string;
   email: string;
   phone?: string;
-  profileUrl?: Blob | File;
+  profileUrl?: string | Blob | File;
   openModal: boolean;
   onClose: () => void;
 }
