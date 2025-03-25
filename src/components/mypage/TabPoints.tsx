@@ -8,7 +8,7 @@ interface Button {
   path: string;
 }
 const buttons: Button[] = [
-  { name: '포인트 충전', path: '/recharge' },
+  { name: '포인트 충전', path: '/payment' },
   { name: '환불하기', path: './' },
 ];
 const TabPoints = (): React.JSX.Element => {

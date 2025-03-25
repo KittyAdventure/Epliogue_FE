@@ -22,17 +22,21 @@ const TabCollection = (): React.JSX.Element => {
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-      const response = await axios.get(`${apiUrl}api/collection`, {
+      const response = await axios.get(`${apiUrl}/api/collection`, {
         params: { page },
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const { totalPages, collections = [] } = response.data;
+      console.log(response)
+      console.log(response.data.books)
+      console.log(response.data.page)
+      console.log(response.data.totalPages)
+      const { totalPages, books = [] } = response.data;
 
       setTotalPages(Number(totalPages));
-      setCollections(collections);
+      setCollections(books);
     } catch (error) {
       console.error('Failed to fetch collection:', error);
     }
@@ -56,7 +60,7 @@ const TabCollection = (): React.JSX.Element => {
                 alt="collection book"
                 className="block w-full h-[450px] shadow-md rounded-xl"
               />
-              <h4 className="font-semibold text-center leading-10">
+              <h4 className="font-semibold text-center leading-5">
                 {col.bookTitle}
               </h4>
             </div>

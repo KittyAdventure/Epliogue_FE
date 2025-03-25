@@ -14,6 +14,7 @@ import MainPage from '../pages/MainPage';
 import LoginForm from '../components/login/LoginForm';
 import SignupForm from '../components/login/SignupForm';
 import MyPage from '../components/mypage/MyPage';
+import PaymentPage from "../components/payment/PaymentPage"
 // Nav (서브 페이지)
 import BookPage from '../pages/BookPage';
 import GatheringPage from '../pages/GatheringPage';
@@ -59,6 +60,7 @@ const AppRouter = (): React.JSX.Element => {
             </PrivateRoute>
           }
         />
+        <Route path='/payment' element={<PaymentPage />}/>
         <Route path="/project" element={<ProjectPage />} />
         <Route path="/book" element={<BookPage />} />
         <Route path="/gathering" element={<GatheringPage />} />
