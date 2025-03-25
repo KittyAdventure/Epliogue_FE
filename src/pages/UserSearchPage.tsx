@@ -10,27 +10,27 @@ interface Params extends Record<string, string | undefined> {
 
 const UserSearchPage: React.FC = () => {
   const { searchTerm } = useParams<Params>();
-  const [sortCriterion, setSortCriterion] = useState<string>('latest');
+  const [sortCriterion, setSortCriterion] = useState<string>('newest');
   const [isOpen, setIsOpen] = useState(false);
   const options = [
     { value: 'newest', label: '최신 가입순' },
     { value: 'oldest', label: '오래된 가입순' },
   ];
 
-  const [filters, setFilters] = useState({
-    nickname: 'false',
-    loginId: 'true', // 기본값을 true로 설정 (loginId가 기본 검색 필터로 선택)
-    email: 'false',
-    profileUrl: 'false',
-    createAt: 'false',
-  });
+ const [filters, setFilters] = useState({
+   nickname: 'true', // 기본값을 true로 설정 (nickname이 기본 검색 필터로 선택)
+   loginId: 'false',
+   email: 'false',
+   profileUrl: 'false',
+   createAt: 'false',
+ });
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const searchType = filters.loginId === 'true' ? 'loginId' : 'nickname'; // loginId가 true일 때 loginId를 검색 기준으로 사용
+      const searchType = filters.nickname === 'true' ? 'nickname' : 'loginId'; // nickname이 true일 때 nickname을 검색 기준으로 사용
       const keyword = searchTerm; // 검색할 키워드
       const page = 0; // 페이지 번호
       const size = 9; // 페이지 당 회원 수

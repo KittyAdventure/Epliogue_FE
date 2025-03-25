@@ -1,26 +1,35 @@
 import axios from 'axios';
 import { X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utility/AuthContext';
+import { redirectToLogin } from '../../utility/AuthUtils';
 
 interface GatheringModalProps {
   isOpen: boolean; // A boolean indicating if the modal is open
   closeModal: () => void; // A function to close the modal
 }
-// 모임 생성 API 호출 함수 (axios 사용)
+// 모임 생성 API 호출 함수
 const createMeeting = async (data: {
   title: string;
   description: string;
   location: string;
   dateTime: string;
 }) => {
+  const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
+  const { loggedIn } = authContext;
   try {
+    if (!loggedIn) {
+      redirectToLogin(navigate);
+      return;
+    }
+    const token = localStorage.getItem('accesstoken');
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
       data,
       {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { Authorization: `Bearer ${token}` },
       },
     );
     alert(`모임이 생성되었습니다! 모임 ID: ${response.data.meetingId}`);

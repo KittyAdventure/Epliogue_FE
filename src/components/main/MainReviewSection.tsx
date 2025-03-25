@@ -25,7 +25,7 @@ const MainReviewSection: React.FC = () => {
     // 최신 리뷰 가져오기
     axios
       .get(`${import.meta.env.VITE_API_URL_DEV}/api/reviews/latest`, {
-        params: { page: 1, size: 2 },
+        params: { page: 1, size: 10 },
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
         },

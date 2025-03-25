@@ -16,11 +16,7 @@ const UserListSection: React.FC<UserListProps> = ({ users, isLoading }) => {
 
   // users가 없거나 빈 배열일 경우 처리
   if (!users || users.length === 0) {
-    return (
-      <div className="mx-auto mt-20 text-xl h-[40vh]">
-        검색 결과가 없습니다.
-      </div>
-    );
+    return <div className="mx-auto mt-20 text-xl">검색 결과가 없습니다.</div>;
   }
 
   return (
@@ -33,20 +29,33 @@ const UserListSection: React.FC<UserListProps> = ({ users, isLoading }) => {
         {users.map((user, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all duration-400 hover:scale-103 hover:bg-gray-100 mb-7 py-5"
+            className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all duration-400 hover:scale-103 hover:bg-gray-100 py-5"
           >
-            <div className="p-4 text-black space-y-1 pt-0">
-              <h3 className="text-center font-semibold text-xl">
-                {user.loginId}
-              </h3>
-              <p className="text-center text-sm text-gray-500">{user.email}</p>
-              <p className="text-center text-sm text-gray-400">
-                {user.nickname ? `Nickname: ${user.nickname}` : 'No nickname'}
+            <div className="p-4 text-black space-y-1 pt-0 flex flex-col items-center">
+              <p className="text-center text-sm text-gray-400 rounded-full ">
+                {user.profileUrl === 'true' ? (
+                  'Has Profile Image'
+                ) : (
+                  <img
+                    src={
+                      user.profileUrl === 'true'
+                        ? user.profileUrl
+                        : '/img/members/user.png'
+                    }
+                    alt="Profile"
+                    className="w-16 h-16"
+                  />
+                )}
               </p>
-              <p className="text-center text-sm text-gray-400">
-                {user.profileUrl === 'true'
-                  ? 'Has Profile Image'
-                  : 'No Profile Image'}
+
+              <h3 className="text-center font-semibold text-xl">
+                {user.nickname ? `${user.nickname}` : 'No nickname'}
+              </h3>
+              <p className="text-center text-sm text-gray-500">
+                ID : {user.loginId}
+              </p>
+              <p className="text-center text-sm text-gray-500">
+                Email : {user.email}
               </p>
             </div>
           </div>

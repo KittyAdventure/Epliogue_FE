@@ -109,6 +109,13 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
       );
 
       console.log('리뷰 삭제 성공:', response.data);
+
+      // 삭제 성공 알림 표시
+      alert('리뷰가 삭제되었습니다.');
+
+      // 페이지 새로 고침
+      window.location.reload(); // 페이지 리로드 후 이전 페이지로 돌아가기
+      navigate(-1); // 마지막 페이지로 돌아가기
     } catch (error) {
       console.error('리뷰 삭제 실패:', error);
     }

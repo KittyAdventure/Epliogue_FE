@@ -81,8 +81,6 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
     fetchReviews();
   }, [currentPage, sortType, bookId]);
 
-
-  
   return (
     <div className="review-section mt-28 mb-28">
       <div className="flex justify-between items-center mb-4">
