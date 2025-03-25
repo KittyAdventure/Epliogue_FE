@@ -71,7 +71,7 @@ export default function ReviewModal({
     // 이미지 파일 (File[])을 FormData에 추가
     imageUrls.forEach((image) => {
       if (image instanceof File) {
-        formData.append('images[]', image); // 이미지 파일은 'images' 필드로 전송
+        formData.append('images', image); // 이미지 파일은 'images' 필드로 전송
       }
     });
 

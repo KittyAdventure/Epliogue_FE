@@ -9,19 +9,25 @@ interface UserListProps {
   isLoading: boolean;
 }
 
+const DEFAULT_PROFILE_IMAGE = '/img/members/user.png';
+
 const UserListSection: React.FC<UserListProps> = ({ users, isLoading }) => {
   if (isLoading) {
-    return <div className="mx-auto mt-20 text-xl h-[40vh]">Loading...</div>;
+    return <div className="mx-auto mt-20 text-xl h-[40vh]">Loading...</div>
   }
 
   // users가 없거나 빈 배열일 경우 처리
   if (!users || users.length === 0) {
-    return <div className="mx-auto mt-20 text-xl">검색 결과가 없습니다.</div>;
+    return (
+      <div className="w-6/7 pl-12 pr-7 pb-[4rem] mx-auto mt-20 text-xl text-center">
+        검색 결과가 없습니다.
+      </div>
+    );
   }
 
   return (
     <div
-      className="w-6/7 pl-12 pr-7 pt-5 pb-[4rem]"
+      className="w-6/7 pl-12 pr-7 pb-[4rem]"
       style={{ maxHeight: '80vh', overflowY: 'auto' }}
     >
       {/* User Card List */}
@@ -29,23 +35,19 @@ const UserListSection: React.FC<UserListProps> = ({ users, isLoading }) => {
         {users.map((user, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all duration-400 hover:scale-103 hover:bg-gray-100 py-5"
+            className="bg-white rounded-lg border border-gray-100 overflow-hidden shadow-xl transform transition-all duration-400 hover:scale-103 hover:bg-gray-100 p-6"
           >
-            <div className="p-4 text-black space-y-1 pt-0 flex flex-col items-center">
-              <p className="text-center text-sm text-gray-400 rounded-full ">
-                {user.profileUrl === 'true' ? (
-                  'Has Profile Image'
-                ) : (
-                  <img
-                    src={
-                      user.profileUrl === 'true'
-                        ? user.profileUrl
-                        : '/img/members/user.png'
-                    }
-                    alt="Profile"
-                    className="w-16 h-16"
-                  />
-                )}
+            <div className="text-black space-y-1 pt-0 flex flex-col items-center">
+              <p className="text-center text-sm text-gray-400 rounded-full border border-gray-100">
+                <img
+                  src={
+                    user.profileUrl && user.profileUrl !== DEFAULT_PROFILE_IMAGE
+                      ? user.profileUrl
+                      : DEFAULT_PROFILE_IMAGE
+                  }
+                  alt="Profile"
+                  className="w-16 h-16 rounded-full"
+                />
               </p>
 
               <h3 className="text-center font-semibold text-xl">

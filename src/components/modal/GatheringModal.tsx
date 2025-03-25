@@ -11,14 +11,17 @@ interface GatheringModalProps {
 }
 // 모임 생성 API 호출 함수
 const createMeeting = async (data: {
-  title: string;
-  description: string;
-  location: string;
-  dateTime: string;
+  bookId: string; // 북 아이디
+  title: string; // 모임명
+  content: string; // 모임소개
+  location: string; // 위치
+  dateTime: string; // 모임일정
+  maxPeople: number; // 최대인원
 }) => {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   const { loggedIn } = authContext;
+
   try {
     if (!loggedIn) {
       redirectToLogin(navigate);
@@ -32,6 +35,7 @@ const createMeeting = async (data: {
         headers: { Authorization: `Bearer ${token}` },
       },
     );
+
     alert(`모임이 생성되었습니다! 모임 ID: ${response.data.meetingId}`);
     return response.data;
   } catch (error) {
@@ -71,11 +75,13 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
   closeModal,
 }) => {
   const [title, setTitle] = useState(''); // 모임명 상태
-  const [description, setDescription] = useState(''); // 모임 소개 상태
+  const [content, setcontent] = useState(''); // 모임 소개 상태
   const [location, setLocation] = useState(''); // 위치 상태
   const [dateTime, setDateTime] = useState(''); // 모임 일정 상태
+  const [maxPeople, setMaxPeople] = useState(0); // 최대 인원 상태
   const [bookSearchQuery, setBookSearchQuery] = useState(''); // 책 검색 쿼리 상태
   const [bookResults, setBookResults] = useState([]); // 책 검색 결과 상태
+  const [bookId, setBookId] = useState<string | null>(null); // 책 ID 상태
 
   // 책 검색 input 변경 시
   const handleBookSearchChange = async (
@@ -96,11 +102,23 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
   const handleBookSelect = (bookTitle: string) => {
     setBookSearchQuery(bookTitle); // 클릭한 책 제목을 검색 쿼리에 설정
     setBookResults([]); // 검색 결과 목록을 숨김
+    setBookId(bookId); // 선택한 책의 ID 설정
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const meetingData = { title, description, location, dateTime };
+    if (!bookId) {
+      alert('책을 선택해 주세요.');
+      return;
+    }
+    const meetingData = {
+      title,
+      content,
+      location,
+      dateTime,
+      maxPeople,
+      bookId,
+    };
     await createMeeting(meetingData);
     closeModal(); // 모임 생성 후 모달 닫기
   };
@@ -140,15 +158,20 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
             {bookResults.length > 0 && (
               <div className="absolute w-full mt-2 bg-white border border-gray-300 rounded-md shadow-sm p-2">
                 <ul>
-                  {bookResults.map((book: { title: string }, index: number) => (
-                    <li
-                      key={index}
-                      className="text-sm text-gray-700 cursor-pointer hover:bg-gray-100 p-3"
-                      onClick={() => handleBookSelect(book.title)} // 클릭 시 제목 입력란에 설정
-                    >
-                      {book.title}
-                    </li>
-                  ))}
+                  {bookResults.map(
+                    (
+                      book: { title: string; bookId: string },
+                      index: number,
+                    ) => (
+                      <li
+                        key={index}
+                        className="text-sm text-gray-700 cursor-pointer hover:bg-gray-100 p-3"
+                        onClick={() => handleBookSelect(book.bookId)} // 클릭 시 제목 입력란에 설정
+                      >
+                        {book.title}
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
             )}
@@ -175,15 +198,15 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
           {/* 최대 인원 선택 */}
           <div className="mb-4">
             <label
-              htmlFor="location"
+              htmlFor="maxPeople"
               className="block text-sm font-medium text-gray-700"
             >
               최대 인원은 몇 명 인가요? (최대 인원 30명)
             </label>
             <select
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              id="maxPeople"
+              value={maxPeople}
+              onChange={(e) => setMaxPeople(Number(e.target.value))}
               className="mt-1 block w-full py-3 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               required
             >
@@ -235,22 +258,22 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
           {/* 간단한 모임 소개 작성 */}
           <div className="mb-4">
             <label
-              htmlFor="description"
+              htmlFor="content"
               className="block text-sm font-medium text-gray-700"
             >
               간단한 모임 소개 글 작성해 주세요.
             </label>
             <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              id="content"
+              value={content}
+              onChange={(e) => setcontent(e.target.value)}
               className="resize-none border mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md py-3 pl-3"
               rows={4}
               maxLength={5000}
               required
             />
             <p className="text-sm text-gray-500 mt-1 text-right">
-              {description.length}/5000
+              {content.length}/5000
             </p>
           </div>
 
@@ -260,7 +283,7 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
               className="text-gray-500 px-6 py-2 rounded-full mr-2"
               onClick={() => {
                 setTitle('');
-                setDescription('');
+                setcontent('');
                 setLocation('');
                 setDateTime('');
               }}

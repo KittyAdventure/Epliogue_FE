@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import {
   faChevronLeft,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { MdNavigateNext } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
@@ -41,7 +41,7 @@ const GatheringSection: React.FC = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
           {
-            params: { page: 1, limit: 10 },
+            params: { page: 1, size: 10 },
           },
         );
         setGatherings(response.data);
@@ -199,7 +199,9 @@ const GatheringSection: React.FC = () => {
             ))}
           </Slider>
         ) : (
-          <p className="text-gray-500">모임 정보를 불러오는 중...</p>
+          <p className="w-3/4 h-full relative pt-[90px] text-gray-500 text-center">
+            모임 정보를 불러오는 중...
+          </p>
         )}
       </div>
     </div>

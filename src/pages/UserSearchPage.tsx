@@ -17,13 +17,13 @@ const UserSearchPage: React.FC = () => {
     { value: 'oldest', label: '오래된 가입순' },
   ];
 
- const [filters, setFilters] = useState({
-   nickname: 'true', // 기본값을 true로 설정 (nickname이 기본 검색 필터로 선택)
-   loginId: 'false',
-   email: 'false',
-   profileUrl: 'false',
-   createAt: 'false',
- });
+  const [filters, setFilters] = useState({
+    nickname: 'true', // 기본값을 true로 설정 (nickname이 기본 검색 필터로 선택)
+    loginId: 'false',
+    email: 'false',
+    profileUrl: 'false',
+    createAt: 'false',
+  });
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -57,6 +57,23 @@ const UserSearchPage: React.FC = () => {
   useEffect(() => {
     fetchUsers();
   }, [searchTerm, filters]);
+
+  const DEFAULT_PROFILE_IMAGE = '/img/members/user.png'; // 기본 이미지 경로
+const filteredUsers = users.filter((user) => {
+  // 닉네임, 로그인 ID, 이메일 필터
+  const matchesSearchFilter =
+    (filters.nickname === 'true' && user.nickname) ||
+    (filters.loginId === 'true' && user.loginId) ||
+    (filters.email === 'true' && user.email);
+
+  // 프로필 이미지 필터 (기본 프로필 제외)
+  const matchesProfileFilter =
+    filters.profileUrl !== 'excludeDefault' ||
+    (user.profileUrl && user.profileUrl !== DEFAULT_PROFILE_IMAGE);
+
+  return matchesSearchFilter && matchesProfileFilter;
+});
+
 
   return (
     <section className="section-wrap mb-[150px]">
@@ -96,9 +113,8 @@ const UserSearchPage: React.FC = () => {
         <div className="flex w-full justify-between gap-[2vw]">
           {/* 유저 필터 영역 */}
           <UserFilterSection filters={filters} setFilters={setFilters} />
-
           {/* 유저 리스트 영역 */}
-          <UserListSection users={users} isLoading={isLoading} />
+          <UserListSection users={filteredUsers} isLoading={isLoading} />
         </div>
       </div>
     </section>

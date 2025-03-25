@@ -28,7 +28,7 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
   const [totalPages, setTotalPages] = useState(1);
   const reviewsPerPage = 6; // API 요청에 맞게 설정
   const navigate = useNavigate();
-  console.log('bookId: ', bookId); // bookId 확인
+  // console.log('bookId: ', bookId); // bookId 확인
 
   const options = [
     { value: 'latest', label: '최신순' },
