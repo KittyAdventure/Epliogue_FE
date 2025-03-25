@@ -3,10 +3,10 @@ import { useState } from 'react';
 
 interface InputInfo {
   className?: string;
-  type: 'text' | 'email' | 'password' | 'tel' | 'date' | "file";
-  id: string;
-  name: string;
-  placeholder: string;
+  type: 'text' | 'email' | 'password' | 'tel' | 'date' | 'file';
+  id?: string;
+  name?: string;
+  placeholder?: string;
   value?: string;
   disabled?: boolean;
   maxLength?: number;

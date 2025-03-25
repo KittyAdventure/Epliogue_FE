@@ -6,8 +6,8 @@ import { useEffect, useState, useCallback } from 'react';
 import Pagination from './Pagination';
 
 interface Review {
-  reviewid: number;
-  reviewBooktitle: string;
+  reviewId: number;
+  reviewBookTitle: string;
   reviewBookPubYear: number;
   reviewBookAuthor: string;
   reviewContent: string;
@@ -44,14 +44,12 @@ const TabReview = (): React.JSX.Element => {
       if (!response) {
         console.log('TabReview No Response');
       } else {
+        console.log('Review Response');
         console.log(response);
-        console.log(response.data);
-        console.log('Meeting Response');
-        const { userNickname, totalPage, reviews = [] } = response.data; //mypage 각 가져오기
-        console.log(response.data);
-        setUserNickname(userNickname);
+        const {reviews, totalPages, userNickname} = response.data
         setReviews(reviews);
-        setTotalPages(Number(totalPage));
+        setUserNickname(userNickname);
+        setTotalPages(totalPages);
       }
     } catch (error) {
       console.error('Failed to fetch reviews:', error);
@@ -67,26 +65,26 @@ const TabReview = (): React.JSX.Element => {
 
   return (
     <div className="mt-20">
-      <h3 className="text-2xl">{userNickname} 남긴 리뷰</h3>
+      <h3 className="text-2xl">{userNickname} 님이 남긴 리뷰</h3>
 
       <div className="flex flex-wrap gap-y-20 justify-between w-full min-h-[680px] mt-10">
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div
-              key={review.reviewid}
-              className="reviewPost relative rounded-xl w-[30%] h-[300px] p-5 shadow-md hover:shadow-lg z-[10]"
+              key={review.reviewId}
+              className="reviewPost relative rounded-xl w-[30%] h-[300px] px-5 py-10 shadow-md hover:shadow-lg z-[10]"
             >
-              <button className="reviewDelBtn absolute top-3 right-3 text-[gray] text-sm">
+              <button className="reviewDelBtn absolute top-3 right-5 text-[gray] text-sm">
                 삭제하기
               </button>
               <div className="reviewContainer flex items-center">
                 <img
                   src={review.thumbnail}
                   alt="review book thumbnail"
-                  className="block w-[50px] max-h-20 mr-5 leading-20 shadow-sm"
+                  className="block w-[65px] h-[100px] mr-5 leading-20 shadow-sm"
                 />
                 <div className="reviewTop">
-                  <h5>{review.reviewBooktitle}</h5>
+                  <h5 className='h-[80px]'>{review.reviewBookTitle}</h5>
                   <p className="text-[gray]">
                     <span className="mr-1">{review.reviewBookPubYear}</span> |
                     <span className="ml-1">{review.reviewBookAuthor}</span>

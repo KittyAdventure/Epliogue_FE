@@ -121,7 +121,7 @@ const MyPage = (): React.JSX.Element => {
   return (
     <div className="mypage ">
       <h2 className="title my-0 mx-[auto] max-w-[1440px] py-20 text-4xl font-medium">
-        {userInfo.nickName}의 페이지
+        {userInfo.nickName} 님의 페이지
       </h2>
       <div className="contentWrap flex justify-between my-0 mx-[auto] max-w-[1440px]">
         <aside className="text-center w-1/5">

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import UserInfoEdit from './UserInfoEdit';
-import AvatarUploader from "./AvatarUploader.tsx"
+// import AvatarUploader from "./AvatarUploader.tsx"
 
 interface AboutUsers {
   nickName: string;
@@ -8,8 +8,8 @@ interface AboutUsers {
   email: string;
   follower: string;
   following: string;
-  phone:string;
-  profileUrl:string;
+  phone: string;
+  profileUrl: string;
 }
 
 const UserInfo: React.FC<AboutUsers> = ({
@@ -19,22 +19,17 @@ const UserInfo: React.FC<AboutUsers> = ({
   follower,
   following,
   phone,
-  profileUrl
+  profileUrl,
 }): React.JSX.Element => {
-  const [showModal, setShowModal] = useState(false);
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-  // const openDeleteUserModal = () => setShowModal(true)
-  // const openDeleteCloseModal = () => setShowModal(false)
-  // const handleDeleteUser = async () => {
-
-  // }
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleUserEdit = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
 
   return (
     <div>
       <div className="my-0 mx-[auto] w-40 h-40 border border-gray-500 rounded-full flex items-center justify-center">
-        <AvatarUploader />
+        {/* <AvatarUploader /> */}
+        <img src={profileUrl} alt="user avatar" className="" />
       </div>
       <div className="user-info mt-5">
         <h4 className="text-xl font-medium">{nickName}</h4>
@@ -43,10 +38,20 @@ const UserInfo: React.FC<AboutUsers> = ({
         <div>
           <button
             className="block text-[#333] m-auto hover:underline"
-            onClick={handleOpenModal}
+            onClick={handleUserEdit}
           >
             내 정보 수정 <i className="far fa-edit text-[#777]"></i>
           </button>
+          {modalOpen && (
+            <UserInfoEdit
+              openModal
+              onClose={handleCloseModal}
+              nickName={nickName}
+              email={email}
+              phone={phone}
+              profileUrl={profileUrl}
+            ></UserInfoEdit>
+          )}
           <button
             className="text-center hover:underline"
             // onClick={openDeleteUserModal}
@@ -58,14 +63,6 @@ const UserInfo: React.FC<AboutUsers> = ({
             <button>확인</button>
             <button>취소</button>
           </div>
-          <UserInfoEdit
-            showModal={showModal}
-            onClose={handleCloseModal}
-            nickName={nickName}
-            email={email}
-            phone={phone}
-            profileUrl={profileUrl}
-          ></UserInfoEdit>
         </div>
         <div className="follow-info flex justify-center items-center mt-3">
           <button className="mr-3 hover:underline">

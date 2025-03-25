@@ -71,9 +71,9 @@ const TabComment = (): React.JSX.Element => {
           <table className="w-full mt-10">
             <thead className="headerTitle w-full border-y-1">
               <tr>
-                <th className='w-1/6'>작성일</th>
-                <th className='w-2/6'>책 제목</th>
-                <th className='w-3/6'>댓글 내용</th>
+                <th className="w-1/6">작성일</th>
+                <th className="w-2/6">책 제목</th>
+                <th className="w-3/6">댓글 내용</th>
               </tr>
             </thead>
 
@@ -83,9 +83,15 @@ const TabComment = (): React.JSX.Element => {
                   key={idx}
                   className="text-center leading-10 border-b-1 border-gray-300"
                 >
-                  <td className="leading-10">{comment.postDateTime}</td>
-                  <td className="leading-10">{comment.bookTitle}</td>
-                  <td className="leading-10">{comment.content}</td>
+                  <td className="w-1/6 leading-10 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {comment.postDateTime}
+                  </td>
+                  <td className="w-2/6 leading-10 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {comment.bookTitle}
+                  </td>
+                  <td className="w-1/2 leading-10 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {comment.content}
+                  </td>
                 </tr>
               ))}
             </tbody>
