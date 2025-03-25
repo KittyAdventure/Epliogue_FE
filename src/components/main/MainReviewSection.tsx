@@ -11,7 +11,6 @@ import { LatestReview } from '../review/type';
 
 const MainReviewSection: React.FC = () => {
   const [reviews, setReviews] = useState<LatestReview[]>([]);
-  const [likedReviews, setLikedReviews] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
@@ -70,27 +69,6 @@ const MainReviewSection: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  // 좋아요 토글 함수
-  const handleLikeToggle = (reviewId: number, newLikeCount: number) => {
-    setLikedReviews((prevLikes) => {
-      const updatedLikes = new Set(prevLikes);
-      if (updatedLikes.has(reviewId)) {
-        updatedLikes.delete(reviewId);
-      } else {
-        updatedLikes.add(reviewId);
-      }
-      return updatedLikes;
-    });
-
-    setReviews((prevReviews) =>
-      prevReviews.map((review) =>
-        review.id === reviewId
-          ? { ...review, likeCount: newLikeCount }
-          : review,
-      ),
-    );
-  };
-
   // 슬라이드 설정
   const settings = {
     dots: true,
@@ -100,6 +78,12 @@ const MainReviewSection: React.FC = () => {
     slidesToScroll: 2,
     arrows: true,
     adaptiveHeight: true,
+  };
+
+  // 리뷰 클릭 시 페이지 이동
+  const handleReviewClick = (reviewId: number) => {
+    window.scrollTo(0, 0);
+    navigate(`/reviews/${reviewId}`);
   };
 
   return (
@@ -113,11 +97,7 @@ const MainReviewSection: React.FC = () => {
             <div
               key={review.id}
               className="relative cursor-pointer w-full h-60 bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between hover:shadow-2xl hover:bg-gray-100 transition-all duration-300"
-              onClick={() => {
-                // Navigate to the review page with review id
-                window.scrollTo(0, 0);
-                navigate(`/reviews/${review.id}`);
-              }}
+              onClick={() => handleReviewClick(review.id)}
             >
               <div className="flex justify-between items-center mb-2">
                 {/* 유저 프로필 */}
@@ -164,8 +144,7 @@ const MainReviewSection: React.FC = () => {
                 <LikeButton
                   reviewId={review.id}
                   likeCount={review.likeCount}
-                  isLiked={likedReviews.has(review.id)}
-                  onLikeToggle={handleLikeToggle}
+                  onClick={(e) => e.stopPropagation()}
                 />
               </div>
             </div>

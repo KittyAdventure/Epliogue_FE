@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -20,7 +21,6 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 
   const options = [
     { value: 'title', label: '제목' },
-    { value: 'author', label: '저자' },
     { value: 'user', label: '유저' },
   ];
 
@@ -28,11 +28,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchPopularSearches = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `${import.meta.env.VITE_API_URL_DEV}/api/keywords`,
         );
-        const data = await response.json();
-        setPopularSearches(data);
+        // axios에서 바로 response.data로 처리
+        setPopularSearches(response.data);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -40,37 +40,6 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     fetchPopularSearches();
   }, []);
 
-  // ✨ 책 검색 API 호출
-  // useEffect(() => {
-  //   if (!searchTerm) {
-  //     const fetchBooks = async () => {
-  //       try {
-  //         const params: {
-  //           query: string;
-  //           sort: string | null;
-  //           display: string;
-  //           start: string;
-  //         } = {
-  //           query: searchTerm || '', // 검색어가 없다면 빈 문자열로 설정
-  //           sort: 'sim', // 기본적으로 정확도순으로 설정
-  //           display: '10', // 한 번에 표시할 책의 수
-  //           start: '1', // 시작 페이지 (페이지 번호)
-  //         };
-
-  //         // axios를 사용하여 API 요청
-  //         await axios.get(`${import.meta.env.VITE_API_URL_DEV}/api/books`, {
-  //           params,
-  //         });
-  //       } catch (error) {
-  //         console.error('Error loading books:', error);
-  //       }
-  //     };
-
-  //     fetchBooks();
-  //   }
-  // }, [searchTerm]);
-
-  // SearchModal.tsx
   const handleSearch = () => {
     if (searchTerm.trim() === '') {
       setErrorMessage('검색어를 입력해주세요.');
@@ -79,12 +48,13 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 
     let searchQuery = '';
 
-    if (filter === 'author' || filter === 'title') {
-      searchQuery = searchTerm; // 'author'나 'title' 필터일 경우, searchTerm 사용
+    // 03/25 주석처리
+    if (filter === 'title') {
+      searchQuery = searchTerm;
     } else if (filter === 'user') {
-      searchQuery = searchTerm; // 'user' 필터일 경우, usearchTerm 사용
+      searchQuery = searchTerm;
     } else {
-      searchQuery = searchTerm; // 기본적으로 searchTerm 사용
+      searchQuery = searchTerm;
     }
 
     // 에러 메시지 초기화
@@ -98,9 +68,9 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 
     const sort = filter || 'sim'; // 필터 값이 없다면 기본값은 'sim'
 
-    // 필터가 'user'일 때 UserSearchPage로 이동
+    // 필터가 'user'일 때
     if (filter === 'user') {
-      navigate(`/members/search/${encodeURIComponent(searchQuery)}`); // usersearchTerm 사용하여 유저 검색 페이지로 이동
+      navigate(`/members/search/${encodeURIComponent(searchQuery)}`); // 유저 검색 페이지로 이동
     } else {
       // 그렇지 않으면 기존의 책 검색 페이지로 이동
       navigate(

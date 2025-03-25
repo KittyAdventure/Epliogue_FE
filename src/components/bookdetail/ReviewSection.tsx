@@ -1,22 +1,26 @@
 import axios from 'axios';
-import { MessageSquare, ThumbsUp } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import LikeButton from '../button/LikeButton';
 interface Review {
   id: number;
   content: string;
   nickname: string;
-  memberId: string;
+  memberId: number;
   memberProfileImage: string;
   likeCount: number;
-  commentsCount: string;
+  commentsCount: number;
   bookTitle: string;
   createdAt: string;
   imageUrls: string[];
 }
 
-function ReviewSection() {
+interface ReviewSectionProps {
+  bookId: string; // bookId를 props로 받음
+}
+
+function ReviewSection({ bookId }: ReviewSectionProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [sortType, setSortType] = useState('likes'); // 기본값: 좋아요순
   const [isOpen, setIsOpen] = useState(false);
@@ -24,50 +28,7 @@ function ReviewSection() {
   const [totalPages, setTotalPages] = useState(1);
   const reviewsPerPage = 6; // API 요청에 맞게 설정
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ state 가져오기
-  const { bookId } = location.state || {}; // 기본값 처리
-
-  const [likedReviews, setLikedReviews] = useState<Set<number>>(new Set()); // 좋아요한 리뷰 ID를 추적
-
-  // 좋아요 클릭 처리 함수
-  const handleLike = async (reviewId: number, currentLikeCount: number) => {
-    try {
-      // 좋아요 여부 확인
-      const isLiked = likedReviews.has(reviewId);
-
-      if (isLiked) {
-        // 좋아요 취소
-        await axios.delete(
-          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
-        );
-        setLikedReviews(
-          new Set([...likedReviews].filter((id) => id !== reviewId)),
-        );
-        setReviews((prevReviews) =>
-          prevReviews.map((review) =>
-            review.id === reviewId
-              ? { ...review, likeCount: currentLikeCount - 1 }
-              : review,
-          ),
-        );
-      } else {
-        // 좋아요 추가
-        await axios.post(
-          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
-        );
-        setLikedReviews(new Set(likedReviews.add(reviewId)));
-        setReviews((prevReviews) =>
-          prevReviews.map((review) =>
-            review.id === reviewId
-              ? { ...review, likeCount: currentLikeCount + 1 }
-              : review,
-          ),
-        );
-      }
-    } catch (error) {
-      console.error('좋아요 처리 실패:', error);
-    }
-  };
+  console.log('bookId: ', bookId); // bookId 확인
 
   const options = [
     { value: 'latest', label: '최신순' },
@@ -82,8 +43,8 @@ function ReviewSection() {
           `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
           {
             params: {
-              page: currentPage,
-              size: reviewsPerPage,
+              page: 1,
+              size: 10,
               sortType: sortType,
             },
           },
@@ -120,6 +81,8 @@ function ReviewSection() {
     fetchReviews();
   }, [currentPage, sortType, bookId]);
 
+
+  
   return (
     <div className="review-section mt-28 mb-28">
       <div className="flex justify-between items-center mb-4">
@@ -157,7 +120,10 @@ function ReviewSection() {
           <div
             key={index}
             className="bg-white p-6 rounded-lg shadow-md relative h-[360px] hover:bg-black/5 cursor-pointer transition-all duration-300"
-            onClick={() => navigate(`/reviews/${review.id}`)}
+            onClick={() => {
+              window.scrollTo(0, 0); // 페이지 상단으로 스크롤
+              navigate(`/reviews/${review.id}`); // 해당 리뷰 페이지로 이동
+            }}
           >
             <div className="flex items-center gap-2 mb-6">
               <img
@@ -193,20 +159,12 @@ function ReviewSection() {
                   {review.commentsCount}
                 </span>
               </span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation(); // 클릭 이벤트 전파 방지
-                  handleLike(review.id, review.likeCount);
-                }}
-                className={`flex items-center gap-1 text-sm ${
-                  likedReviews.has(review.id) ? 'text-red-500' : 'text-gray-600'
-                } hover:text-gray-800`}
-              >
-                <ThumbsUp className="w-5 h-5" />
-                <span className="text-base text-gray-500">
-                  {review.likeCount}
-                </span>
-              </button>
+              {/* 좋아요 버튼 */}
+              <LikeButton
+                reviewId={review.id}
+                likeCount={review.likeCount}
+                onClick={(e) => e.stopPropagation()}
+              />
             </div>
           </div>
         ))}

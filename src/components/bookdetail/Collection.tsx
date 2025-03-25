@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utility/AuthContext';
+import { redirectToLogin } from '../../utility/AuthUtils';
 
 interface CollectionProps {
   bookId: string;
@@ -8,60 +10,33 @@ interface CollectionProps {
 
 const Collection: React.FC<CollectionProps> = ({ bookId }) => {
   const [isInCollection, setIsInCollection] = useState(false);
-  const [message, setMessage] = useState('');
   const navigate = useNavigate();
+ const authContext = useContext(AuthContext);
 
-  // const addToCollection = async () => {
-  //   try {
-  //     const accessToken = localStorage.getItem('accesstoken');
-  //     console.log(accessToken);
+  if (!authContext) {
+    console.error('🚨 AuthContext가 제공되지 않았습니다.');
+    return null;
+  }
 
-  //     const response = await axios.post(
-  //       `${import.meta.env.VITE_API_URL_DEV}/api/collection`,
-  //       { bookId },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       },
-  //     );
-
-  //     if (response.data.message === '컬렉션에 추가 되었습니다.') {
-  //       setIsInCollection(true);
-  //       setMessage(response.data.message);
-  //     }
-  //   } catch (error: any) {
-  //     console.error('Error occurred at URL:', error.config?.url);
-  //     console.error('Error details:', error);
-
-  //     setMessage('Error adding to collection.');
-  //   }
-  // };
+  const { loggedIn } = authContext;
 
   const addToCollection = async () => {
-    const formData = new FormData();
 
-    // JSON 데이터를 Blob 형식으로 변환해서 추가
     const reviewData = {
       content: bookId,
     };
-    formData.append(
-      'data',
-      new Blob([JSON.stringify(reviewData)], { type: 'application/json' }),
-    );
+
     const token = localStorage.getItem('accesstoken');
 
-    if (!token) {
-      alert('로그인이 필요합니다.');
-      window.scroll(0, 0);
-      navigate('/login');
+    if (!loggedIn) {
+      redirectToLogin(navigate);
       return;
     }
 
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL_DEV}/api/collection?bookId=${bookId}`,
-        formData, // formData를 본문에 포함
+        reviewData,
         {
           headers: {
             Authorization: `Bearer ${token}`, // 필요한 경우 인증 추가
@@ -91,49 +66,68 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
 
   const removeFromCollection = async () => {
     const token = localStorage.getItem('accesstoken');
-
-    if (!token) {
-      alert('로그인이 필요합니다.');
-      window.scroll(0, 0);
-      navigate('/login');
+   
+    if (!loggedIn) {
+      redirectToLogin(navigate);
       return;
     }
+
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL_DEV}/collection?bookId=${bookId}`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/collection?bookId=${bookId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Authorization 헤더에 token을 포함시킵니다.
+            Authorization: `Bearer ${token}`,
           },
         },
       );
-      if (response.data.message === '컬렉션에 삭제 되었습니다.') {
+
+      console.log('삭제 응답:', response);
+
+      // 응답 메시지를 직접 확인하고 상태 변경
+      if (response.status === 200) {
+        alert('컬렉션에서 삭제되었습니다.');
         setIsInCollection(false);
-        setMessage(response.data.message);
+      } else {
+        throw new Error('삭제 실패');
       }
     } catch (error) {
-      setMessage('Error removing from collection.');
+      console.error('삭제 요청 오류:', error);
+
+      if (error instanceof AxiosError && error.response) {
+        console.error('서버 응답 오류:', error.response);
+      }
     }
   };
 
   return (
-    <div className="collection-container">
-      <div className="icon-container">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-10 h-12"
-          style={{
-            filter: 'drop-shadow(0.5px 2px 3px rgba(255, 255, 255, 0.5))',
-          }}
-        >
-          <path d="M6 2a2 2 0 00-2 2v18l8-5 8 5V4a2 2 0 00-2-2H6z" />
-        </svg>
-      </div>
-      <div className="message">{message}</div>
-      <button onClick={isInCollection ? removeFromCollection : addToCollection}>
-        {isInCollection ? 'Remove from Collection' : 'Add to Collection'}
+    <div className="collection-container absolute top-3 right-3">
+      <button
+        onClick={isInCollection ? removeFromCollection : addToCollection}
+        className="icon-button"
+        style={{
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          cursor: 'pointer',
+        }}
+      >
+        <div className="icon-container">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-12 h-14"
+            style={{
+              filter: isInCollection
+                ? 'drop-shadow(0px 0px 6px #22C55E)'
+                : 'drop-shadow(0.5px 2px 3px rgba(255, 255, 255, 0.5))',
+              color: isInCollection ? '#22C55E' : 'currentColor',
+            }}
+          >
+            <path d="M6 2a2 2 0 00-2 2v18l8-5 8 5V4a2 2 0 00-2-2H6z" />
+          </svg>
+        </div>
       </button>
     </div>
   );

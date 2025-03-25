@@ -2,7 +2,7 @@ import { FaFilter } from 'react-icons/fa';
 
 interface FilterProps {
   filters: {
-    id: string; // 유저 닉네임
+    nickname: string; // 유저 닉네임
     loginId: string; // 로그인 아이디
     email: string;
     profileUrl: string;
@@ -16,7 +16,7 @@ const UserFilterSection: React.FC<FilterProps> = ({ filters, setFilters }) => {
     // Only allow one filter to be 'true' among id, loginId, email
     const newFilters = {
       ...filters,
-      id: 'false',
+      nickname: 'false',
       loginId: 'false',
       email: 'false',
       [filter]: filters[filter] === 'true' ? 'false' : 'true',
@@ -39,8 +39,8 @@ const UserFilterSection: React.FC<FilterProps> = ({ filters, setFilters }) => {
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={filters.id === 'true'}
-                  onChange={() => handleFilterChange('id')}
+                  checked={filters.nickname === 'true'}
+                  onChange={() => handleFilterChange('nickname')}
                 />
                 <span>닉네임</span>
               </label>

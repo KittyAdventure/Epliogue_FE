@@ -5,19 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../utility/AuthContext';
 import { redirectToLogin } from '../../utility/AuthUtils';
 
-interface LikeButtonProps {
-  reviewId: number;
-  likeCount: number;
+interface UserLikeButtonProps {
+  commentId: string;
+  commentsLike: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // onClick을 optional로 추가
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({
-  reviewId,
-  likeCount,
+const CommentsLikeButton: React.FC<UserLikeButtonProps> = ({
+  commentId,
+  commentsLike,
   onClick,
 }) => {
   const [isInLikes, setIsInLikes] = useState(false);
-  const [currentLikeCount, setLikeCount] = useState(likeCount);
+  const [currentcommentsLike, setcommentsLike] = useState(commentsLike || '0');
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   const { loggedIn } = authContext;
@@ -31,7 +31,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     try {
       const token = localStorage.getItem('accesstoken');
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/comments/${commentId}/likes`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -43,7 +43,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       if (response.status === 200) {
         alert('좋아요에 추가 되었습니다.');
         setIsInLikes(true);
-        setLikeCount((prev) => prev + 1);
+        setcommentsLike((prev) => String((Number(prev) || 0) + 1));
       } else {
         throw new Error('좋아요 추가 실패');
       }
@@ -66,7 +66,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     try {
       const token = localStorage.getItem('accesstoken');
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
+        `${import.meta.env.VITE_API_URL_DEV}/api/comments/${commentId}/likes`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -77,7 +77,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       if (response.status === 200) {
         alert('좋아요에서 삭제되었습니다.');
         setIsInLikes(false);
-        setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
+        setcommentsLike(
+          (prev) => String(Math.max((Number(prev) || 0) - 1, 0)), // NaN 방지 및 0 이하로 내려가지 않도록
+        );
       } else {
         throw new Error('좋아요 삭제 실패');
       }
@@ -92,7 +94,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   };
 
   return (
-    <div className="icon-container">
+    <div className="icon-container mt-3 ml-2">
       <button
         onClick={(e) => {
           // 기존의 onClick 동작을 처리
@@ -110,11 +112,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           isInLikes ? 'text-red-500' : 'text-gray-600'
         } hover:text-gray-800`}
       >
-        <ThumbsUp className="w-5 h-5" />
-        <span className="text-base">{currentLikeCount}</span>
+        <ThumbsUp className="w-4 h-4" />
+        <span className="text-base">{currentcommentsLike}</span>
       </button>
     </div>
   );
 };
 
-export default LikeButton;
+export default CommentsLikeButton;

@@ -3,16 +3,23 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface ChatButtonProps {
-  roomId?: number;
-  bookName?:string;
-  bookId?:string;
-  memberId?:string;
+  roomId?: number; // roomId를 number로 변경
+  bookName?: string;
+  bookId?: string;
+  memberId?: string;
+  chatRoom: number;
 }
 
-const ChatButton: React.FC<ChatButtonProps> = ({ roomId,bookName,bookId,memberId }) => {
-  console.log(bookName)
-  console.log(memberId)
-  console.log(bookId)
+const ChatButton: React.FC<ChatButtonProps> = ({
+  roomId,
+  bookName,
+  bookId,
+  memberId,
+  chatRoom,
+}) => {
+  console.log(bookName);
+  console.log(memberId);
+  console.log(bookId);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -29,10 +36,10 @@ const ChatButton: React.FC<ChatButtonProps> = ({ roomId,bookName,bookId,memberId
           },
         },
       );
- 
+
       // 2. roomId가 존재하는지 확인
       const existingRoom = chatroomsResponse.data.rooms.find(
-        (room: { roomId: number }) => room.roomId === roomId,
+        (room: { roomId: number }) => room.roomId === roomId, // roomId가 number 타입인 것으로 수정
       );
 
       if (existingRoom) {
@@ -54,6 +61,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({ roomId,bookName,bookId,memberId
 
   // ✅ 채팅방 참여
   const joinChatRoom = async (roomId: number) => {
+    // roomId가 number로 전달되는 것 확인
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chat/participates`,
@@ -77,8 +85,13 @@ const ChatButton: React.FC<ChatButtonProps> = ({ roomId,bookName,bookId,memberId
   const createChatRoom = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL_DEV}/api/meeting/chatrooms`,
-        {},
+        `${
+          import.meta.env.VITE_API_URL_DEV
+        }/api/meeting/chatrooms?chatRoom=${chatRoom}`,
+        {
+          memberId: memberId,
+          bookName: bookName,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,

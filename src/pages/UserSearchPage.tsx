@@ -13,13 +13,13 @@ const UserSearchPage: React.FC = () => {
   const [sortCriterion, setSortCriterion] = useState<string>('latest');
   const [isOpen, setIsOpen] = useState(false);
   const options = [
-    { value: 'latest', label: '최신 가입순' },
+    { value: 'newest', label: '최신 가입순' },
     { value: 'oldest', label: '오래된 가입순' },
   ];
 
   const [filters, setFilters] = useState({
-    id: 'false',
-    loginId: 'false',
+    nickname: 'false',
+    loginId: 'true', // 기본값을 true로 설정 (loginId가 기본 검색 필터로 선택)
     email: 'false',
     profileUrl: 'false',
     createAt: 'false',
@@ -30,10 +30,23 @@ const UserSearchPage: React.FC = () => {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
+      const searchType = filters.loginId === 'true' ? 'loginId' : 'nickname'; // loginId가 true일 때 loginId를 검색 기준으로 사용
+      const keyword = searchTerm; // 검색할 키워드
+      const page = 0; // 페이지 번호
+      const size = 9; // 페이지 당 회원 수
+
+      const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL_DEV}/api/members/search`,
+        {
+          params: {
+            searchType,
+            keyword,
+            page,
+            size,
+          },
+        },
       );
-      setUsers(response.data.member);
+      setUsers(data.data.content);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {

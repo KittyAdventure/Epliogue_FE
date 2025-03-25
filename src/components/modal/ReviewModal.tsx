@@ -1,6 +1,9 @@
 import axios from 'axios'; // axios import
 import { Image, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utility/AuthContext';
+import { redirectToLogin } from '../../utility/AuthUtils';
 
 interface ReviewModalProps {
   setReviewModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +19,9 @@ export default function ReviewModal({
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const maxChars = 10000;
   const maxImages = 5;
+  const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
+  const { loggedIn } = authContext;
 
   useEffect(() => {
     const newPreviews = imageUrls.map((img) => URL.createObjectURL(img));
@@ -46,8 +52,8 @@ export default function ReviewModal({
   };
 
   const handleSave = async () => {
-    if (!text.trim()) {
-      alert('리뷰 내용을 입력해야 합니다.');
+    if (!text.trim() && imageUrls.length === 0) {
+      alert('리뷰 내용을 입력하거나 이미지를 추가해야 합니다.');
       return;
     }
 
@@ -55,7 +61,7 @@ export default function ReviewModal({
 
     // 리뷰 데이터 (텍스트) 추가
     const reviewData = {
-      content: text,
+      content: text || '', // content가 비어있으면 빈 문자열로 설정
     };
     formData.append(
       'data',
@@ -73,7 +79,13 @@ export default function ReviewModal({
     formData.forEach((value, key) => {
       console.log(key, value); // key는 'data' 또는 'images'가 되고, value는 값
     });
+
     try {
+      if (!loggedIn) {
+        redirectToLogin(navigate); // 로그인 페이지로 이동
+        return;
+      }
+
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
         formData,
@@ -92,6 +104,9 @@ export default function ReviewModal({
 
       alert('리뷰가 성공적으로 등록되었습니다.');
       setReviewModalOpen(false); // 모달 닫기
+
+      // 페이지 새로고침
+      window.location.reload(); // 리뷰를 저장하고 새로고침
     } catch (error) {
       alert('리뷰 저장 중 오류가 발생했습니다.');
       console.error('Error:', error);

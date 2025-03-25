@@ -1,6 +1,6 @@
 interface UserListProps {
   users: {
-    id: string; // 유저 닉네임
+    nickname: string; // 유저 닉네임
     loginId: string; // 로그인 아이디
     email: string;
     profileUrl: string;
@@ -41,7 +41,7 @@ const UserListSection: React.FC<UserListProps> = ({ users, isLoading }) => {
               </h3>
               <p className="text-center text-sm text-gray-500">{user.email}</p>
               <p className="text-center text-sm text-gray-400">
-                {user.id ? `Nickname: ${user.id}` : 'No nickname'}
+                {user.nickname ? `Nickname: ${user.nickname}` : 'No nickname'}
               </p>
               <p className="text-center text-sm text-gray-400">
                 {user.profileUrl === 'true'

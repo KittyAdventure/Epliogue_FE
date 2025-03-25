@@ -17,8 +17,6 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [editMode, setEditMode] = useState(false);
   const [updatedContent, setUpdatedContent] = useState(review.content);
-  const [liked, setLiked] = useState<boolean>(false);
-  const [likeCount, setLikeCount] = useState<number>(review.likeCount);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   if (!authContext) {
@@ -77,12 +75,16 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${review.id}`,
         formData,
-        // { headers: { 'Content-Type': 'multipart/form-data' } }
         {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
       console.log('리뷰 수정 성공:', response.data);
+
+      // 서버에서 받은 수정된 리뷰 데이터를 상태에 업데이트
+      setUpdatedContent(response.data.content); // 내용 수정
+      review.content = response.data.content; // 서버에서 받은 수정된 내용을 적용
+
       setEditMode(false);
     } catch (error) {
       console.error('리뷰 수정 실패:', error);
@@ -95,14 +97,9 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
       redirectToLogin(navigate); // 로그인 페이지로 이동
       return;
     }
-
     try {
       const token = localStorage.getItem('accesstoken');
-      if (!token) {
-        console.error('토큰이 없습니다.');
-        redirectToLogin(navigate);
-        return;
-      }
+      console.log('🔑 토큰 확인:', token);
 
       const response = await axios.delete(
         `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${review.id}`,
@@ -120,12 +117,6 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
   // 날짜
   const formattedDate = new Date(review.createdAt).toLocaleString();
 
-  // 좋아요 토글 함수
-  const handleLikeToggle = (newLikeCount: number) => {
-    setLikeCount(newLikeCount);
-    setLiked((prevLiked) => !prevLiked);
-  };
-
   return (
     <div>
       <div key={review.id} className="flex mb-8 gap-12 mt-4">
@@ -139,12 +130,11 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
           <span className="font-semibold text-xl text-gray-800 text-center">
             {review.nickname}
           </span>
-          {/* LikeButton 컴포넌트 추가 */}
+          {/* 좋아요 */}
           <LikeButton
             reviewId={review.id}
-            likeCount={likeCount}
-            isLiked={liked}
-            onLikeToggle={handleLikeToggle}
+            likeCount={review.likeCount}
+            onClick={(e) => e.stopPropagation()}
           />
         </div>
 

@@ -38,7 +38,6 @@ export interface LatestReview {
   bookCoverUrl: string;
 }
 
-// Book 타입을 여기에서 정의
 export interface Book {
   isbn: string;
   title: string;

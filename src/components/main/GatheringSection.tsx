@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 import {
   faChevronLeft,
   faChevronRight,
@@ -24,87 +24,35 @@ interface Gathering {
   bookImage: string;
 }
 
-const dummyData: Gathering[] = [
-  {
-    meetingId: 1,
-    title: '독서 모임 A',
-    content:
-      '해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.해리포터를 읽고 이야기 나누는 모임입니다.',
-    dateTime: '2025-02-21,12:00:00',
-    bookImage:
-      'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791173321528.jpg',
-    nowPeople: 5,
-    total: 20,
-    bookTitle: '해리포터와 마법사의 돌',
-    location: '서울시 강남구',
-  },
-  {
-    meetingId: 2,
-    title: '독서 모임 B',
-    content: '어린왕자를 읽으며 삶의 의미를 찾아봐요.',
-    dateTime: '2025-02-21,12:00:00',
-    bookImage:
-      'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791194368175.jpg',
-    nowPeople: 8,
-    total: 30,
-    bookTitle:
-      'ETS 토익 단기공략 750+(LC+RC) (기출문제 한국 독점출간, 기출 문항으로 보강한 단기완성 시리즈)',
-    location: '서울시 마포구',
-  },
-  {
-    meetingId: 3,
-    title: '문학 토론회',
-    content: '디스토피아 문학 1984를 주제로 토론합니다.',
-    dateTime: '2025-02-21,12:00:00',
-    bookImage:
-      'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788998441012.jpg',
-    nowPeople: 10,
-    total: 15,
-    bookTitle: '1984',
-    location: '서울시 종로구',
-  },
-  {
-    meetingId: 4,
-    title: '책 읽는 밤',
-    content: '밤에 함께 책을 읽고 감상을 나누는 모임입니다.',
-    dateTime: '2025-02-21,12:00:00',
-    bookImage:
-      'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788936434120.jpg',
-    nowPeople: 3,
-    total: 10,
-    bookTitle: '데미안',
-    location: '서울시 서초구',
-  },
-];
-
 const GatheringSection: React.FC = () => {
-  // const [gatherings, setGatherings] = useState<Gathering[]>([]); // API 응답을 저장할 상태
+  const [gatherings, setGatherings] = useState<Gathering[]>([]);
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
+  const [participated, setParticipated] = useState<Record<number, boolean>>({});
   const navigate = useNavigate();
-  const [participated, setParticipated] = useState<Record<number, boolean>>({}); // Tracks participation for each gathering
+
   const GatheringPage = () => {
     navigate(`/gathering`);
   };
 
   useEffect(() => {
-    // const fetchGatherings = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
-    //       {
-    //         params: { page: 1, limit: 10 },
-    //       },
-    //     );
-    //     setGatherings(response.data);
-    //   } catch (error) {
-    //     console.error('Error loading gathering:', error);
-    //   }
-    // };
-    // fetchGatherings();
+    const fetchGatherings = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
+          {
+            params: { page: 1, limit: 10 },
+          },
+        );
+        setGatherings(response.data);
+      } catch (error) {
+        console.error('Error loading gathering:', error);
+      }
+    };
+    fetchGatherings();
   }, []);
 
-  const slidesToShow = Math.min(dummyData.length, 3);
+  const slidesToShow = Math.min(gatherings.length, 3);
 
   const settings = {
     dots: false,
@@ -115,7 +63,7 @@ const GatheringSection: React.FC = () => {
     arrows: true,
     afterChange: (index: number) => {
       setIsPrevDisabled(index === 0);
-      setIsNextDisabled(index >= dummyData.length - slidesToShow);
+      setIsNextDisabled(index >= gatherings.length - slidesToShow);
     },
   };
 
@@ -192,13 +140,13 @@ const GatheringSection: React.FC = () => {
       </div>
 
       <div className="w-3/4 h-full relative pt-[90px]">
-        {dummyData.length > 0 ? (
+        {gatherings.length > 0 ? (
           <Slider
             {...settings}
             prevArrow={<CustomPrevArrow />}
             nextArrow={<CustomNextArrow />}
           >
-            {dummyData.map((gathering) => (
+            {gatherings.map((gathering) => (
               <div key={gathering.meetingId} className="w-full">
                 <div
                   className="relative w-full group overflow-hidden rounded-lg"

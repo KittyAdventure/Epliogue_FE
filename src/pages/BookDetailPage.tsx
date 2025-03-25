@@ -76,7 +76,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
       <SameAuthorSection sameAuthor={book.sameAuthor} />
 
       {/* 리뷰 영역 */}
-      <ReviewDetailSection />
+      <ReviewDetailSection bookId={book.isbn} />
     </section>
   );
 };
