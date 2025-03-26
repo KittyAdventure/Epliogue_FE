@@ -6,6 +6,10 @@ interface DeleteProps {
 // user 삭제 /회원탈퇴
 const handleUserDelete = async () => {
   const accessToken = localStorage.getItem('accesstoken');
+  if (!accessToken){
+    console.error("Access Token N/A")
+    return
+  }
   try {
     const apiUrl =
       import.meta.env.NODE === 'production'
@@ -19,7 +23,8 @@ const handleUserDelete = async () => {
     });
     if (response.status === 200) {
       console.log(response);
-    }
+      alert(response.data.message)
+    } 
   } catch (error) {
     console.error('UserDelete Error', error);
   }

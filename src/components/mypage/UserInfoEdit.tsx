@@ -8,6 +8,7 @@ interface ModalProps {
   nickName: string;
   email: string;
   phone?: string;
+  profileUrl?: File
   openModal: boolean;
   onClose: () => void;
 }
@@ -124,7 +125,7 @@ const UserInfoEdit: React.FC<ModalProps> = ({
           <i className="fas fa-times"></i>
         </button>
         <h2 className="text-4xl font-medium">회원정보 수정</h2>
-        <InputBox type="file" accept="image/*" onChange={handleFileChange} />
+        <InputBox type="file" accept="image/*" name="profileImage" onChange={handleFileChange} />
         <InputBox
           type="text"
           id="nickname"

@@ -106,7 +106,7 @@ export default function ReviewModal({
       setReviewModalOpen(false); // 모달 닫기
 
       // 페이지 새로고침
-      window.location.reload(); // 리뷰를 저장하고 새로고침
+      navigate(0); // 리뷰를 저장하고 새로고침
     } catch (error) {
       alert('리뷰 저장 중 오류가 발생했습니다.');
       console.error('Error:', error);

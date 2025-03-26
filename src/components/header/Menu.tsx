@@ -71,7 +71,7 @@ const Menu = (): React.JSX.Element => {
         setLoggedIn(false);
         localStorage.removeItem('memberId');
         localStorage.removeItem('accesstoken');
-        alert("로그아웃 했습니다")
+        alert("정상적으로 로그아웃 했습니다")
         navigate('/');
       } else {
         console.error('Logout failed: ', response.statusText);

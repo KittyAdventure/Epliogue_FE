@@ -122,7 +122,7 @@ const MyPage = (): React.JSX.Element => {
       <h2 className="title my-0 mx-[auto] max-w-[1440px] py-20 text-4xl font-medium">
         {userInfo.nickName} 님의 페이지
       </h2>
-      <div className="contentWrap flex justify-between my-0 mx-[auto] max-w-[1440px]">
+      <div className="contentWrap flex justify-between my-0 mx-[auto] max-w-[1440px] min-h-[1200px]">
         <aside className="text-center w-1/5">
           <UserInfo
             nickName={userInfo.nickName}

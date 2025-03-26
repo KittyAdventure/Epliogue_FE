@@ -54,7 +54,7 @@ const TabMeeting = (): React.JSX.Element => {
 
   return (
     <div className="mt-20">
-      <h3 className="text-2xl">나의 모임</h3>
+      <h3 className="text-2xl font-semibold">나의 모임</h3>
       <div className="flex flex-wrap gap-y-20 justify-between w-full mt-10">
         {meetings.length > 0 ? (
           meetings.map((meeting) => (

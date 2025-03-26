@@ -95,7 +95,9 @@ const TabReview = (): React.JSX.Element => {
 
   return (
     <div className="mt-20">
-      <h3 className="text-2xl">{userNickname} 님이 남긴 리뷰</h3>
+      <h3 className="text-2xl font-semibold">
+        {userNickname}의 리뷰
+      </h3>
 
       <div className="flex flex-wrap gap-y-20 justify-between w-full min-h-[680px] mt-10">
         {reviews.length > 0 ? (
