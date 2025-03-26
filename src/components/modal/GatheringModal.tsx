@@ -31,11 +31,11 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [location, setLocation] = useState('');
-  const [dateTime, setDateTime] = useState('');
+  const [dateTime, setDateTime] = useState('2024-04-01 19:00:00');
   const [maxPeople, setMaxPeople] = useState(0);
   const [bookSearchQuery, setBookSearchQuery] = useState('');
   const [bookResults, setBookResults] = useState<Book[]>([]);
-  const [bookId, setBookId] = useState<string | null>(null);
+  const [bookId, setBookId] = useState<string | null>('98788932475233');
 
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
@@ -59,14 +59,14 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json', 
+            'Content-Type': 'application/json',
           },
         },
       );
 
       console.log('모임 생성 성공 응답:', response);
 
-      alert(`모임이 생성되었습니다! 모임 ID: ${response.data.meetingId}`);
+      alert(`모임이 생성되었습니다!`);
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -120,7 +120,7 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
   // 책 제목 클릭 시
   const handleBookSelect = (book: Book) => {
     setBookSearchQuery(book.title);
-    setBookId(book.isbn);
+    setBookId('9788932475233');
     setBookResults([]);
     console.log('선택한 책 ISBN:', book.isbn);
   };

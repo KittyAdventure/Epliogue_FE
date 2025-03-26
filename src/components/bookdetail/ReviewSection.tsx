@@ -22,7 +22,7 @@ interface ReviewSectionProps {
 
 function ReviewSection({ bookId }: ReviewSectionProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [sortType, setSortType] = useState('likes'); // 기본값: 좋아요순
+  const [sortType, setSortType] = useState('latest'); // 기본값: 좋아요순
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);

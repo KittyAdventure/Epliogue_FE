@@ -30,17 +30,26 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
   useEffect(() => {
     if (!isbn) return;
 
+    // API URL 생성
     const url = `${
       import.meta.env.VITE_API_URL_DEV
     }/api/books/detail?query=${isbn}&type=d_isbn`;
 
+    const token = localStorage.getItem('accesstoken');
+    const headers: { [key: string]: string } = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    // 토큰이 있으면 Authorization 헤더 추가
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    // API 호출
     fetch(url, {
-      method: 'GET', // ✅ GET 요청으로 변경
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
-      },
+      method: 'GET',
+      headers,
     })
       .then(async (response) => {
         if (!response.ok) {
@@ -58,7 +67,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
         console.error('🚨 Error loading book details:', error.message);
         setBook(null);
       });
-  }, [isbn]);
+  }, [isbn]); // isbn이 변경될 때마다 다시 실행
 
   if (!book) {
     return <div>Loading...</div>;
