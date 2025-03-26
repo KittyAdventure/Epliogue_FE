@@ -8,7 +8,6 @@ interface ModalProps {
   nickName: string;
   email: string;
   phone?: string;
-  profileUrl?: string | Blob | File;
   openModal: boolean;
   onClose: () => void;
 }
@@ -17,14 +16,12 @@ const UserInfoEdit: React.FC<ModalProps> = ({
   onClose,
   nickName,
   email,
-  profileUrl,
   phone,
 }) => {
   const [formData, setFormData] = useState<ModalProps>({
     nickName: nickName || '',
     email: email || '',
     phone: phone || '',
-    profileUrl: profileUrl || undefined,
     openModal,
     onClose,
   });
@@ -33,7 +30,7 @@ const UserInfoEdit: React.FC<ModalProps> = ({
     nickName: string,
     email: string,
     phone?: string,
-    profileUrl?: Blob | File, //accept file or blob
+    profileUrl?: string | Blob | File, //accept file or blob
   ) => {
     const jsonData = {
       nickName,
@@ -87,7 +84,6 @@ const UserInfoEdit: React.FC<ModalProps> = ({
         formData.nickName,
         formData.email,
         formData.phone,
-        formData.profileUrl,
       );
       for (const pair of formDataToSend.entries()){
         console.log(pair[0], pair[1])
@@ -155,7 +151,7 @@ const UserInfoEdit: React.FC<ModalProps> = ({
         />
 
         <ButtonBig name="수정하기" arialabel="edit info" />
-        <ButtonBig name="취소하기" arialabel="cancel edit info" />
+        <ButtonBig name="취소하기" arialabel="cancel edit info" onClick={onClose}/>
       </form>
     </div>
   );

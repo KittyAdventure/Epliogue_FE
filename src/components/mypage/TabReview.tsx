@@ -2,7 +2,8 @@
  * 마이페이지 콘텐츠 컴포넌트
  */
 import axios from 'axios';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Pagination from './Pagination';
 
 interface Review {
@@ -23,38 +24,67 @@ const TabReview = (): React.JSX.Element => {
 
   const accessToken = localStorage.getItem('accesstoken');
   const memberId = localStorage.getItem('memberId');
-
-  const fetchReviews = useCallback(async (memberId: string, page: number) => {
+  const handleReviewDelete = async (reviewId: number) => {
+    console.log(reviewId);
+    if (!reviewId) {
+      console.error('invalid reviewId');
+      return;
+    }
     try {
       const apiUrl = //env production 인지 development 인지 확인 후 url 할당
         import.meta.env.NODE === 'production'
           ? import.meta.env.VITE_API_URL_PROD
           : import.meta.env.VITE_API_URL_DEV;
-          console.log(`${apiUrl}/api/mypage/reviews`)
-      const response = await axios.get(
-        `${apiUrl}/api/mypage/reviews`,
-        {
+      const response = await axios.delete(`${apiUrl}/api/reviews/${reviewId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log('TabReview Response', response);
+        alert('성공적으로 리뷰를 삭제했습니다');
+        if (memberId) {
+          fetchReviews(memberId, page); //삭제 후 탭 리뷰를 업데이트 해줌
+        }
+      } else {
+        console.log('Review Unexpected Error', response.status);
+      }
+    } catch (error) {
+      console.error('Review Del Error', error);
+    }
+  };
+
+  const fetchReviews = useCallback(
+    async (memberId: string, page: number) => {
+      try {
+        const apiUrl = //env production 인지 development 인지 확인 후 url 할당
+          import.meta.env.NODE === 'production'
+            ? import.meta.env.VITE_API_URL_PROD
+            : import.meta.env.VITE_API_URL_DEV;
+        const response = await axios.get(`${apiUrl}/api/mypage/reviews`, {
           params: { memberId, page },
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
           },
-        },
-      );
-      if (!response) {
-        console.log('TabReview No Response');
-      } else {
-        console.log('Review Response');
-        console.log(response);
-        const {reviews, totalPages, userNickname} = response.data
-        setReviews(reviews);
-        setUserNickname(userNickname);
-        setTotalPages(totalPages);
+        });
+        if (!response) {
+          console.log('TabReview No Response');
+        } else {
+          console.log('Review Response');
+          console.log(response);
+          const { reviews, totalPages, userNickname } = response.data;
+          setReviews(reviews);
+          setUserNickname(userNickname);
+          setTotalPages(totalPages);
+        }
+      } catch (error) {
+        console.error('Failed to fetch reviews:', error);
       }
-    } catch (error) {
-      console.error('Failed to fetch reviews:', error);
-    }
-  },[accessToken]);
+    },
+    [accessToken],
+  );
 
   // useEffect needed to automatically trigger API call when 'page' state updates
   useEffect(() => {
@@ -72,29 +102,45 @@ const TabReview = (): React.JSX.Element => {
           reviews.map((review) => (
             <div
               key={review.reviewId}
-              className="reviewPost relative rounded-xl w-[30%] h-[300px] px-5 py-10 shadow-md hover:shadow-lg z-[10]"
+              className="reviewPost relative rounded-xl w-[30%] h-[320px] px-5 py-10 shadow-md hover:shadow-lg z-[10]"
             >
-              <button className="reviewDelBtn absolute top-3 right-5 text-[gray] text-sm">
+              <button
+                className="reviewDelBtn absolute top-3 right-5 text-[gray] text-sm"
+                onClick={() => handleReviewDelete(review.reviewId)}
+              >
                 삭제하기
               </button>
-              <div className="reviewContainer flex items-center">
+              <div className="reviewContainer w-full flex items-center">
                 <img
                   src={review.thumbnail}
                   alt="review book thumbnail"
                   className="block w-[65px] h-[100px] mr-5 leading-20 shadow-sm"
                 />
-                <div className="reviewTop">
-                  <h5 className='h-[80px]'>{review.reviewBookTitle}</h5>
-                  <p className="text-[gray]">
-                    <span className="mr-1">{review.reviewBookPubYear}</span> |
-                    <span className="ml-1">{review.reviewBookAuthor}</span>
+
+                <Link
+                  to={`/reviews/${review.reviewId}`}
+                  className="reviewTop h-[100px]"
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                  }}
+                >
+                  <h5 className="w-[100%] h-[60px] text-semibold leading-5 text-ellipsis line-clamp-3">
+                    {review.reviewBookTitle}
+                  </h5>
+                  <p className="text-[gray] mt-5">
+                    <span className="mr-1">{review.reviewBookAuthor}</span>|
+                    <span className="ml-1">
+                      {review.reviewBookPubYear
+                        ? review.reviewBookPubYear
+                        : 'N/A'}
+                    </span>
                   </p>
-                </div>
+                </Link>
               </div>
               <p className="mt-5 leading-5 h-[120px] line-clamp-6">
                 {review.reviewContent}
               </p>
-              <button className="reviewCommentCnt block mt-5">
+              <button className="reviewComment block mb-3 hover:underline">
                 댓글 ({review.reviewCommentsCount})
               </button>
             </div>
@@ -110,9 +156,7 @@ const TabReview = (): React.JSX.Element => {
           totalPages={totalPages}
           onPageChange={(newPage) => setPage(newPage)}
         />
-      ) : (
-        null
-      )}
+      ) : null}
     </div>
   );
 };

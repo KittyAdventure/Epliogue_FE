@@ -4,6 +4,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Pagination from './Pagination';
+import {Link} from "react-router-dom"
 
 interface Collection {
   bookId: string;
@@ -51,8 +52,10 @@ const TabCollection = (): React.JSX.Element => {
       <div className="mt-10 gap-y-10 grid grid-cols-3">
         {collections.length > 0 ? (
           collections.map((col) => (
-            <div
+            <Link
               key={col.bookId}
+              to={`/book/${col.bookId}`}
+              title={col.bookTitle}
               className="collectionPost w-[300px] h-[500px]"
             >
               <img
@@ -60,10 +63,10 @@ const TabCollection = (): React.JSX.Element => {
                 alt="collection book"
                 className="block w-full h-[450px] shadow-lg rounded-xl"
               />
-              <h4 className="font-semibold text-center mt-3 leading-5 text-ellipsis line-clamp-2">
+              <h4 className="font-semibold text-center mt-3 leading-5 hover:underline">
                 {col.bookTitle}
               </h4>
-            </div>
+            </Link>
           ))
         ) : (
           <div>나만의 컬렉션을 만들어보세요</div>

@@ -68,34 +68,32 @@ const TabComment = (): React.JSX.Element => {
 
       <div className="mt-10">
         {comments.length > 0 ? (
-          <table className="w-full mt-10">
-            <thead className="headerTitle w-full border-y-1">
-              <tr>
-                <th className="w-1/6">작성일</th>
-                <th className="w-2/6">책 제목</th>
-                <th className="w-3/6">댓글 내용</th>
-              </tr>
-            </thead>
+          <div className="w-full mt-10">
+            <div className="headerTitle text-center w-full border-y-1 grid grid-cols-15 gap-12">
+              <h5 className="font-semibold col-span-3">작성일</h5>
+              <h5 className="font-semibold col-span-6">책 제목</h5>
+              <h5 className="font-semibold col-span-6">댓글 내용</h5>
+            </div>
 
-            <tbody>
+            <div>
               {comments.map((comment, idx) => (
-                <tr
+                <div
                   key={idx}
-                  className="text-center leading-10 border-b-1 border-gray-300"
+                  className="commentInfo border-b-1 border-gray-300 text-center w-full border-y-1 grid grid-cols-15 gap-12"
                 >
-                  <td className="w-1/6 leading-10 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="col-span-3 leading-10">
                     {comment.postDateTime}
-                  </td>
-                  <td className="w-2/6 leading-10 overflow-hidden text-ellipsis whitespace-nowrap">
+                  </p>
+                  <p className="col-span-6 leading-10 text-ellipsis line-clamp-1">
                     {comment.bookTitle}
-                  </td>
-                  <td className="w-1/2 leading-10 overflow-hidden text-ellipsis whitespace-nowrap">
+                  </p>
+                  <p className="col-span-6 leading-10 text-ellipsis line-clamp-1">
                     {comment.content}
-                  </td>
-                </tr>
+                  </p>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
         ) : (
           <p>리뷰에 댓글을 남겨보세요</p>
         )}

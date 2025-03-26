@@ -117,7 +117,6 @@ const MyPage = (): React.JSX.Element => {
     { tabId: '4', name: 'Comment', value: userInfo.commentCount },
     { tabId: '5', name: 'Points', value: userInfo.point },
   ];
-
   return (
     <div className="mypage ">
       <h2 className="title my-0 mx-[auto] max-w-[1440px] py-20 text-4xl font-medium">
@@ -134,8 +133,8 @@ const MyPage = (): React.JSX.Element => {
             phone={userInfo.phone}
             profileUrl={userInfo.profileUrl}
           />
-          <div className="calendar mt-20 w-auto h-96 border border-green-500">
-            <Calendar />
+          <div className="calendar mt-20 w-auto h-96">
+            <Calendar/>
           </div>
         </aside>
         <div className="content w-4/5 ml-20">
