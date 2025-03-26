@@ -1,10 +1,14 @@
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios'; // axios 추가
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Link 추가
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-
 interface Book {
   id: string;
   title: string;
@@ -21,6 +25,8 @@ interface Book {
 const BookListSection: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [isPrevDisabled, setIsPrevDisabled] = useState(true);
+  const [isNextDisabled, setIsNextDisabled] = useState(false);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -37,20 +43,59 @@ const BookListSection: React.FC = () => {
 
     fetchBooks();
   }, []);
+  
 
   const settings = {
     dots: false,
     infinite: true,
-    speed: 1000,
+    speed: 700,
     slidesToShow: 2,
     slidesToScroll: 1,
-    arrows: false,
+    arrows: true,
     adaptiveHeight: true,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 2500,
     afterChange: (index: number) => {
       setCurrentIndex(Math.min(index, books.length - 1)); // 마지막 아이템에 대한 처리
+      setIsPrevDisabled(index === 0);
+      setIsNextDisabled(index >= books.length);
     },
+  };
+
+  // 🔹 이전(왼쪽) 화살표 버튼
+  const CustomPrevArrow = (props: any) => {
+    const { onClick } = props;
+    return (
+      <button
+        className={`absolute left-[-40px] top-1/2 -translate-y-1/2 z-20 p-3 rounded-full transition-all duration-300 ease-in-out ${
+          isPrevDisabled
+            ? 'bg-black/5 opacity-20'
+            : 'bg-black/40 hover:bg-black/70 text-white'
+        }`}
+        onClick={isPrevDisabled ? undefined : onClick}
+        disabled={isPrevDisabled}
+      >
+        <FontAwesomeIcon icon={faChevronLeft} className="w-6 h-6" />
+      </button>
+    );
+  };
+
+  // 🔹 다음(오른쪽) 화살표 버튼
+  const CustomNextArrow = (props: any) => {
+    const { onClick } = props;
+    return (
+      <button
+        className={`absolute right-[-40px] top-1/2 -translate-y-1/2 z-20 p-3 rounded-full transition-all duration-300 ease-in-out ${
+          isNextDisabled
+            ? 'bg-black/5 opacity-20'
+            : 'bg-black/40 hover:bg-black/70 text-white'
+        }`}
+        onClick={isNextDisabled ? undefined : onClick}
+        disabled={isNextDisabled}
+      >
+        <FontAwesomeIcon icon={faChevronRight} className="w-6 h-6" />
+      </button>
+    );
   };
 
   if (books.length === 0) {
@@ -77,7 +122,11 @@ const BookListSection: React.FC = () => {
 
       {/* 오른쪽 슬라이드 영역 */}
       <div className="w-2/3">
-        <Slider {...settings}>
+        <Slider
+          {...settings}
+          prevArrow={<CustomPrevArrow />}
+          nextArrow={<CustomNextArrow />}
+        >
           {books.map((book, index) => (
             <div key={index} className="image-container px-2">
               <div className="relative w-full rounded-lg overflow-hidden pb-[150%]">

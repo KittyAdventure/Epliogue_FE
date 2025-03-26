@@ -1,17 +1,19 @@
 import axios, { AxiosError } from 'axios';
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../utility/AuthContext';
 import { redirectToLogin } from '../../utility/AuthUtils';
 
 interface CollectionProps {
   bookId: string;
+  existCollection: boolean; // existCollection 값을 전달받음
 }
 
-const Collection: React.FC<CollectionProps> = ({ bookId }) => {
-  const [isInCollection, setIsInCollection] = useState(false);
+const Collection: React.FC<CollectionProps> = ({ bookId, existCollection }) => {
+  const [isInCollection, setIsInCollection] =
+    useState<boolean>(existCollection);
   const navigate = useNavigate();
- const authContext = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
 
   if (!authContext) {
     console.error('🚨 AuthContext가 제공되지 않았습니다.');
@@ -21,7 +23,6 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
   const { loggedIn } = authContext;
 
   const addToCollection = async () => {
-
     const reviewData = {
       content: bookId,
     };
@@ -66,7 +67,7 @@ const Collection: React.FC<CollectionProps> = ({ bookId }) => {
 
   const removeFromCollection = async () => {
     const token = localStorage.getItem('accesstoken');
-   
+
     if (!loggedIn) {
       redirectToLogin(navigate);
       return;

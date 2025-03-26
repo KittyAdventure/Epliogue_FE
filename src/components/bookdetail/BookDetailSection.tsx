@@ -1,14 +1,14 @@
 import axios from 'axios'; // axios import 추가
-import { useState, useContext } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utility/AuthContext';
+import { redirectToLogin } from '../../utility/AuthUtils';
 import GatheringModal from '../modal/GatheringModal'; // Import GatheringModal
 import ReviewModal from '../modal/ReviewModal';
 import ShareModal from '../modal/ShareModal';
 import Collection from './Collection';
 import Rating from './Rating';
 import Share from './Share';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../utility/AuthContext';
-import { redirectToLogin } from '../../utility/AuthUtils';
 interface Book {
   isbn: string;
   title: string;
@@ -19,6 +19,7 @@ interface Book {
   publisher: string;
   pubDate: string;
   avgRating: string;
+  existCollection: boolean;
   sameAuthor: Array<{ title: string; isbn: string }>;
 }
 
@@ -39,17 +40,17 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
   } | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
   const [gatheringModalOpen, setGatheringModalOpen] = useState<boolean>(false);
- const navigate = useNavigate();
- const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
   const { loggedIn } = authContext;
-  
+
   // 별점 클릭 핸들러
   const handleRatingClick = async (index: number) => {
     const newRating = index + 1;
-       if (!loggedIn) {
-          redirectToLogin(navigate);
-          return;
-        }
+    if (!loggedIn) {
+      redirectToLogin(navigate);
+      return;
+    }
     if (rating === newRating) {
       // 별점 삭제
       try {
@@ -111,7 +112,8 @@ function BookDetailSection({ book }: BookDetailSectionProps) {
   return (
     <div className="pt-6 flex gap-14">
       <div className="w-1/3 relative">
-        <Collection bookId={book.isbn} />
+        <Collection bookId={book.isbn} existCollection={book.existCollection} />
+
         <img
           src={book.image}
           alt={book.title}

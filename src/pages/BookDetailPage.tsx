@@ -15,6 +15,7 @@ interface Book {
   publisher: string;
   pubDate: string;
   avgRating: string;
+  existCollection: boolean;
   sameAuthor: Array<{ title: string; isbn: string }>;
 }
 
@@ -38,6 +39,7 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
       },
     })
       .then(async (response) => {

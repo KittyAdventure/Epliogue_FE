@@ -14,6 +14,7 @@ interface Comment {
   commentPostDateTime: string;
   memberProfile: string;
   commentColor?: string;
+  existLike: boolean;
 }
 interface MyComponentProps {
   comments: Comment[];
@@ -56,6 +57,9 @@ const CommentSection: React.FC<MyComponentProps> = ({ reviewId }) => {
             reviewId, // 리뷰 ID
             page: pageInfo.currentPage, // 페이지 번호
             sort, // 정렬 기준 (최신순 또는 좋아요 순)
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
           },
         },
       );
@@ -239,12 +243,12 @@ const CommentSection: React.FC<MyComponentProps> = ({ reviewId }) => {
   };
 
   // 정렬 변경 시 댓글 목록 재요청
-const handleFilterChange = (newFilter: string) => {
-  setFilter(newFilter);
-  setSort(newFilter); // 정렬 기준 변경
-  fetchComments(); // 필터 변경 시 댓글 목록 다시 불러오기
-  setIsOpen(false); // 옵션 클릭 후 옵션창 닫기
-};
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+    setSort(newFilter); // 정렬 기준 변경
+    fetchComments(); // 필터 변경 시 댓글 목록 다시 불러오기
+    setIsOpen(false); // 옵션 클릭 후 옵션창 닫기
+  };
 
   const options = [
     { value: 'latest', label: '최신순' },

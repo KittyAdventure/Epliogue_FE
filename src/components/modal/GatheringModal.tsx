@@ -5,83 +5,103 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../utility/AuthContext';
 import { redirectToLogin } from '../../utility/AuthUtils';
 
-interface GatheringModalProps {
-  isOpen: boolean; // A boolean indicating if the modal is open
-  closeModal: () => void; // A function to close the modal
+interface Book {
+  title: string;
+  isbn: string;
 }
-// 모임 생성 API 호출 함수
-const createMeeting = async (data: {
-  bookId: string; // 북 아이디
-  title: string; // 모임명
-  content: string; // 모임소개
-  location: string; // 위치
-  dateTime: string; // 모임일정
-  maxPeople: number; // 최대인원
-}) => {
-  const navigate = useNavigate();
-  const authContext = useContext(AuthContext);
-  const { loggedIn } = authContext;
 
-  try {
-    if (!loggedIn) {
-      redirectToLogin(navigate);
-      return;
-    }
-    const token = localStorage.getItem('accesstoken');
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
-      data,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+interface GatheringModalProps {
+  isOpen: boolean;
+  closeModal: () => void;
+}
 
-    alert(`모임이 생성되었습니다! 모임 ID: ${response.data.meetingId}`);
-    return response.data;
-  } catch (error) {
-    alert('모임 생성에 실패했습니다.');
-    console.error(error);
-  }
-};
-
-// 책 검색 API 호출 함수 (axios 사용)
-const searchBooks = async (
-  query: string,
-  sort: string = 'sim',
-  display: number = 10,
-  start: number = 1,
-) => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL_DEV}/api/books`,
-      {
-        params: {
-          query: query, // 책 제목 검색
-          sort: sort, // 정렬 방식 (sim: 유사도, date: 날짜순)
-          display: display, // 한 번에 가져올 책 개수 (예: 10 ~ 100)
-          start: start, // 결과의 시작 위치 (예: 1 ~ 100)
-        },
-      },
-    );
-    return response.data.items;
-  } catch (error) {
-    console.error('책 검색 실패:', error);
-    return [];
-  }
-};
+interface Gathering {
+  bookId: string;
+  title: string;
+  content: string;
+  location: string;
+  dateTime: string;
+  maxPeople: number;
+}
 
 const GatheringModal: React.FC<GatheringModalProps> = ({
   isOpen,
   closeModal,
 }) => {
-  const [title, setTitle] = useState(''); // 모임명 상태
-  const [content, setcontent] = useState(''); // 모임 소개 상태
-  const [location, setLocation] = useState(''); // 위치 상태
-  const [dateTime, setDateTime] = useState(''); // 모임 일정 상태
-  const [maxPeople, setMaxPeople] = useState(0); // 최대 인원 상태
-  const [bookSearchQuery, setBookSearchQuery] = useState(''); // 책 검색 쿼리 상태
-  const [bookResults, setBookResults] = useState([]); // 책 검색 결과 상태
-  const [bookId, setBookId] = useState<string | null>(null); // 책 ID 상태
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [location, setLocation] = useState('');
+  const [dateTime, setDateTime] = useState('');
+  const [maxPeople, setMaxPeople] = useState(0);
+  const [bookSearchQuery, setBookSearchQuery] = useState('');
+  const [bookResults, setBookResults] = useState<Book[]>([]);
+  const [bookId, setBookId] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
+  const { loggedIn } = authContext;
+
+  // 모임 생성 API 호출 함수
+  const createMeeting = async (meetingData: Gathering) => {
+    const token = localStorage.getItem('accesstoken');
+    if (!loggedIn) {
+      redirectToLogin(navigate);
+      return;
+    }
+
+    try {
+      console.log('모임 생성 데이터:', meetingData);
+      // Token 출력
+      console.log('Authorization Token:', token);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
+        meetingData, // 전송되는 body 데이터
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json', 
+          },
+        },
+      );
+
+      console.log('모임 생성 성공 응답:', response);
+
+      alert(`모임이 생성되었습니다! 모임 ID: ${response.data.meetingId}`);
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error('모임 생성 실패:', error);
+        if (error.config) {
+          console.log('요청된 URL:', error.config.url);
+          console.log('요청 데이터:', error.config.data); // 요청 본문이 실제로 들어가는지 확인
+        }
+        alert('모임 생성에 실패했습니다.');
+      } else {
+        console.error('알 수 없는 에러 발생:', error);
+      }
+    }
+  };
+
+  // 책 검색 API 호출 함수
+  const searchBooks = async (
+    query: string,
+    sort: string = 'sim',
+    display: number = 10,
+    start: number = 1,
+  ): Promise<Book[]> => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL_DEV}/api/books`,
+        {
+          params: { query, sort, display, start },
+        },
+      );
+      return response.data.items as Book[];
+    } catch (error) {
+      console.error('책 검색 실패:', error);
+      return [];
+    }
+  };
 
   // 책 검색 input 변경 시
   const handleBookSearchChange = async (
@@ -90,7 +110,6 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
     const query = e.target.value;
     setBookSearchQuery(query);
     if (query.length >= 2) {
-      // 최소 2글자 이상 입력시 검색
       const books = await searchBooks(query);
       setBookResults(books);
     } else {
@@ -98,20 +117,24 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
     }
   };
 
-  // 책 제목 리스트 항목 클릭 시
-  const handleBookSelect = (bookTitle: string) => {
-    setBookSearchQuery(bookTitle); // 클릭한 책 제목을 검색 쿼리에 설정
-    setBookResults([]); // 검색 결과 목록을 숨김
-    setBookId(bookId); // 선택한 책의 ID 설정
+  // 책 제목 클릭 시
+  const handleBookSelect = (book: Book) => {
+    setBookSearchQuery(book.title);
+    setBookId(book.isbn);
+    setBookResults([]);
+    console.log('선택한 책 ISBN:', book.isbn);
   };
 
+  // 모임 생성 버튼 클릭 시
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!bookId) {
       alert('책을 선택해 주세요.');
       return;
     }
-    const meetingData = {
+
+    const meetingData: Gathering = {
       title,
       content,
       location,
@@ -119,8 +142,14 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
       maxPeople,
       bookId,
     };
-    await createMeeting(meetingData);
-    closeModal(); // 모임 생성 후 모달 닫기
+
+    // 모임 생성 API 호출
+    const createdMeeting = await createMeeting(meetingData);
+
+    // 모임 생성 성공 후 모달 닫기
+    if (createdMeeting) {
+      closeModal();
+    }
   };
 
   if (!isOpen) return null;
@@ -155,26 +184,15 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
               placeholder="책 제목을 검색하세요(최소 2자이상)"
               required
             />
-            {bookResults.length > 0 && (
-              <div className="absolute w-full mt-2 bg-white border border-gray-300 rounded-md shadow-sm p-2">
-                <ul>
-                  {bookResults.map(
-                    (
-                      book: { title: string; bookId: string },
-                      index: number,
-                    ) => (
-                      <li
-                        key={index}
-                        className="text-sm text-gray-700 cursor-pointer hover:bg-gray-100 p-3"
-                        onClick={() => handleBookSelect(book.bookId)} // 클릭 시 제목 입력란에 설정
-                      >
-                        {book.title}
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </div>
-            )}
+            {bookResults.map((book, index) => (
+              <li
+                key={index}
+                className="text-sm text-gray-700 cursor-pointer hover:bg-gray-100 p-3"
+                onClick={() => handleBookSelect(book)} // ✅ 클릭 시 handleBookSelect 실행
+              >
+                {book.title}
+              </li>
+            ))}
           </div>
 
           {/* 모임명 입력 */}
@@ -266,7 +284,7 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
             <textarea
               id="content"
               value={content}
-              onChange={(e) => setcontent(e.target.value)}
+              onChange={(e) => setContent(e.target.value)}
               className="resize-none border mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md py-3 pl-3"
               rows={4}
               maxLength={5000}
@@ -283,7 +301,7 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
               className="text-gray-500 px-6 py-2 rounded-full mr-2"
               onClick={() => {
                 setTitle('');
-                setcontent('');
+                setContent('');
                 setLocation('');
                 setDateTime('');
               }}

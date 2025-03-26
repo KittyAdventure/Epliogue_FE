@@ -1,110 +1,51 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 interface Gathering {
+  id?: number;
   meetingId: number;
-  hostId?: number;
+  bookId: string;
   title: string;
   content: string;
-  dateTime: string;
   location: string;
+  dateTime: string;
   nowPeople: number;
-  total?: number;
-  bookTitle: string;
+  maxPeople?: number;
   bookImage: string;
+  bookTitle: string;
 }
-
-// const dummyData: Gathering[] = [
-//   {
-//     meetingId: 1,
-//     title: '독서 모임 A',
-//     content: '해리포터를 읽고 이야기 나누는 모임입니다.',
-//     dateTime: '2025-02-21,12:00:00',
-//     bookImage:
-//       'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791173321528.jpg',
-//     nowPeople: 5,
-//     total: 20,
-//     bookTitle: '해리포터와 마법사의 돌',
-//     location: '서울시 강남구',
-//   },
-//   {
-//     meetingId: 2,
-//     title: '독서 모임 B',
-//     content: '어린왕자를 읽으며 삶의 의미를 찾아봐요.',
-//     dateTime: '2025-02-21,12:00:00',
-//     bookImage:
-//       'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791194368175.jpg',
-//     nowPeople: 8,
-//     total: 30,
-//     bookTitle:
-//       'ETS 토익 단기공략 750+(LC+RC) (기출문제 한국 독점출간, 기출 문항으로 보강한 단기완성 시리즈)',
-//     location: '서울시 마포구',
-//   },
-//   {
-//     meetingId: 3,
-//     title: '문학 토론회',
-//     content: '디스토피아 문학 1984를 주제로 토론합니다.',
-//     dateTime: '2025-02-21,12:00:00',
-//     bookImage:
-//       'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788998441012.jpg',
-//     nowPeople: 10,
-//     total: 15,
-//     bookTitle: '1984',
-//     location: '서울시 종로구',
-//   },
-//   {
-//     meetingId: 4,
-//     title: '책 읽는 밤',
-//     content: '밤에 함께 책을 읽고 감상을 나누는 모임입니다.',
-//     dateTime: '2025-02-21,12:00:00',
-//     bookImage:
-//       'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788936434120.jpg',
-//     nowPeople: 3,
-//     total: 10,
-//     bookTitle: '데미안',
-//     location: '서울시 서초구',
-//   },
-// ];
 
 const GatheringListSection: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태
-  const [gatherings, setGatherings] = useState<Gathering[]>([]); // 실제 모임 리스트 상태
-  const [filteredGatherings, setFilteredGatherings] = useState<Gathering[]>([]); // 필터링된 모임 리스트
+  const [gatherings, setGatherings] = useState<Gathering[]>([]); // 전체 모임 목록
   const [participated, setParticipated] = useState<Record<number, boolean>>({});
 
+  // 모임 리스트 데이터 불러오기
   useEffect(() => {
-    // API에서 gathering 데이터를 가져오는 코드
     const fetchGatherings = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_DEV}/meetings/gatherings`,
+          `${import.meta.env.VITE_API_URL_DEV}/api/meetings/gatherings`,
           {
-            params: { page: 1, limit: 10 },
+            params: { page: 1, size: 10 },
           },
         );
-        const fetchedGatherings: Gathering[] = response.data;
-        setGatherings(fetchedGatherings); // 받은 데이터를 gatherings 상태에 저장
-        setFilteredGatherings(fetchedGatherings); // 필터링된 데이터도 초기화
+        console.log('API 응답 데이터:', response.data);
+        setGatherings(response.data.content);
       } catch (error) {
         console.error('Error loading gathering:', error);
       }
     };
     fetchGatherings();
-  }, []); // 컴포넌트 마운트 시 한 번만 호출
+  }, []);
 
-  useEffect(() => {
-    // 검색어에 따라 모임 리스트를 필터링
-    if (searchQuery) {
-      setFilteredGatherings(
-        gatherings.filter((gathering) =>
-          gathering.bookTitle.toLowerCase().includes(searchQuery.toLowerCase()),
-        ),
-      );
-    } else {
-      setFilteredGatherings(gatherings); // 검색어가 없으면 전체 모임 표시
-    }
-  }, [searchQuery, gatherings]); // searchQuery나 gatherings가 변경될 때마다 필터링
+  // 검색어로 모임 필터링
+  const filteredGatherings = gatherings.filter(
+    (gathering) =>
+      gathering.bookTitle.toLowerCase().includes(searchQuery.toLowerCase()), // 책 제목에 검색어가 포함된 경우만 필터링
+  );
 
+  // 참여 버튼 클릭 처리
   const handleParticipateClick = (meetingId: number) => {
     setParticipated((prevState) => ({
       ...prevState,
@@ -120,7 +61,7 @@ const GatheringListSection: React.FC = () => {
         <div className="relative mb-4">
           <input
             type="text"
-            placeholder="현재 생성된 모임 책 제목 검색하기"
+            placeholder="책 제목을 입력하여 모임을 검색하세요."
             className="border rounded-full p-3 px-8 w-full pr-10 text-lg" // 검색 아이콘 공간 확보를 위해 padding-right 추가
             value={searchQuery} // 상태값을 입력 필드에 반영
             onChange={(e) => setSearchQuery(e.target.value)} // 입력된 값을 상태에 저장
@@ -130,8 +71,8 @@ const GatheringListSection: React.FC = () => {
       {/* 모임 리스트 */}
       <div className="grid grid-cols-4 gap-14 mt-32 px-24 min-h-[40vh]">
         {filteredGatherings.length > 0 ? (
-          filteredGatherings.map((gathering) => (
-            <div key={gathering.meetingId} className="w-full">
+          filteredGatherings.map((gathering, index) => (
+            <div key={`${gathering.meetingId}-${index}`} className="w-full">
               <div
                 className="relative w-full group overflow-hidden rounded-lg"
                 style={{ aspectRatio: '2/3' }}
@@ -158,7 +99,7 @@ const GatheringListSection: React.FC = () => {
                     {gathering.location}
                   </p>
                   <p className="text-sm font-medium mt-6">
-                    현재 인원: {gathering.nowPeople}/{gathering.total} 명
+                    현재 인원: {gathering.nowPeople}/{gathering.maxPeople} 명
                   </p>
                   <button
                     className={`transition-all duration-300 ease-in-out mt-2 px-6 py-2 rounded-full font-bold shadow-md ${

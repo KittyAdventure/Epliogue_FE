@@ -9,6 +9,7 @@ interface Comment {
   commentPostDateTime: string;
   memberProfile: string;
   commentColor?: string;
+  existLike: boolean;
 }
 
 interface CommentListProps {
@@ -105,6 +106,7 @@ const CommentList: React.FC<CommentListProps> = ({
               <CommentsLikeButton
                 commentId={comment.commentId}
                 commentsLike={comment.commentsLike}
+                existLike={comment.existLike}
                 onClick={(e) => e.stopPropagation()}
               />
             </div>

@@ -10,10 +10,11 @@ import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import GatheringBtn from '../button/GatheringBtn';
 
 interface Gathering {
-  id?: number;
-  meetingId: number;
+  id: number;
+  memberId: number;
   bookId: string;
   title: string;
   content: string;
@@ -29,7 +30,6 @@ const GatheringSection: React.FC = () => {
   const [gatherings, setGatherings] = useState<Gathering[]>([]);
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
-  const [participated, setParticipated] = useState<Record<number, boolean>>({});
   const navigate = useNavigate();
 
   const GatheringPage = () => {
@@ -106,12 +106,6 @@ const GatheringSection: React.FC = () => {
     );
   };
 
-  const handleParticipateClick = (meetingId: number) => {
-    setParticipated((prevState) => ({
-      ...prevState,
-      [meetingId]: true,
-    }));
-  };
 
   return (
     <div className="section-wrap flex gap-16 mb-[200px]">
@@ -149,7 +143,7 @@ const GatheringSection: React.FC = () => {
             nextArrow={<CustomNextArrow />}
           >
             {gatherings.map((gathering) => (
-              <div key={gathering.meetingId} className="w-full">
+              <div key={gathering.memberId} className="w-full">
                 <div
                   className="relative w-full group overflow-hidden rounded-lg"
                   style={{ aspectRatio: '2/3' }}
@@ -178,20 +172,7 @@ const GatheringSection: React.FC = () => {
                     <p className="text-sm font-medium mt-6 mb-6">
                       현재 인원: {gathering.nowPeople}/{gathering.maxPeople} 명
                     </p>
-                    <button
-                      className={`transition-all duration-300 ease-in-out mt-2 px-6 py-2 rounded-full font-bold shadow-md ${
-                        participated[gathering.meetingId]
-                          ? 'bg-blue-500 text-white hover:bg-blue-700'
-                          : 'bg-white text-black hover:bg-black hover:text-white'
-                      }`}
-                      onClick={() =>
-                        handleParticipateClick(gathering.meetingId)
-                      }
-                    >
-                      {participated[gathering.meetingId]
-                        ? '참여완료'
-                        : '참여하기'}
-                    </button>
+                    <GatheringBtn meetingId={gathering.id} />
                   </div>
                 </div>
                 <p className="text-lg mt-4 text-center font-semibold">
