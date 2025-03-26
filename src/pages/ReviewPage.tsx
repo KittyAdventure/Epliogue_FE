@@ -59,20 +59,23 @@ export default function ReviewPage() {
   }
 
   // 댓글 추가 함수
-  const handleAddComment = () => {
-    if (newComment.trim() === '') return;
-    const newEntry: Comment = {
-      commentId: (comments.length + 1).toString(),
-      memberNickname: 'Username2',
-      commentContent: newComment,
-      commentPostDateTime: '방금 전',
-      memberProfile:
-        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-      commentsLike: '0', // 댓글의 좋아요 수는 string으로 처리
-    };
-    setComments([newEntry, ...comments]);
-    setNewComment('');
+const handleAddComment = () => {
+  if (newComment.trim() === '') return;
+
+  const newEntry: Comment = {
+    commentId: (comments.length + 1).toString(),
+    memberNickname: 'Username2',
+    commentContent: newComment,
+    commentPostDateTime: '방금 전',
+    memberProfile:
+      'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
+    commentsLike: '0',
+    existLike: false, // existLike 추가
   };
+
+  setComments([newEntry, ...comments]);
+  setNewComment('');
+};
 
   // 댓글 내용 변경 함수
   const handleNewCommentChange = (comment: string) => {
