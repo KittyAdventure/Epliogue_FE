@@ -30,9 +30,23 @@ export default function ReviewPage() {
     const fetchReviewData = async () => {
       try {
         console.log('Attempting to fetch review data...');
+
+        const token = localStorage.getItem('accesstoken');
+        const headers: { [key: string]: string } = {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        };
+
+        // 토큰이 있을 경우 Authorization 헤더 추가
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}`,
+          { headers },
         );
+
         console.log('Review data received:', response.data);
         setReview(response.data);
       } catch (error) {
@@ -59,23 +73,23 @@ export default function ReviewPage() {
   }
 
   // 댓글 추가 함수
-const handleAddComment = () => {
-  if (newComment.trim() === '') return;
+  const handleAddComment = () => {
+    if (newComment.trim() === '') return;
 
-  const newEntry: Comment = {
-    commentId: (comments.length + 1).toString(),
-    memberNickname: 'Username2',
-    commentContent: newComment,
-    commentPostDateTime: '방금 전',
-    memberProfile:
-      'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
-    commentsLike: '0',
-    existLike: false, // existLike 추가
+    const newEntry: Comment = {
+      commentId: (comments.length + 1).toString(),
+      memberNickname: 'Username2',
+      commentContent: newComment,
+      commentPostDateTime: '방금 전',
+      memberProfile:
+        'https://i.pinimg.com/736x/09/fa/41/09fa410e40c990bce7498f9d971838d6.jpg',
+      commentsLike: '0',
+      existLike: false, // existLike 추가
+    };
+
+    setComments([newEntry, ...comments]);
+    setNewComment('');
   };
-
-  setComments([newEntry, ...comments]);
-  setNewComment('');
-};
 
   // 댓글 내용 변경 함수
   const handleNewCommentChange = (comment: string) => {

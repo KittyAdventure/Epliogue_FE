@@ -46,6 +46,9 @@ const GatheringBtn: React.FC<GatheringBtnProps> = ({ meetingId }) => {
         setIsJoined(true);
         setParticipated((prev) => ({ ...prev, [meetingId]: true }));
         alert('모임에 참가하셨습니다!');
+
+        // 모임 참가 후 페이지 새로고침
+        window.location.reload(); // 페이지 새로고침
       }
     } catch (error) {
       console.error('모임 참가 실패:', error);
@@ -84,6 +87,9 @@ const GatheringBtn: React.FC<GatheringBtnProps> = ({ meetingId }) => {
         setIsJoined(false);
         setParticipated((prev) => ({ ...prev, [meetingId]: false }));
         alert('모임을 나갔습니다.');
+
+        // 모임 나가기 후 페이지 새로고침
+        window.location.reload(); // 페이지 새로고침
       }
     } catch (error) {
       console.error('모임 나가기 실패:', error);

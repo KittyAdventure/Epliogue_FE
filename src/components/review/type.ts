@@ -19,8 +19,10 @@ export interface Review {
   likeCount: number;
   commentsCount?: string;
   bookTitle: string;
+  bookCoverUrl: string;
   createdAt: string;
   imageUrls: string[];
+  liked: boolean;
 }
 
 export interface LatestReview {
@@ -50,4 +52,20 @@ export interface Book {
   pubDate: string;
   avgRating: string;
   sameAuthor: Array<{ title: string; isbn: string }>;
+  myRating: boolean;
+  existCollection: boolean;
+}
+
+export interface Gathering {
+  id: number;
+  memberId: number;
+  bookId: string;
+  title: string;
+  content: string;
+  location: string;
+  dateTime: string;
+  nowPeople: number;
+  maxPeople?: number;
+  bookImage: string;
+  bookTitle: string;
 }

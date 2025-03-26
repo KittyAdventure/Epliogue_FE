@@ -8,19 +8,22 @@ import { redirectToLogin } from '../../utility/AuthUtils';
 interface LikeButtonProps {
   reviewId: number;
   likeCount: number;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // onClick을 optional로 추가
+  liked: boolean; // 부모에서 전달받은 liked 값
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({
   reviewId,
   likeCount,
+  liked, // 부모 컴포넌트에서 전달받은 liked 값
   onClick,
 }) => {
-  const [isInLikes, setIsInLikes] = useState(false);
-  const [currentLikeCount, setLikeCount] = useState(likeCount);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   const { loggedIn } = authContext;
+
+  const [isInLikes, setIsInLikes] = useState<boolean>(liked); // 초기값: 부모에서 전달받은 liked 값
+  const [currentLikeCount, setLikeCount] = useState<number>(likeCount);
 
   const addToLikes = async () => {
     if (!loggedIn) {
@@ -33,27 +36,26 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
         {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      console.log('좋아요 추가 응답:', response);
-
       if (response.status === 200) {
-        alert('좋아요에 추가 되었습니다.');
-        setIsInLikes(true);
+        setIsInLikes(true); // 좋아요 추가
         setLikeCount((prev) => prev + 1);
       } else {
         throw new Error('좋아요 추가 실패');
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error('Response error:', error.response);
+        if (error.response?.data === '이미 좋아요를 눌렀습니다.') {
+          setIsInLikes(true); // 이미 좋아요 상태라면 그대로 두기
+        } else {
+          console.error('Response error:', error.response);
+        }
       } else {
         console.error('Error:', error);
       }
-      alert('좋아요 추가 중 오류가 발생했습니다.');
+      // alert('좋아요 추가 중 오류가 발생했습니다.');
     }
   };
 
@@ -67,25 +69,20 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       const token = localStorage.getItem('accesstoken');
       const response = await axios.delete(
         `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}/likes`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      console.log('좋아요 삭제 응답:', response);
-
       if (response.status === 200) {
-        alert('좋아요에서 삭제되었습니다.');
-        setIsInLikes(false);
-        setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
+        setIsInLikes(false); // 좋아요 제거
+        setLikeCount((prev) => Math.max(prev - 1, 0));
       } else {
         throw new Error('좋아요 삭제 실패');
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error('서버 응답 오류:', error.response);
+        console.error('Response error:', error.response);
       } else {
-        console.error('삭제 요청 오류:', error);
+        console.error('Error:', error);
       }
       alert('좋아요 삭제 중 오류가 발생했습니다.');
     }
@@ -95,15 +92,13 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     <div className="icon-container">
       <button
         onClick={(e) => {
-          // 기존의 onClick 동작을 처리
           if (isInLikes) {
             removeFromLikes();
           } else {
             addToLikes();
           }
-          // 추가적인 동작 처리
           if (onClick) {
-            onClick(e); // 외부에서 전달된 onClick 처리
+            onClick(e);
           }
         }}
         className={`flex items-center gap-1 text-sm ${

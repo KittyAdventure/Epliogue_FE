@@ -7,10 +7,10 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import { AuthContext } from '../../utility/AuthContext';
 import LikeButton from '../button/LikeButton';
-import { LatestReview } from '../review/type';
+import { Review } from '../review/type';
 
 const MainReviewSection: React.FC = () => {
-  const [reviews, setReviews] = useState<LatestReview[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
@@ -22,13 +22,25 @@ const MainReviewSection: React.FC = () => {
 
   // 페이지가 로드될 때마다 리뷰 데이터 가져오기
   useEffect(() => {
+     console.log('Attempting to fetch review data...');
+
+     const token = localStorage.getItem('accesstoken');
+     const headers: { [key: string]: string } = {
+       Accept: 'application/json',
+       'Content-Type': 'application/json',
+     };
+
+     // 토큰이 있을 경우 Authorization 헤더 추가
+     if (token) {
+       headers['Authorization'] = `Bearer ${token}`;
+     }
+
+    
     // 최신 리뷰 가져오기
     axios
       .get(`${import.meta.env.VITE_API_URL_DEV}/api/reviews/latest`, {
+        headers, // 헤더에 토큰을 포함시킴
         params: { page: 1, size: 10 },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
-        },
       })
       .then((response) => {
         const data = response.data;
@@ -38,24 +50,22 @@ const MainReviewSection: React.FC = () => {
           return;
         }
 
-        const fetchedReviews: LatestReview[] = data.content.map(
-          (review: any) => ({
-            id: review.id,
-            nickname: review.nickname ?? '익명',
-            memberId: review.memberId,
-            memberProfileImage:
-              review.memberProfileImage || '/img/members/user.png',
-            bookId: review.bookId,
-            bookTitle: review.bookTitle ?? '제목 없음',
-            content: review.content ?? '내용 없음',
-            imageUrls: review.imageUrls ?? [],
-            createdAt: review.createdAt,
-            modifiedAt: review.modifiedAt,
-            likeCount: review.likeCount ?? 0,
-            commentsCount: review.commentsCount ?? '0',
-            bookCoverUrl: review.bookCoverUrl ?? '/img/expected/silver.jpg',
-          }),
-        );
+        const fetchedReviews: Review[] = data.content.map((review: any) => ({
+          id: review.id,
+          nickname: review.nickname ?? '익명',
+          memberId: review.memberId,
+          memberProfileImage:
+            review.memberProfileImage || '/img/members/user.png',
+          bookId: review.bookId,
+          bookTitle: review.bookTitle ?? '제목 없음',
+          content: review.content ?? '내용 없음',
+          imageUrls: review.imageUrls ?? [],
+          createdAt: review.createdAt,
+          modifiedAt: review.modifiedAt,
+          likeCount: review.likeCount ?? 0,
+          commentsCount: review.commentsCount ?? '0',
+          bookCoverUrl: review.bookCoverUrl ?? '/img/expected/silver.jpg',
+        }));
 
         setReviews(fetchedReviews);
       })
@@ -144,6 +154,7 @@ const MainReviewSection: React.FC = () => {
                 <LikeButton
                   reviewId={review.id}
                   likeCount={review.likeCount}
+                  liked={review.liked}
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>

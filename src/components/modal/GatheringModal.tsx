@@ -31,11 +31,11 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [location, setLocation] = useState('');
-  const [dateTime, setDateTime] = useState('2024-04-01 19:00:00');
+  const [dateTime, setDateTime] = useState('');
   const [maxPeople, setMaxPeople] = useState(0);
   const [bookSearchQuery, setBookSearchQuery] = useState('');
   const [bookResults, setBookResults] = useState<Book[]>([]);
-  const [bookId, setBookId] = useState<string | null>('98788932475233');
+  const [bookId, setBookId] = useState<string | null>('');
 
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
@@ -134,11 +134,17 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
       return;
     }
 
+    // dateTime 변환
+    const formattedDateTime = new Date(dateTime)
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
+
     const meetingData: Gathering = {
       title,
       content,
       location,
-      dateTime,
+      dateTime: formattedDateTime, // 변환된 날짜 시간
       maxPeople,
       bookId,
     };
@@ -149,6 +155,7 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
     // 모임 생성 성공 후 모달 닫기
     if (createdMeeting) {
       closeModal();
+      window.location.reload(); // 페이지 새로고침
     }
   };
 

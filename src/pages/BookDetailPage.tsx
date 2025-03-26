@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import BookDetailSection from '../components/bookdetail/BookDetailSection';
 import ReviewDetailSection from '../components/bookdetail/ReviewSection';
 import SameAuthorSection from '../components/bookdetail/SameAuthorSection';
@@ -36,6 +37,8 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
     }/api/books/detail?query=${isbn}&type=d_isbn`;
 
     const token = localStorage.getItem('accesstoken');
+
+    // Axios 요청 헤더 설정
     const headers: { [key: string]: string } = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -46,25 +49,14 @@ const BookDetailPage: React.FC<BookDetailPageProps> = ({ memberId }) => {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // API 호출
-    fetch(url, {
-      method: 'GET',
-      headers,
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(
-            `❌ 서버 응답 오류: ${response.status} - ${errorText}`,
-          );
-        }
-        return response.json();
-      })
-      .then((jsonData) => {
-        setBook(jsonData);
+    // Axios로 API 호출
+    axios
+      .get(url, { headers })
+      .then((response) => {
+        setBook(response.data);
       })
       .catch((error) => {
-        console.error('🚨 Error loading book details:', error.message);
+        console.error('🚨 Error loading book details:', error);
         setBook(null);
       });
   }, [isbn]); // isbn이 변경될 때마다 다시 실행

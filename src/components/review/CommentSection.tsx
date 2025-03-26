@@ -58,9 +58,6 @@ const CommentSection: React.FC<MyComponentProps> = ({ reviewId }) => {
             page: pageInfo.currentPage, // 페이지 번호
             sort, // 정렬 기준 (최신순 또는 좋아요 순)
           },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
-          },
         },
       );
 
@@ -264,7 +261,7 @@ const CommentSection: React.FC<MyComponentProps> = ({ reviewId }) => {
         onAddComment={handleAddComment}
       />
       {/* 오류 메시지 표시 */}
-      {error && <div className="error">{error}</div>}
+      {/* {error && <div className="error">{error}</div>} */}
 
       {/* 정렬 옵션 */}
       <div className="absolute float-right right-16 w-36 z-50 mt-7">

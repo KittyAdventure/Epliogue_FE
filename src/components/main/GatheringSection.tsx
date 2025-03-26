@@ -46,7 +46,7 @@ const GatheringSection: React.FC = () => {
             params: { page: 1, size: 10 },
           },
         );
-        console.log('API 응답 데이터:', response.data);
+        // console.log('API 응답 데이터:', response.data);
         setGatherings(response.data.content);
       } catch (error) {
         console.error('Error loading gathering:', error);

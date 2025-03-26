@@ -141,6 +141,7 @@ const ReviewCommentSection: React.FC<ReviewSectionProps> = ({ review }) => {
           <LikeButton
             reviewId={review.id}
             likeCount={review.likeCount}
+            liked={review.liked}
             onClick={(e) => e.stopPropagation()}
           />
         </div>

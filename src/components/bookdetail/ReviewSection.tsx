@@ -14,6 +14,7 @@ interface Review {
   bookTitle: string;
   createdAt: string;
   imageUrls: string[];
+  liked: boolean;
 }
 
 interface ReviewSectionProps {
@@ -81,6 +82,24 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
     fetchReviews();
   }, [currentPage, sortType, bookId]);
 
+  // 좋아요 상태 변경 함수
+  const handleLikeToggle = (reviewId: number, currentLiked: boolean) => {
+    // 상태 변경 로직을 작성 (예: API 요청 후 상태 업데이트)
+    setReviews((prevReviews) =>
+      prevReviews.map((review) =>
+        review.id === reviewId
+          ? {
+              ...review,
+              liked: !currentLiked,
+              likeCount: currentLiked
+                ? review.likeCount - 1
+                : review.likeCount + 1,
+            }
+          : review,
+      ),
+    );
+  };
+
   return (
     <div className="review-section mt-28 mb-28">
       <div className="flex justify-between items-center mb-4">
@@ -125,7 +144,7 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
           >
             <div className="flex items-center gap-2 mb-6">
               <img
-                src={review.memberProfileImage}
+                src={review.memberProfileImage || '/img/members/user.png'}
                 alt="User"
                 className="w-12 h-12 rounded-full"
               />
@@ -161,7 +180,11 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
               <LikeButton
                 reviewId={review.id}
                 likeCount={review.likeCount}
-                onClick={(e) => e.stopPropagation()}
+                liked={review.liked}
+                onClick={(e) => {
+                  e.stopPropagation(); // 클릭 이벤트 전파 방지
+                  handleLikeToggle(review.id, review.liked);
+                }}
               />
             </div>
           </div>
