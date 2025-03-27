@@ -1,6 +1,9 @@
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import { useEffect } from 'react';
 
 function PlaningSection() {
+  const controls = useAnimation(); // 애니메이션 컨트롤
+
   const textVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -23,9 +26,14 @@ function PlaningSection() {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.7, ease: 'easeInOut', delay: 2 },
+      transition: { duration: 0.7, ease: 'easeInOut', delay: 1.6 },
     },
   };
+
+  useEffect(() => {
+    // 선 애니메이션이 끝난 후 원 애니메이션 실행
+    controls.start('visible');
+  }, [controls]);
 
   const letterVariants = {
     hidden: { opacity: 0, y: 10, color: '#CBD5E0' },
@@ -113,7 +121,7 @@ function PlaningSection() {
         variants={circleVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false }}
+        viewport={{ once: false, amount: 0.5 }}
       ></motion.div>
     </div>
   );
