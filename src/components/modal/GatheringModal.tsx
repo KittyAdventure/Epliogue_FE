@@ -120,7 +120,7 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
   // 책 제목 클릭 시
   const handleBookSelect = (book: Book) => {
     setBookSearchQuery(book.title);
-    setBookId('9788932475233');
+    setBookId(book.isbn);
     setBookResults([]);
     console.log('선택한 책 ISBN:', book.isbn);
   };
