@@ -1,6 +1,6 @@
 // 마이페이지 클릭 -> 로그인 안되어있음 -> 이 페이지로 온다
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../assets/css/checkbox.css';
 import { useAuth } from '../../utility/useAuth';
@@ -38,6 +38,31 @@ const LoginForm = (): React.JSX.Element => {
       return '암호는 6자 이상이어야 합니다';
     }
     return null;
+  };
+
+  const KAKAO_JS_KEY = 'b9f8e210339fc67468499c6d5964ff35'; // Replace with your actual key
+  useEffect(() => {
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(KAKAO_JS_KEY);
+      console.log('Kakao SDK Initialized:', window.Kakao.isInitialized());
+    }
+  }, []);
+  const handleKakaoLogin = () => {
+    if (!window.Kakao) return;
+    if (!window.Kakao.Auth) return;
+    window.Kakao.Auth.login({
+      success: function (authObj: { access_token: string }) {
+        console.log('Kakao Login Success:', authObj);
+        localStorage.setItem('accesstoken', authObj.access_token);
+
+        window.Kakao.Auth.authorize({
+          redirectUri: import.meta.env.VITE_API_URL_PROD, // Or your deployed URL
+        });
+      },
+      fail: function (err: Error) {
+        console.error('Kakao Login Failed:', err);
+      },
+    });
   };
 
   // 로그인 버튼을 클릭하면 실행
@@ -133,6 +158,7 @@ const LoginForm = (): React.JSX.Element => {
           provider="kakao"
           name="카카오 로그인"
           arialabel="카카오 로그인"
+          onClick={handleKakaoLogin}
         />
         <ButtonBig
           provider="google"

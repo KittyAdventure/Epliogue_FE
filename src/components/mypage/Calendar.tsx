@@ -37,9 +37,10 @@ const Calendar: React.FC = (): React.JSX.Element => {
       });
 
       if (response.data) {
+        console.log('Calendar', response);
         setCalendarData(response.data);
       } else {
-        console.log('No Response');
+        console.log('Calendar No Response');
       }
     } catch (error) {
       console.log('Calendar Error', error);
@@ -111,12 +112,16 @@ const Calendar: React.FC = (): React.JSX.Element => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <button onClick={handlePrevMonth}>&lt; Prev</button>
+        <button onClick={handlePrevMonth} className="hover:font-semibold">
+          &lt; 이전달
+        </button>
         <span>
           {currentMonth.toLocaleString('default', { month: 'long' })}{' '}
           {currentMonth.getFullYear()}
         </span>
-        <button onClick={handleNextMonth}>Next &gt;</button>
+        <button onClick={handleNextMonth} className="hover:font-semibold">
+          다음달 &gt;
+        </button>
       </div>
 
       <div className="grid grid-cols-7 gap-0">
@@ -143,7 +148,7 @@ const Calendar: React.FC = (): React.JSX.Element => {
           return (
             <div
               key={index}
-              className="relative cursor-pointer"
+              className="relative cursor-pointer hover:font-semibold"
               onClick={() => day && handleDateClick(formattedDate!)}
             >
               <div className="flex justify-center items-center h-16">
@@ -165,25 +170,34 @@ const Calendar: React.FC = (): React.JSX.Element => {
       {/* Modal with dark transparent background */}
       {modalVisible && selectedReviews && (
         <div className="modal fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="modal-content bg-white p-6 w-3/4 max-w-3xl relative rounded-lg shadow-lg">
+          <div className="modal-content bg-white p-10 w-3/4 max-w-3xl relative rounded-lg shadow-lg">
             <span
-              className="close absolute top-0 right-0 p-2 cursor-pointer text-xl"
+              className="close absolute top-5 right-5 cursor-pointer text-xl"
               onClick={closeModal}
             >
               &times;
             </span>
-            <h2 className="text-2xl mb-4">Reviews for {selectedDate}</h2>
-            <div className="reviews-container flex overflow-x-auto space-x-6">
+            <h3 className="text-2xl mb-4 leading-5">{selectedDate} 리뷰</h3>
+            <div className="reviews-container flex overflow-x-auto space-x-6 mt-10 w-full max-w-full scroll-smooth">
               {selectedReviews.map((review, index) => (
-                <div key={index} className="review-item w-64">
+                <div key={index} className="review-item w-64 flex-shrink-0">
                   <img
                     src={review.thumbnail || defaultAvatar}
                     alt="Review Thumbnail"
-                    className="w-full h-64 object-cover rounded-md mb-4"
+                    className="w-64 h-96 object-cover bg-center rounded-lg shadow-lg"
                   />
-                  <h3 className="text-lg font-semibold">{review.bookTitle}</h3>
-                  <p className="text-sm text-gray-500">
-                    Review posted on: {review.reviewPostDateTime}
+                  <h3 className="w-full text-lg font-semibold mt-5 leading-6 break-words">
+                    {review.bookTitle}
+                  </h3>
+
+                  <p className="text-sm text-gray-500 leading-6 mt-2">
+                    작성날짜:{' '}
+                    {new Date(review.reviewPostDateTime).toLocaleString(
+                      'ko-KR',
+                      {
+                        timeZone: 'Asia/Seoul',
+                      },
+                    )}
                   </p>
                 </div>
               ))}

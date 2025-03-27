@@ -95,16 +95,14 @@ const TabReview = (): React.JSX.Element => {
 
   return (
     <div className="mt-20">
-      <h3 className="text-2xl font-semibold">
-        {userNickname}의 리뷰
-      </h3>
+      <h3 className="text-2xl font-semibold">{userNickname}의 리뷰</h3>
 
-      <div className="flex flex-wrap gap-y-20 justify-between w-full min-h-[680px] mt-10">
+      <div className=" grid grid-cols-3 gap-y-20 gap-x-10 justify-between w-full min-h-[680px] mt-10">
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div
               key={review.reviewId}
-              className="reviewPost relative rounded-xl w-[30%] h-[320px] px-5 py-10 shadow-md hover:shadow-lg z-[10]"
+              className="reviewPost relative rounded-xl w-[100%] h-[320px] px-5 py-10 shadow-md hover:shadow-lg z-[10]"
             >
               <button
                 className="reviewDelBtn absolute top-3 right-5 text-[gray] text-sm"
@@ -116,20 +114,20 @@ const TabReview = (): React.JSX.Element => {
                 <img
                   src={review.thumbnail}
                   alt="review book thumbnail"
-                  className="block w-[65px] h-[100px] mr-5 leading-20 shadow-sm"
+                  className="block w-16 h-24 mr-5 leading-20 shadow-sm object-cover"
                 />
 
                 <Link
                   to={`/reviews/${review.reviewId}`}
-                  className="reviewTop h-[100px]"
+                  className="reviewTop"
                   onClick={() => {
                     window.scrollTo(0, 0);
                   }}
                 >
-                  <h5 className="w-[100%] h-[60px] text-semibold leading-5 text-ellipsis line-clamp-3">
+                  <h5 className="w-full h-16 text-semibold leading-5 text-ellipsis line-clamp-3">
                     {review.reviewBookTitle}
                   </h5>
-                  <p className="text-[gray] mt-5">
+                  <p className="text-[gray] mt-3">
                     <span className="mr-1">{review.reviewBookAuthor}</span>|
                     <span className="ml-1">
                       {review.reviewBookPubYear
@@ -142,9 +140,15 @@ const TabReview = (): React.JSX.Element => {
               <p className="mt-5 leading-5 h-[120px] line-clamp-6">
                 {review.reviewContent}
               </p>
-              <button className="reviewComment block mb-3 hover:underline">
+              <Link
+                to={`/reviews/${review.reviewId}`}
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                }}
+                className="reviewComment block mb-3 hover:underline"
+              >
                 댓글 ({review.reviewCommentsCount})
-              </button>
+              </Link>
             </div>
           ))
         ) : (
