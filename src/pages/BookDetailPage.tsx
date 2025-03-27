@@ -18,6 +18,8 @@ interface Book {
   avgRating: string;
   existCollection: boolean;
   sameAuthor: Array<{ title: string; isbn: string }>;
+  
+  myRating: boolean //배포에러 처리요망!
 }
 
 interface BookDetailPageProps {

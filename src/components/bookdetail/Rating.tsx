@@ -19,6 +19,8 @@ const Rating = ({ bookIsbn, initialRating, initialMyRating }: RatingProps) => {
   const { loggedIn } = authContext;
   const navigate = useNavigate();
 
+  console.log(myRating) //배포에러 myRating 처리요망
+
   // ⭐ 별점 클릭 핸들러
   const handleRatingClick = async (index: number) => {
     const newRating = index + 1;
