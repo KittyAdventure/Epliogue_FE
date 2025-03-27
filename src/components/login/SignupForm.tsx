@@ -13,10 +13,11 @@ const SignupForm = (): React.JSX.Element => {
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [birthDate, setBirthDate] = useState<string>('');
+  const [profileUrl, setProfileUrl] = useState<string>("");
   // 요청관련 메세지
-
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.currentTarget.value);
+    setProfileUrl('s3://bucket/register/user.txt');
   };
   const validatePassword = (valPW: string): string | null => {
     if (valPW.length <= 5) {
@@ -48,24 +49,23 @@ const SignupForm = (): React.JSX.Element => {
         nickname,
         name,
         phone,
+        profileUrl,
       };
       console.log(`${apiUrl}/api/member/register`);
-      console.log(payload)
-      const response = await axios.post(`${apiUrl}/api/member/register`, payload, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      console.log(payload);
+      const response = await axios.post(
+        `${apiUrl}/api/member/register`,
+        payload,
+      );
       console.log('Register Response');
       console.log(response);
     } catch (error) {
-      console.error("Error in signup form:", error)
+      console.error('Error in signup form:', error);
     }
   };
 
   return (
     <div id="signupForm" className="p-[120px]">
-
       <form
         action=""
         id="signupWrap"
@@ -73,7 +73,6 @@ const SignupForm = (): React.JSX.Element => {
         onSubmit={handleSubmit}
       >
         <h2 className="text-4xl font-medium">회원가입</h2>
-        <div>Avatar</div>
         <InputBox
           type="text"
           id="loginId"

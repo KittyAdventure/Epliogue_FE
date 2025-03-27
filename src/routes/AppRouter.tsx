@@ -13,6 +13,7 @@ import MainPage from '../pages/MainPage';
 // Mypage
 import LoginForm from '../components/login/LoginForm';
 import SignupForm from '../components/login/SignupForm';
+import KakaoRedirectHandler from '../components/login/KakaoRedirectHandler';
 import MyPage from '../components/mypage/MyPage';
 import PaymentPage from "../components/payment/PaymentPage"
 // Nav (서브 페이지)
@@ -50,6 +51,7 @@ const AppRouter = (): React.JSX.Element => {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/auth/kakao" element={<KakaoRedirectHandler/>} />
         <Route path="/register" element={<SignupForm />} />
         {/* private route 적용 */}
         <Route
