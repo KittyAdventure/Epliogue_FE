@@ -44,35 +44,17 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
           `${import.meta.env.VITE_API_URL_DEV}/api/books/${bookId}/reviews`,
           {
             params: {
-              page: 1,
-              size: 10,
+              page: currentPage,
+              size: reviewsPerPage,
               sortType: sortType,
             },
           },
         );
 
-        let sortedReviews = response.data.content;
+        console.log('API 응답 데이터:', response.data); // 응답 데이터 확인
+        console.log('총 페이지 수:', response.data.totalPages); // totalPages 확인
 
-        if (sortType === 'likes') {
-          sortedReviews = [...sortedReviews].sort(
-            (a, b) =>
-              b.likeCount - a.likeCount ||
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-          );
-        } else if (sortType === 'latest') {
-          sortedReviews = [...sortedReviews].sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-          );
-        }
-
-        const startIndex = (currentPage - 1) * reviewsPerPage;
-        const paginatedReviews = sortedReviews.slice(
-          startIndex,
-          startIndex + reviewsPerPage,
-        );
-
-        setReviews(paginatedReviews);
+        setReviews(response.data.content);
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error('Error loading reviews:', error);
@@ -99,6 +81,8 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
       ),
     );
   };
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className="review-section mt-28 mb-28">
@@ -191,18 +175,19 @@ function ReviewSection({ bookId }: ReviewSectionProps) {
         ))}
       </div>
 
-      <div className="flex justify-center mt-16">
-        {Array.from({ length: totalPages }, (_, i) => (
+      {/* 페이지네이션 */}
+      <div className="flex justify-center mt-8">
+        {Array.from({ length: totalPages }, (_, index) => (
           <button
-            key={i}
-            className={`mx-1 px-3 py-1 mb-1 ${
-              currentPage === i + 1
-                ? 'text-black font-bold bg-gray-100 rounded-full'
-                : ''
+            key={index}
+            onClick={() => paginate(index + 1)}
+            className={`mx-1 px-4 py-2 rounded-full ${
+              currentPage === index + 1
+                ? 'bg-gray-200 text-black'
+                : 'bg-white text-black'
             }`}
-            onClick={() => setCurrentPage(i + 1)}
           >
-            {i + 1}
+            {index + 1}
           </button>
         ))}
       </div>
