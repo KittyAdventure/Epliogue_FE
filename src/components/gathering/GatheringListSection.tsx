@@ -16,11 +16,12 @@ interface Gathering {
 }
 
 const GatheringListSection: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태
-  const [gatherings, setGatherings] = useState<Gathering[]>([]); // 전체 모임 목록
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [gatherings, setGatherings] = useState<Gathering[]>([]);
   const [participated, setParticipated] = useState<Record<number, boolean>>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const gatheringsPerPage = 8;
 
-  // 모임 리스트 데이터 불러오기
   useEffect(() => {
     const fetchGatherings = async () => {
       try {
@@ -37,15 +38,20 @@ const GatheringListSection: React.FC = () => {
       }
     };
     fetchGatherings();
-  }, []);
+  }, [currentPage]);
 
-  // 검색어로 모임 필터링
-  const filteredGatherings = gatherings.filter(
-    (gathering) =>
-      gathering.bookTitle.toLowerCase().includes(searchQuery.toLowerCase()), // 책 제목에 검색어가 포함된 경우만 필터링
+  const filteredGatherings = gatherings.filter((gathering) =>
+    gathering.bookTitle.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  // 참여 버튼 클릭 처리
+  const totalPages = Math.ceil(filteredGatherings.length / gatheringsPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const startIndex = (currentPage - 1) * gatheringsPerPage;
+  const endIndex = startIndex + gatheringsPerPage;
+  const currentGatherings = filteredGatherings.slice(startIndex, endIndex);
+
   const handleParticipateClick = (meetingId: number) => {
     setParticipated((prevState) => ({
       ...prevState,
@@ -57,21 +63,19 @@ const GatheringListSection: React.FC = () => {
     <div className="container mx-auto p-4 mt-[80px] mb-56">
       <div className="mx-24">
         <h2 className="text-3xl font-bold mb-8">전체 모임 리스트</h2>
-        {/* 모임 검색 */}
         <div className="relative mb-4">
           <input
             type="text"
             placeholder="책 제목을 입력하여 모임을 검색하세요."
-            className="border rounded-full p-3 px-8 w-full pr-10 text-lg" // 검색 아이콘 공간 확보를 위해 padding-right 추가
-            value={searchQuery} // 상태값을 입력 필드에 반영
-            onChange={(e) => setSearchQuery(e.target.value)} // 입력된 값을 상태에 저장
+            className="border rounded-full p-3 px-8 w-full pr-10 text-lg"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
-      {/* 모임 리스트 */}
       <div className="grid grid-cols-4 gap-14 mt-32 px-24 min-h-[40vh]">
-        {filteredGatherings.length > 0 ? (
-          filteredGatherings.map((gathering, index) => (
+        {currentGatherings.length > 0 ? (
+          currentGatherings.map((gathering, index) => (
             <div key={`${gathering.meetingId}-${index}`} className="w-full">
               <div
                 className="relative w-full group overflow-hidden rounded-lg"
@@ -125,6 +129,22 @@ const GatheringListSection: React.FC = () => {
             해당하는 모임이 없습니다.
           </div>
         )}
+      </div>
+
+      <div className="flex justify-center mt-8">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => paginate(index + 1)}
+            className={`mx-1 px-4 py-2 rounded-full ${
+              currentPage === index + 1
+                ? 'bg-gray-200 text-black'
+                : 'bg-white text-black'
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
