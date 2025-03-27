@@ -1,8 +1,8 @@
-import { useState, useContext } from 'react';
-import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
-import { AuthContext } from '../../utility/AuthContext';
+import { useContext, useState } from 'react';
+import { FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utility/AuthContext';
 import { redirectToLogin } from '../../utility/AuthUtils';
 
 interface RatingProps {
@@ -19,7 +19,7 @@ const Rating = ({ bookIsbn, initialRating, initialMyRating }: RatingProps) => {
   const { loggedIn } = authContext;
   const navigate = useNavigate();
 
-  console.log(myRating) //배포에러 myRating 처리요망
+  console.log(myRating); //배포에러 myRating 처리요망
 
   // ⭐ 별점 클릭 핸들러
   const handleRatingClick = async (index: number) => {
@@ -50,6 +50,9 @@ const Rating = ({ bookIsbn, initialRating, initialMyRating }: RatingProps) => {
         setRating(0);
         setMyRating(false);
         console.log('별점 삭제 성공');
+
+        // 🚀 페이지 새로고침
+        window.location.reload();
       } catch (error) {
         console.error('별점 삭제 오류:', error);
       }
@@ -74,6 +77,9 @@ const Rating = ({ bookIsbn, initialRating, initialMyRating }: RatingProps) => {
         setRating(newRating);
         setMyRating(true);
         console.log('별점 등록 성공:', response.data);
+
+        // 🚀 페이지 새로고침
+        window.location.reload();
       } catch (error) {
         console.error('별점 등록 오류:', error);
       }
