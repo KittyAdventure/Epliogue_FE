@@ -38,6 +38,7 @@ const LoginForm = (): React.JSX.Element => {
       console.error('❌ Kakao SDK is not properly initialized');
       return;
     }
+    // vercel or localhost
     const kakaoRedirectUri =
       import.meta.env.NODE === 'production'
         ? import.meta.env.VITE_KAKAO_REDIRECT_URI_PROD
@@ -53,7 +54,7 @@ const LoginForm = (): React.JSX.Element => {
       return;
     }
     if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(import.meta.env.VITE_KAKAO_JS_KEY);
+      window.Kakao.init(import.meta.env.VITE_KAKAO_JS);
       console.log('✅ Kakao SDK Initialized');
     }
   }, []);
