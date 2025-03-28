@@ -4,11 +4,11 @@ import DeleteUser from "./DeleteUser"
 
 interface AboutUsers {
   nickName: string;
-  loginId?: string;
-  email?: string;
+  loginId: string;
+  email: string;
   follower: string;
   following: string;
-  phone?: string;
+  phone: string;
   profileUrl: string;
 }
 
@@ -65,8 +65,8 @@ const UserInfo: React.FC<AboutUsers> = ({
               openModal
               onClose={handleCloseModal}
               nickName={nickName}
-              email={email||""}
-              phone={phone||""}
+              email={email}
+              phone={phone}
             ></UserInfoEdit>
           )}
           <button
@@ -78,17 +78,11 @@ const UserInfo: React.FC<AboutUsers> = ({
           {deleteModal && <DeleteUser openModal onClose={handleDeleteClose} />}
         </div>
         <div className="follow-info flex justify-center items-center mt-3">
-          <button
-            className="mr-3 hover:underline"
-            // onClick={handleFollowerModal}
-          >
+          <button className="mr-3 hover:underline">
             Followers: {follower}
           </button>
           <span> | </span>
-          <button
-            className="ml-3 hover:underline"
-            // onClick={handleFollowingModal}
-          >
+          <button className="ml-3 hover:underline">
             Following: {following}
           </button>
         </div>

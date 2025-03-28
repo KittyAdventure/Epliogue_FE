@@ -108,6 +108,7 @@ const Calendar: React.FC = (): React.JSX.Element => {
   };
 
   const defaultAvatar = '../../../img/members/user.png';
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -185,12 +186,12 @@ const Calendar: React.FC = (): React.JSX.Element => {
                     alt="Review Thumbnail"
                     className="w-64 h-96 object-cover bg-center rounded-lg shadow-lg"
                   />
-                  <h3 className="w-full text-lg font-semibold mt-5 leading-6 break-words overflow-hidden line-clamp-3">
+                  <h3 className="w-full text-lg font-semibold mt-5 leading-6 break-words">
                     {review.bookTitle}
                   </h3>
 
                   <p className="text-sm text-gray-500 leading-6 mt-2">
-                    작성날짜:
+                    작성날짜:{' '}
                     {new Date(review.reviewPostDateTime).toLocaleString(
                       'ko-KR',
                       {

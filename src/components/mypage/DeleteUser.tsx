@@ -4,8 +4,6 @@ interface DeleteProps {
   onClose: () => void;
 }
 // user 삭제 /회원탈퇴
-// 백엔드에서 정보와 코드가 썪여서 처리하는게 까다롭다고 한다
-// 해서 실제로는 연결하지 않음
 const handleUserDelete = async () => {
   const accessToken = localStorage.getItem('accesstoken');
   if (!accessToken){

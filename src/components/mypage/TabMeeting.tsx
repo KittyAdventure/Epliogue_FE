@@ -73,15 +73,11 @@ const TabMeeting = (): React.JSX.Element => {
                   <h4 className="font-bold leading-[60px]">
                     {meeting.meetingBookTitle}
                     <span className="ml-5 text-gray-500">
-                      {meeting.meetingPeople}명 참가 중
+                      {meeting.meetingPeople}참가 중
                     </span>
                   </h4>
                   <h5 className="leading-5 font-bold mt-5">일정</h5>
-                  <p className="leading-5">
-                    {new Date(meeting.dateTime).toLocaleString('ko-KR', {
-                      timeZone: 'Asia/Seoul',
-                    })}
-                  </p>
+                  <p className="leading-5">{meeting.dateTime}</p>
 
                   <h5 className="leading-5 font-bold mt-5">장소</h5>
                   <p className="leading-5 h-[60px] line-clamp-3">

@@ -33,7 +33,7 @@ const RechargePage = (): React.JSX.Element => {
             key={idx}
             name={`${point.value} 포인트`}
             arialabel="button"
-            provider="kakaopay"
+            provider="kakao"
             value={point.value}
             onClick={handleRecharge}
           />
@@ -42,8 +42,9 @@ const RechargePage = (): React.JSX.Element => {
           <h4>상품문의</h4>
           <p>
             주의: 구매한 상품의 취소/반품은 구매내역에서 신청 가능합니다.
+            상품문의
           </p>
-          <p>게시판을 통해 취소나 환불, 반품 등은 처리되지 않습니다. </p>
+          <p>후기게시판을 통해 취소나 환불, 반품 등은 처리되지 않습니다. </p>
           <p>
             가격, 판매자, 교환/환불 및 배송 등 해당 상품 자체와 관련 없는 문의는
             고객센터 내 1:1 문의하기를 이용해주세요.
