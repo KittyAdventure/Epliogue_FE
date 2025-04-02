@@ -115,7 +115,7 @@ export default function ReviewModal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
-      <div className="bg-white p-9 rounded-lg w-[500px] md:w-[600px] lg:w-[700px] shadow-xl relative">
+      <div className="bg-white p-9 rounded-lg w-[500px] shadow-xl relative">
         <button
           onClick={() => setReviewModalOpen(false)}
           className="absolute top-4 right-4"

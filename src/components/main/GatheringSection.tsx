@@ -106,7 +106,6 @@ const GatheringSection: React.FC = () => {
     );
   };
 
-
   return (
     <div className="section-wrap flex gap-16 mb-[200px]">
       <div className="w-1/4">
@@ -143,38 +142,74 @@ const GatheringSection: React.FC = () => {
             nextArrow={<CustomNextArrow />}
           >
             {gatherings.map((gathering) => (
-              <div key={gathering.memberId} className="w-full">
-                <div
-                  className="relative w-full group overflow-hidden rounded-lg"
-                  style={{ aspectRatio: '2/3' }}
-                >
-                  <div className="absolute inset-0 bg-black bg-opacity-60 rounded-lg z-10"></div>
-                  <img
-                    className="absolute inset-0 w-full h-full object-cover rounded-lg z-5 transition-transform duration-300 ease-in-out group-hover:scale-105"
-                    src={gathering.bookImage}
-                    alt={gathering.title}
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-6 z-20">
-                    <h3 className="text-xl font-bold line-clamp-1 text-center">
-                      {gathering.title}
-                    </h3>
-                    <p className="text-[0.9rem] mt-3 text-center line-clamp-4">
-                      {gathering.content}
-                    </p>
-                    <p className="text-sm mt-6 text-center">
-                      <span className="font-semibold">일정 :</span>{' '}
-                      {gathering.dateTime}
-                    </p>
-                    <p className="text-sm text-center">
-                      <span className="font-semibold">장소 :</span>{' '}
-                      {gathering.location}
-                    </p>
-                    <p className="text-sm font-medium mt-6 mb-6">
-                      현재 인원: {gathering.nowPeople}/{gathering.maxPeople} 명
-                    </p>
-                    <GatheringBtn meetingId={gathering.id} />
+              <div key={gathering.memberId} className="w-full wrapper">
+                <div className="col">
+                  {/* container */}
+                  <div
+                    className="container relative w-full group rounded-lg"
+                    style={{
+                      aspectRatio: '2/3',
+                      perspective: '1000px', // 3D 효과를 위한 perspective
+                    }}
+                  >
+                    {/* Hover 유도 문구 */}
+                    <div className="absolute -top-7 w-full flex justify-center items-center text-black text-lg font-semibold drop-shadow-md opacity-80 group-hover:opacity-0 group-hover:translate-y-[-4px] transition-all duration-500 ease-in-out">
+                      <span className="flex items-center animate-bounce">
+                        🖱️ 마우스 올려서 정보 확인하기
+                      </span>
+                    </div>
+                    {/* front: 카드의 앞면 */}
+                    <div
+                      className="front absolute inset-0 w-full h-full group-hover:rotate transition-all duration-300 ease-in-out"
+                      style={{
+                        transformStyle: 'preserve-3d', // 3D 효과 적용
+                        backfaceVisibility: 'hidden', // 뒷면이 보이지 않도록 설정
+                        backgroundImage: `url(${gathering.bookImage})`, // 배경 이미지로 책 이미지 설정
+                        backgroundSize: 'cover', // 배경 이미지 크기 조정
+                        backgroundPosition: 'center', // 이미지의 중심에 맞추기
+                        borderRadius: '10px', // 부드러운 모서리 처리
+                      }}
+                    >
+                      <div className="inner flex flex-col items-center justify-center w-full h-full rounded-lg p-4">
+                        <h3 className="text-2xl font-semibold text-white text-center drop-shadow-md">
+                          {gathering.title}
+                        </h3>
+                        <p className="text-base font-medium mt-6 mb-1 text-white drop-shadow-md">
+                          현재 인원: {gathering.nowPeople}/{gathering.maxPeople}{' '}
+                          명
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* back: 카드의 뒷면 */}
+                    <div
+                      className="back absolute inset-0 w-full h-full group-hover:rotate-back transition-all duration-300 ease-in-out bg-gradient-to-b from-gray-900 via-gray-700 to-gray-900 shadow-xl"
+                      style={{
+                        transformStyle: 'preserve-3d',
+                        backfaceVisibility: 'hidden',
+                        borderRadius: '10px',
+                      }}
+                    >
+                      <div className="inner flex flex-col items-center justify-center gap-2 p-6 text-base text-center text-white drop-shadow-md">
+                        <p>
+                          <span className="font-semibold">모임소개 :</span>{' '}
+                          {gathering.content}
+                        </p>
+                        <p>
+                          <span className="font-semibold">일정 :</span>{' '}
+                          {gathering.dateTime}
+                        </p>
+                        <p>
+                          <span className="font-semibold">장소 :</span>{' '}
+                          {gathering.location}
+                        </p>
+                        <GatheringBtn meetingId={gathering.id} />
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                {/* 책 제목 */}
                 <p className="text-lg mt-4 text-center font-semibold">
                   {gathering.bookTitle}
                 </p>

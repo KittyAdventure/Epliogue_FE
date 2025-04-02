@@ -28,7 +28,7 @@ const CommentSection: React.FC<MyComponentProps> = ({ reviewId }) => {
   const [comments, setComments] = useState<Comment[]>([]); // 댓글 목록 상태
   const [newComment, setNewComment] = useState<string>(''); // 새로운 댓글 내용 상태
   const [error, setError] = useState<string>(''); // 오류 메시지 상태
-  console.log(error) //배포에러 처리요망
+  // console.log(error) //배포에러 처리요망
   const [sort, setSort] = useState<string | null>('latest'); // 기본 정렬 기준을 최신순으로 설정
   const [likedComments, setLikedComments] = useState<{
     [key: string]: boolean;

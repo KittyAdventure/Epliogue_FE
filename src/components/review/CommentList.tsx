@@ -105,9 +105,6 @@ const CommentList: React.FC<CommentListProps> = ({
               {/* 좋아요 버튼 */}
               <CommentsLikeButton
                 commentId={comment.commentId}
-                commentsLike={comment.commentsLike}
-                existLike={comment.existLike}
-                onClick={(e) => e.stopPropagation()}
               />
             </div>
           </div>

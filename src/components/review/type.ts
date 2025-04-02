@@ -7,7 +7,7 @@ export interface Comment {
   memberProfile: string; // 프로필 이미지 URL
   commentsLike: string; // 좋아요 수 (문자열)
   commentColor?: string; // 댓글 색상
-  existLike: boolean;
+  existLike: boolean; // 댓글 좋아요 상태 true or false
 }
 
 export interface Review {

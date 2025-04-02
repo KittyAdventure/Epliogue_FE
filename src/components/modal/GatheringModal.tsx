@@ -191,15 +191,20 @@ const GatheringModal: React.FC<GatheringModalProps> = ({
               placeholder="책 제목을 검색하세요(최소 2자이상)"
               required
             />
-            {bookResults.map((book, index) => (
-              <li
-                key={index}
-                className="text-sm text-gray-700 cursor-pointer hover:bg-gray-100 p-3"
-                onClick={() => handleBookSelect(book)} // ✅ 클릭 시 handleBookSelect 실행
-              >
-                {book.title}
-              </li>
-            ))}
+            {/* 책 검색 결과 리스트 */}
+            {bookResults.length > 0 && (
+              <ul className="absolute w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto z-10">
+                {bookResults.map((book, index) => (
+                  <li
+                    key={index}
+                    className="text-sm text-gray-700 cursor-pointer hover:bg-gray-100 p-4"
+                    onClick={() => handleBookSelect(book)} // 클릭 시 handleBookSelect 실행
+                  >
+                    {book.title}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* 모임명 입력 */}

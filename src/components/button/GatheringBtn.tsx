@@ -48,7 +48,7 @@ const GatheringBtn: React.FC<GatheringBtnProps> = ({ meetingId }) => {
         alert('모임에 참가하셨습니다!');
 
         // 모임 참가 후 페이지 새로고침
-        window.location.reload(); // 페이지 새로고침
+        // window.location.reload(); // 페이지 새로고침
       }
     } catch (error) {
       console.error('모임 참가 실패:', error);

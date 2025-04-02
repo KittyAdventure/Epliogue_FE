@@ -29,7 +29,7 @@ export default function ReviewPage() {
 
     const fetchReviewData = async () => {
       try {
-        console.log('Attempting to fetch review data...');
+        // console.log('Attempting to fetch review data...');
 
         const token = localStorage.getItem('accesstoken');
         const headers: { [key: string]: string } = {
@@ -47,7 +47,7 @@ export default function ReviewPage() {
           { headers },
         );
 
-        console.log('Review data received:', response.data);
+        // console.log('Review data received:', response.data);
         setReview(response.data);
       } catch (error) {
         console.error('Error fetching review data:', error);
