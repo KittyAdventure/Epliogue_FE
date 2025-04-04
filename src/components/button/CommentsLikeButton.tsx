@@ -3,7 +3,6 @@ import { ThumbsUp } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../utility/AuthContext';
-import { Review } from '../review/type'; // 타입 파일
 
 interface CommentsLikeButtonProps {
   commentId: string;
@@ -16,72 +15,39 @@ interface ErrorResponse {
 const CommentsLikeButton: React.FC<CommentsLikeButtonProps> = ({
   commentId,
 }) => {
-  const [liked, setLiked] = useState(false); // 좋아요 상태
-  const [commentLike, setCommentLike] = useState(0); // 좋아요 수
+  const [liked, setLiked] = useState(false);
+  const [commentLike, setCommentLike] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const authContext = useContext(AuthContext);
-  const { loggedIn } = authContext;
-  const [review, setReview] = useState<Review | null>(null); // 리뷰 상태
+  const { loggedIn } = useContext(AuthContext);
   const { reviewId } = useParams<{ reviewId: string }>();
 
-  // 리뷰 데이터를 가져오는 함수
-  useEffect(() => {
-    if (!reviewId) {
-      console.error('Review ID is missing.');
-      return; // reviewId가 없으면 API 요청을 하지 않음
-    }
-
-    const fetchReviewData = async () => {
-      try {
-        const token = localStorage.getItem('accesstoken');
-        const headers: { [key: string]: string } = {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        };
-
-        // 토큰이 있을 경우 Authorization 헤더 추가
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-        }
-
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL_DEV}/api/reviews/${reviewId}`,
-          { headers },
-        );
-
-        setReview(response.data);
-      } catch (error) {
-        console.error('Error fetching review data:', error);
-        if (axios.isAxiosError(error)) {
-          console.error('Axios error details:', error.response?.data);
-        } else {
-          console.error('Unexpected error:', error);
-        }
-      }
-    };
-
-    fetchReviewData();
-  }, [reviewId]);
-
-  // 컴포넌트가 처음 렌더링될 때 댓글 정보 불러오기
   useEffect(() => {
     const fetchCommentData = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL_DEV}/api/comments/view`,
           {
-            params: { reviewId: reviewId, page: 1, sort: 'like' }, // 필요한 파라미터 전달
+            params: { reviewId, page: 1, sort: 'like' },
           },
         );
 
-        // 첫 번째 댓글 데이터를 가져온 후 상태 설정
-        const comment = response.data.comments[0];
-        setCommentLike(comment.commentLike); // 댓글의 좋아요 수
-        setLiked(comment.existLike); // 댓글이 이미 좋아요 상태인지 확인
+        const comment = response.data.comments.find(
+          (c: any) => c.commentId === commentId,
+        );
+
+        if (comment) {
+          setCommentLike(comment.commentLike);
+          setLiked(comment.existLike);
+        } else {
+          setError('댓글 정보를 찾을 수 없습니다.');
+        }
       } catch (err) {
         const axiosError = err as AxiosError<ErrorResponse>;
-        setError(axiosError.response?.data?.message || 'Something went wrong');
+        setError(
+          axiosError.response?.data?.message ||
+            '댓글 정보를 불러올 수 없습니다.',
+        );
       }
     };
 
@@ -103,28 +69,28 @@ const CommentsLikeButton: React.FC<CommentsLikeButtonProps> = ({
         },
       };
 
-      // 좋아요 추가 또는 취소 API 호출
       if (liked) {
         await axios.delete(
           `${import.meta.env.VITE_API_URL_DEV}/api/comments/${commentId}/likes`,
           config,
         );
-        setCommentLike(commentLike - 1); // 좋아요 취소 시 감소
+        setCommentLike(commentLike - 1);
       } else {
         await axios.post(
           `${import.meta.env.VITE_API_URL_DEV}/api/comments/${commentId}/likes`,
           {},
           config,
         );
-        setCommentLike(commentLike + 1); // 좋아요 추가 시 증가
+        setCommentLike(commentLike + 1);
       }
 
-      // 좋아요 상태를 토글
       setLiked(!liked);
       setError(null);
     } catch (err) {
       const axiosError = err as AxiosError<ErrorResponse>;
-      setError(axiosError.response?.data?.message || 'Something went wrong');
+      setError(
+        axiosError.response?.data?.message || '좋아요 처리 중 오류 발생',
+      );
     }
   };
 
