@@ -2,7 +2,8 @@
  * 마이페이지 콘텐츠 컴포넌트
  */
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { apiUrl } from '../../utility/AuthUtils';
 import Pagination from './Pagination';
 // interface HeaderRow {
 //   id: number;
@@ -31,13 +32,10 @@ const TabComment = (): React.JSX.Element => {
   const [page, setPage] = useState<number>(1); //pagination
   const [totalPages, setTotalPages] = useState<number>(1); //pagination total page #
 
-  const accessToken = localStorage.getItem('accesstoken'); //REQUIRED FOR COMMENT
-  const fetchComments = async (page: number) => {
+  const accessToken = localStorage.getItem('accesstoken');
+
+  const fetchComments = useCallback(async () => {
     try {
-      const apiUrl =
-        import.meta.env.NODE === 'production'
-          ? import.meta.env.VITE_API_URL_PROD
-          : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.get(`${apiUrl}/api/mypage/comments`, {
         params: { page },
         headers: {
@@ -45,22 +43,19 @@ const TabComment = (): React.JSX.Element => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(response);
-      console.log(response.data);
-      const { totalPage, comments = [] } = response.data; //mypage 각 가져오기
-
-      console.log('Comments ================');
-      console.log(comments);
-      console.log(totalPage);
-      setComments(comments);
-      setTotalPages(Number(totalPage));
+      if (response?.data) {
+        console.log('TabComments Resp', response);
+        const { totalPage, comments = [] } = response.data;
+        setComments(comments);
+        setTotalPages(Number(totalPage));
+      }
     } catch (error) {
       console.error('Failed to fetch comments:', error);
     }
-  };
+  }, [accessToken, page]);
   useEffect(() => {
-    fetchComments(page);
-  }, [page]); //run the code when [something] changes
+    fetchComments();
+  }, [fetchComments]); //run the code when [something] changes
 
   return (
     <div className="mt-20">

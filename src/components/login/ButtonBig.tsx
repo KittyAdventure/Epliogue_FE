@@ -9,7 +9,7 @@
 interface ButtonInfo {
   name: string;
   arialabel: string;
-  type?: 'submit';
+  type?: 'submit' | "button";
   provider?: 'kakao' | 'google';
   classname?: string;
   value?:number;

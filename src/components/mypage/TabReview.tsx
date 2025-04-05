@@ -4,15 +4,16 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { apiUrl } from '../../utility/AuthUtils';
 import Pagination from './Pagination';
 
 interface Review {
-  reviewId: number;
+  reviewId: string;
   reviewBookTitle: string;
-  reviewBookPubYear: number;
+  reviewBookPubYear: string;
   reviewBookAuthor: string;
   reviewContent: string;
-  reviewCommentsCount: number;
+  reviewCommentsCount: string;
   thumbnail: string;
 }
 
@@ -24,74 +25,62 @@ const TabReview = (): React.JSX.Element => {
 
   const accessToken = localStorage.getItem('accesstoken');
   const memberId = localStorage.getItem('memberId');
-  const handleReviewDelete = async (reviewId: number) => {
-    console.log(reviewId);
+
+  const fetchReviews = useCallback(async () => {
+    if (!memberId) return;
+    try {
+      // import apiUrl
+      const response = await axios.get(`${apiUrl}/api/mypage/reviews`, {
+        params: { memberId, page },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response?.data) {
+        console.log("TabReview Resp", response)
+        const { reviews, totalPages, userNickname } = response.data;
+        setReviews(reviews);
+        setTotalPages(totalPages);
+        setUserNickname(userNickname);
+      }
+    } catch (error) {
+      console.error('TabReview Fetch Error:', error);
+    }
+  }, [accessToken, memberId, page]);
+  // useEffect needed to automatically trigger API call when 'page' state updates
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]); //run the code when [something] changes
+
+  const handleReviewDelete = async (reviewId: string) => {
     if (!reviewId) {
       console.error('invalid reviewId');
       return;
     }
     try {
-      const apiUrl = //env production 인지 development 인지 확인 후 url 할당
-        import.meta.env.NODE === 'production'
-          ? import.meta.env.VITE_API_URL_PROD
-          : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.delete(`${apiUrl}/api/reviews/${reviewId}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      if (response.status === 200) {
-        console.log('TabReview Response', response);
+      if (response) {
+        console.log('TabReview - Deleted', response);
         alert('성공적으로 리뷰를 삭제했습니다');
-        if (memberId) {
-          fetchReviews(memberId, page); //삭제 후 탭 리뷰를 업데이트 해줌
+        // page > 1 이상일 경우 + 페이지에 리뷰가 하나있고 삭제했을때, 이전 페이지 보여줌
+        if (reviews.length === 1 && page > 1){
+          setPage((prevPage) => prevPage - 1) //page의 최신 값을 가져옴
+        }else {
+          fetchReviews(); //삭제 후 탭 리뷰를 업데이트 해줌
         }
       } else {
-        console.log('Review Unexpected Error', response.status);
+        console.log('TabReview Del Resp Error', response);
       }
     } catch (error) {
-      console.error('Review Del Error', error);
+      console.error('TabReview Del Catch Error', error);
     }
   };
-
-  const fetchReviews = useCallback(
-    async (memberId: string, page: number) => {
-      try {
-        const apiUrl = //env production 인지 development 인지 확인 후 url 할당
-          import.meta.env.NODE === 'production'
-            ? import.meta.env.VITE_API_URL_PROD
-            : import.meta.env.VITE_API_URL_DEV;
-        const response = await axios.get(`${apiUrl}/api/mypage/reviews`, {
-          params: { memberId, page },
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        if (!response) {
-          console.log('TabReview No Response');
-        } else {
-          console.log('Review Response');
-          console.log(response);
-          const { reviews, totalPages, userNickname } = response.data;
-          setReviews(reviews);
-          setUserNickname(userNickname);
-          setTotalPages(totalPages);
-        }
-      } catch (error) {
-        console.error('Failed to fetch reviews:', error);
-      }
-    },
-    [accessToken],
-  );
-
-  // useEffect needed to automatically trigger API call when 'page' state updates
-  useEffect(() => {
-    if (memberId) {
-      fetchReviews(memberId, page);
-    }
-  }, [memberId, page, fetchReviews]); //run the code when [something] changes
 
   return (
     <div className="mt-20">

@@ -10,12 +10,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // retrieve initial state from localstorage
     // return true //임시용
     const storedToken = localStorage.getItem('accesstoken');
-    return !!storedToken; // 토큰이 있으면 로그인된 상태로 설정
+    const storedId = localStorage.getItem('memberId');
+    return !!storedToken && !!storedId; // 토큰이 있으면 로그인된 상태로 설정
   }); // Initial login status
 
   useEffect(() => {
     if (!loggedIn) {
       localStorage.removeItem('accesstoken'); // 로그아웃되면 토큰 삭제
+      localStorage.removeItem('memberId'); // 로그아웃되면 id 삭제
     }
   }, [loggedIn]);
   return (

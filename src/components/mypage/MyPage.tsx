@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../utility/useAuth';
 
 import Calendar from './Calendar';
 import UserInfo from './UserInfo';
@@ -16,13 +17,23 @@ interface Tab {
   name: string;
   value: string;
 }
+//object where each KEY is string, VALUE is react component
+const tabComponents: Record<string, React.JSX.Element> = {
+  //object entries, each entry in object maps a tab ; render component based on tab name
+  Review: <TabReview />,
+  Meeting: <TabMeeting />,
+  Collection: <TabCollection />,
+  Comment: <TabComment />,
+  Points: <TabPoints />,
+};
 
 interface UserInfo {
-  nickname: string;
+  [key: string]: string;
+  nickName: string;
   loginId: string;
   email: string;
-  phone:string;
-  profileUrl:string;
+  phone: string; //api명세서 추가 안됐음
+  profileUrl: string;
   follower: string;
   following: string;
 
@@ -33,33 +44,38 @@ interface UserInfo {
   point: string;
 }
 
+const tabData = [
+  { name: 'Review', key: 'reviewCount' },
+  { name: 'Meeting', key: 'meetingCount' },
+  { name: 'Collection', key: 'collectionCount' },
+  { name: 'Comment', key: 'commentCount' },
+  { name: 'Points', key: 'point' },
+];
 // 마이페이지 클릭 -> 로그인 되어있음 -> 이 페이지로 온다
 const MyPage = (): React.JSX.Element => {
-  // const navigate = useNavigate();
-  // Robust way to handle multiple useState from same source
-  const [userInfo, setUserInfo] = useState({
-    nickName: '',
-    loginId: '',
-    email: '',
-    follower: '',
-    following: '',
-    phone:"",
-    profileUrl:"",
-    reviewCount: '',
-    commentCount: '',
-    meetingCount: '',
-    collectionCount: '',
-    point: '',
-  });
+  const navigate = useNavigate();
+  const { setLoggedIn } = useAuth();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null); //from name:type x12 -> 1 line of code
   const [activeTab, setActiveTab] = useState<string>('Review');
+
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName); //set active tab
   };
+  const handleLogOut = () => {
+    setLoggedIn(false);
+    localStorage.removeItem('memberId');
+    localStorage.removeItem('accesstoken');
+    navigate('/');
+  };
 
-  // Get user info upon visintg mypage while logged in
-  const accessToken = localStorage.getItem('accesstoken');
-  const memberId = localStorage.getItem('memberId');
-  const fetchUserInfo = async (memberId: string) => {
+  // Fetch user info upon entering MyPage
+  const fetchUserInfo = async () => {
+    const accessToken = localStorage.getItem('accesstoken');
+    const memberId = localStorage.getItem('memberId');
+    if (!accessToken || !memberId) {
+      handleLogOut();
+      return;
+    }
     try {
       const apiUrl =
         import.meta.env.NODE === 'production'
@@ -71,52 +87,38 @@ const MyPage = (): React.JSX.Element => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
       // 메인갔다가 마이페이지로 오면 정보업데이트
-      if (!response) {
-        console.log('No Response MyPage User-Info');
+      if (response?.data) {
+        console.log('Mypage Response', response);
+        setUserInfo(response.data); // response 데이터 각 아이템을 할당
       } else {
-        console.log('==========MYPAGE RESPONSE==========');
-        console.log(response);
-        // response 데이터 각 아이템을 할당
-        setUserInfo({
-          nickName: response.data.nickName,
-          loginId: response.data.loginId,
-          email: response.data.email,
-          follower: response.data.follower,
-          following: response.data.following,
-          phone:response.data.phone,
-          profileUrl:response.data.profileUrl,
-          reviewCount: response.data.reviewCount,
-          commentCount: response.data.commentCount,
-          meetingCount: response.data.meetingCount,
-          collectionCount: response.data.collectionCount,
-          point: response.data.point,
-        });
+        console.warn('Mypage - No user data received');
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Axios Network Error:', error.message);
-      } else {
-        console.error('Unexpected Error:', error);
-      }
+      handleApiError(error);
     }
   };
-  useEffect(() => {
-    // safeguard
-    if (memberId) {
-      fetchUserInfo(memberId);
+  const handleApiError = (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      console.error('MyPage-Axios Net Error:', error.message);
+    } else {
+      console.error('MyPage-Unexpected Error:', error);
     }
-  }, [memberId]);
+  };
 
-  // Values must be called from User's Data
-  const tabs: Tab[] = [
-    { tabId: '1', name: 'Review', value: userInfo.reviewCount },
-    { tabId: '2', name: 'Meeting', value: userInfo.meetingCount },
-    { tabId: '3', name: 'Collection', value: userInfo.collectionCount },
-    { tabId: '4', name: 'Comment', value: userInfo.commentCount },
-    { tabId: '5', name: 'Points', value: userInfo.point },
-  ];
+  useEffect(() => {
+    fetchUserInfo();
+  }, []); //removed dependecy array to avoid unnecessary re-fetching
+
+  // dynamically setup tab buttons
+  const tabs: Tab[] = tabData.map(({ name, key }, idx) => ({
+    tabId: `${idx + 1}`,
+    name,
+    value: userInfo?.[key as keyof UserInfo] ?? '0', //explicitly state the type
+  }));
+
+  //userinfo fetched asynchronously, ensure it's defined before access
+  if (!userInfo) return <p>Loading...</p>;
   return (
     <div className="mypage ">
       <h2 className="title my-0 mx-[auto] max-w-[1440px] py-20 text-4xl font-medium">
@@ -130,11 +132,11 @@ const MyPage = (): React.JSX.Element => {
             email={userInfo.email}
             follower={userInfo.follower}
             following={userInfo.following}
-            phone={userInfo.phone}
+            phone={userInfo.phone} //추가안됐음
             profileUrl={userInfo.profileUrl}
           />
           <div className="calendar mt-20 w-auto h-96">
-            <Calendar/>
+            <Calendar />
           </div>
         </aside>
         <div className="content w-4/5 ml-20">
@@ -160,11 +162,7 @@ const MyPage = (): React.JSX.Element => {
             ))}
           </div>
           {/* Contents shown upon clicking(activeTab) */}
-          {activeTab === 'Review' && <TabReview />}
-          {activeTab === 'Meeting' && <TabMeeting />}
-          {activeTab === 'Collection' && <TabCollection />}
-          {activeTab === 'Comment' && <TabComment />}
-          {activeTab === 'Points' && <TabPoints />}
+          {tabComponents[activeTab]}
         </div>
       </div>
     </div>

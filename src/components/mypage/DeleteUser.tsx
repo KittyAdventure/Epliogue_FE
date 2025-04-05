@@ -1,36 +1,72 @@
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { apiUrl } from '../../utility/AuthUtils';
+import { useAuth } from '../../utility/useAuth';
+
 interface DeleteProps {
-  openModal: boolean;
   onClose: () => void;
 }
-// user 삭제 /회원탈퇴
-const handleUserDelete = async () => {
-  const accessToken = localStorage.getItem('accesstoken');
-  if (!accessToken){
-    console.error("Access Token N/A")
-    return
-  }
-  try {
-    const apiUrl =
-      import.meta.env.NODE === 'production'
-        ? import.meta.env.VITE_API_URL_PROD
-        : import.meta.env.VITE_API_URL_DEV;
-    const response = await axios.delete(`${apiUrl}/api/members`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    if (response.status === 200) {
-      console.log(response);
-      alert(response.data.message)
-    } 
-  } catch (error) {
-    console.error('UserDelete Error', error);
-  }
-};
-const DeleteUser: React.FC<DeleteProps> = ({ onClose, openModal = true }) => {
-  console.log(openModal);
+// user 삭제 /회원탈퇴 -> 처리하기 복잡해서
+//alert 와 로그아웃으로 대체
+
+const DeleteUser: React.FC<DeleteProps> = ({ onClose}) => {
+  const navigate = useNavigate();
+  const { setLoggedIn } = useAuth();
+  const handleUserDelete = async (onClose: () => void) => {
+    const accessToken = localStorage.getItem('accesstoken');
+    if (!accessToken) {
+      console.error('Access Token N/A');
+      return;
+    }
+    try {
+      const response = await axios.delete(`${apiUrl}/api/members`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log(response);
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error('DeleteUser Error1', error);
+    }
+    onClose();
+    handleLogout();
+  };
+
+  const handleLogout = async (): Promise<void> => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL_PROD;
+      const response = await axios.post(
+        `${apiUrl}/api/members/logout`,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+          },
+        },
+      );
+      console.log('DeleteUser->Logout', response);
+      if (response.status === 200) {
+        setLoggedIn(false);
+        localStorage.removeItem('memberId');
+        localStorage.removeItem('accesstoken');
+        alert('정상적으로 처리되었습니다.');
+        // setTimeout 없이하면 메이페이지가 아닌 로그인페이지로 이동한다
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
+      } else {
+        console.error('Delete Failed: ', response.statusText);
+      }
+    } catch (error) {
+      console.error('Delete User Error', error);
+    }
+  };
+
   return (
     <div className="deleteUserModalflex justify-center items-center fixed top-0 left-0 bg-black/[0.7] w-full h-full z-[9999]">
       <div className="deleteUserModalWrap relative text-center w-1/3 mx-[auto] text-center py-[120px] bg-white rounded-xl top-[50%] translate-y-[-50%]">
@@ -44,7 +80,7 @@ const DeleteUser: React.FC<DeleteProps> = ({ onClose, openModal = true }) => {
         <p>모든 기록이 영구적으로 삭제됩니다</p>
         <div className="btnWrap m-auto pt-5 flex w-[50%]">
           <button
-            onClick={handleUserDelete}
+            onClick={() => handleUserDelete(onClose)}
             className="block w-[200px] h-[40px] leading-5 mx-auto border rounded-xl text-[#f00]"
           >
             탈퇴

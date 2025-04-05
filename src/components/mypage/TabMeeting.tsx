@@ -2,8 +2,9 @@
  * 마이페이지 콘텐츠 컴포넌트
  */
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Pagination from './Pagination';
+import {apiUrl} from "../../utility/AuthUtils"
 
 interface Meeting {
   meetingId: string;
@@ -21,12 +22,10 @@ const TabMeeting = (): React.JSX.Element => {
 
   const accessToken = localStorage.getItem('accesstoken');
   const memberId = localStorage.getItem('memberId');
-  const fetchMeetings = async (memberId: string, page: number) => {
+
+  const fetchMeetings = useCallback(async () => {
+    if(!memberId || !accessToken) return
     try {
-      const apiUrl =
-        import.meta.env.NODE === 'production'
-          ? import.meta.env.VITE_API_URL_PROD
-          : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.get(`${apiUrl}/api/mypage/meeting`, {
         params: { memberId, page },
         headers: {
@@ -34,23 +33,20 @@ const TabMeeting = (): React.JSX.Element => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      if (!response) {
-        console.log('TabMeeting No Response');
-      } else {
-        console.log('Meeting Response');
-        console.log(response);
-        setTotalPages(response.data.totalPages);
-        setMeetings(response.data.meetings);
+      if (response?.data) {
+        console.log("TabMeeting Resp", response)
+        const { totalPages, meetings} = response.data
+        setTotalPages(totalPages);
+        setMeetings(meetings);
       }
     } catch (error) {
       console.error('Failed to fetch meetings', error);
     }
-  };
+  }, [accessToken, memberId, page]);
 
   useEffect(() => {
-    fetchMeetings(memberId!, page);
-  }, [memberId, page]);
+    fetchMeetings()
+  }, [fetchMeetings]);
 
   return (
     <div className="mt-20">

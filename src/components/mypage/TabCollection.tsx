@@ -2,9 +2,10 @@
  * 마이페이지 용 컴포넌트
  */
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { apiUrl } from '../../utility/AuthUtils';
 import Pagination from './Pagination';
-import {Link} from "react-router-dom"
 
 interface Collection {
   bookId: string;
@@ -17,12 +18,10 @@ const TabCollection = (): React.JSX.Element => {
   const [totalPages, setTotalPages] = useState<number>(1);
 
   const accessToken = localStorage.getItem('accesstoken');
-  const fetchCollections = async (page: number) => {
+
+  const fetchCollections = useCallback(async () => {
+    if (!accessToken) return; //prevent api call if user not authenticated
     try {
-      const apiUrl =
-        import.meta.env.NODE === 'production'
-          ? import.meta.env.VITE_API_URL_PROD
-          : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.get(`${apiUrl}/api/collection`, {
         params: { page },
         headers: {
@@ -30,21 +29,19 @@ const TabCollection = (): React.JSX.Element => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(response)
-      console.log(response.data.books)
-      console.log(response.data.page)
-      console.log(response.data.totalPages)
-      const { totalPages, books = [] } = response.data;
-
-      setTotalPages(Number(totalPages));
-      setCollections(books);
+      if (response?.data) {
+        console.log('TabCollection Resp', response);
+        const { totalPages, books = [] } = response.data;
+        setTotalPages(Number(totalPages));
+        setCollections(books);
+      }
     } catch (error) {
       console.error('Failed to fetch collection:', error);
     }
-  };
+  }, [accessToken, page]);
   useEffect(() => {
-    fetchCollections(page);
-  }, [page]);
+    fetchCollections();
+  }, [fetchCollections]);
 
   return (
     <div className="mt-20">

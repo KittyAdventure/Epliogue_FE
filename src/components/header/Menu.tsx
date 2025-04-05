@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utility/useAuth';
 import SearchModal from '../modal/SearchModal';
+import { apiUrl } from '../../utility/AuthUtils';
 
 interface MenuItem {
   name: string;
@@ -48,13 +49,7 @@ const Menu = (): React.JSX.Element => {
 
   const handleLogout = async (): Promise<void> => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL_PROD;
       const accessToken = localStorage.getItem('accesstoken');
-      if (!accessToken) {
-        console.warn('Token missing. User may already be logged out');
-        setLoggedIn(false);
-        localStorage.removeItem('memberId');
-      }
       const response = await axios.post(
         `${apiUrl}/api/members/logout`,
         {},
