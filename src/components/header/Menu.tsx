@@ -1,9 +1,7 @@
-import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utility/useAuth';
 import SearchModal from '../modal/SearchModal';
-import { apiUrl } from '../../utility/AuthUtils';
 
 interface MenuItem {
   name: string;
@@ -47,32 +45,57 @@ const Menu = (): React.JSX.Element => {
     }
   };
 
-  const handleLogout = async (): Promise<void> => {
-    try {
-      const accessToken = localStorage.getItem('accesstoken');
-      const response = await axios.post(
-        `${apiUrl}/api/members/logout`,
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      console.log('Logout Response', response);
-      if (response.status === 200) {
-        console.log(response.data.message); //logout success
-        setLoggedIn(false);
-        localStorage.removeItem('memberId');
-        localStorage.removeItem('accesstoken');
-        alert("정상적으로 로그아웃 했습니다")
-        navigate('/');
-      } else {
-        console.error('Logout failed: ', response.statusText);
-      }
-    } catch (error) {
-      console.error('Logout Error', error);
+  // HandleLogout cannot process sometimes due to unknown error
+
+  // const handleLogout = async (): Promise<void> => {
+  //   try {
+  //     const accessToken = localStorage.getItem('accesstoken');
+  //     const response = await axios.post(
+  //       `${apiUrl}/api/members/logout`,
+  //       {},
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       },
+  //     );
+  //     console.log('Logout Response', response);
+  //     if (response.status === 200) {
+  //       console.log(response.data.message); //logout success
+  //       setLoggedIn(false);
+  //       localStorage.removeItem('memberId');
+  //       localStorage.removeItem('accesstoken');
+  //       alert('정상적으로 로그아웃 했습니다');
+  //       navigate('/');
+  //       if (window.Kakao && window.Kakao.Auth) {
+  //         window.Kakao.Auth.logout(function () {
+  //           console.log('Kakao logout successful');
+  //           // 카카오 서비스도 로그아웃 해주기, redirecturi context사용 추천
+  //           window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=8a1d4afe50a1c66832ca09bd0eec1c4d&logout_redirect_uri=http://localhost:5173/login`;
+  //         });
+  //       }
+  //     } else {
+  //       console.error('Logout failed: ', response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error('Logout Error', error);
+  //   }
+  // };
+
+  // handleLogout without requesting
+  const handleLogout = () => {
+    setLoggedIn(false);
+    localStorage.removeItem('memberId');
+    localStorage.removeItem('accesstoken');
+    alert('정상적으로 로그아웃 했습니다');
+    navigate('/');
+    if (window.Kakao && window.Kakao.Auth) {
+      window.Kakao.Auth.logout(function () {
+        console.log('Kakao logout successful');
+        // 카카오 서비스도 로그아웃 해주기, redirecturi context사용 추천
+        window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=8a1d4afe50a1c66832ca09bd0eec1c4d&logout_redirect_uri=http://localhost:5173/login`;
+      });
     }
   };
 

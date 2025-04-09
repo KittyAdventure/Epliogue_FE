@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utility/useAuth';
+import {apiUrl} from "../../utility/AuthUtils"
 
 import Calendar from './Calendar';
 import UserInfo from './UserInfo';
@@ -77,10 +78,6 @@ const MyPage = (): React.JSX.Element => {
       return;
     }
     try {
-      const apiUrl =
-        import.meta.env.NODE === 'production'
-          ? import.meta.env.VITE_API_URL_PROD
-          : import.meta.env.VITE_API_URL_DEV;
       const response = await axios.get(`${apiUrl}/api/mypage/user-info`, {
         params: { memberId },
         headers: {

@@ -67,7 +67,7 @@ const TabReview = (): React.JSX.Element => {
       });
       if (response) {
         console.log('TabReview - Deleted', response);
-        alert('성공적으로 리뷰를 삭제했습니다');
+        alert('리뷰를 삭제했습니다');
         // page > 1 이상일 경우 + 페이지에 리뷰가 하나있고 삭제했을때, 이전 페이지 보여줌
         if (reviews.length === 1 && page > 1){
           setPage((prevPage) => prevPage - 1) //page의 최신 값을 가져옴
@@ -79,6 +79,7 @@ const TabReview = (): React.JSX.Element => {
       }
     } catch (error) {
       console.error('TabReview Del Catch Error', error);
+      alert("삭제 중 오류 발생")
     }
   };
 

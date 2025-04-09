@@ -74,9 +74,9 @@ const TabComment = (): React.JSX.Element => {
               {comments.map((comment, idx) => (
                 <div
                   key={idx}
-                  className="commentInfo border-b-1 border-gray-300 text-center w-full border-y-1 grid grid-cols-15 gap-12"
+                  className="commentInfo border-b-1 border-gray-300 w-full border-y-1 grid grid-cols-15 gap-12"
                 >
-                  <p className="col-span-3 leading-10">
+                  <p className="col-span-3 leading-10 text-center">
                     {comment.postDateTime}
                   </p>
                   <p className="col-span-6 leading-10 text-ellipsis line-clamp-1">
