@@ -89,7 +89,9 @@ const Menu = (): React.JSX.Element => {
     localStorage.removeItem('memberId');
     localStorage.removeItem('accesstoken');
     alert('정상적으로 로그아웃 했습니다');
-    navigate('/');
+    setTimeout(() => {
+      navigate('/');
+    }, 100);
     if (window.Kakao && window.Kakao.Auth) {
       window.Kakao.Auth.logout(function () {
         console.log('Kakao logout successful');

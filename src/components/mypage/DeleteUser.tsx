@@ -36,34 +36,53 @@ const DeleteUser: React.FC<DeleteProps> = ({ onClose}) => {
     handleLogout();
   };
 
-  const handleLogout = async (): Promise<void> => {
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL_PROD;
-      const response = await axios.post(
-        `${apiUrl}/api/members/logout`,
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
-          },
-        },
-      );
-      console.log('DeleteUser->Logout', response);
-      if (response.status === 200) {
-        setLoggedIn(false);
-        localStorage.removeItem('memberId');
-        localStorage.removeItem('accesstoken');
-        alert('정상적으로 처리되었습니다.');
-        // setTimeout 없이하면 메이페이지가 아닌 로그인페이지로 이동한다
-        setTimeout(() => {
-          navigate('/');
-        }, 100);
-      } else {
-        console.error('Delete Failed: ', response.statusText);
-      }
-    } catch (error) {
-      console.error('Delete User Error', error);
+  // 탈퇴(데이터 삭제) 대신 로그아웃. 다시 로그인 할 수 있다
+  // const handleLogout = async (): Promise<void> => {
+  //   try {
+  //     const apiUrl = import.meta.env.VITE_API_URL_PROD;
+  //     const response = await axios.post(
+  //       `${apiUrl}/api/members/logout`,
+  //       {},
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${localStorage.getItem('accesstoken')}`,
+  //         },
+  //       },
+  //     );
+  //     console.log('DeleteUser->Logout', response);
+  //     if (response.status === 200) {
+  //       setLoggedIn(false);
+  //       localStorage.removeItem('memberId');
+  //       localStorage.removeItem('accesstoken');
+  //       alert('정상적으로 처리되었습니다.');
+  //       // setTimeout 없이하면 메이페이지가 아닌 로그인페이지로 이동한다
+  //       setTimeout(() => {
+  //         navigate('/');
+  //       }, 100);
+  //     } else {
+  //       console.error('Delete Failed: ', response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error('Delete User Error', error);
+  //   }
+  // };
+
+  // handleLogout without requesting
+  const handleLogout = () => {
+    setLoggedIn(false);
+    localStorage.removeItem('memberId');
+    localStorage.removeItem('accesstoken');
+    alert('회원탈퇴를 성공적으로 했습니다');
+    setTimeout(() => {
+      navigate('/');
+    }, 100);
+    if (window.Kakao && window.Kakao.Auth) {
+      window.Kakao.Auth.logout(function () {
+        console.log('Kakao logout successful');
+        // 카카오 서비스도 로그아웃 해주기, redirecturi context사용 추천
+        window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=8a1d4afe50a1c66832ca09bd0eec1c4d&logout_redirect_uri=http://localhost:5173/login`;
+      });
     }
   };
 
