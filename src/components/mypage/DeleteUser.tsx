@@ -12,6 +12,7 @@ interface DeleteProps {
 const DeleteUser: React.FC<DeleteProps> = ({ onClose}) => {
   const navigate = useNavigate();
   const { setLoggedIn } = useAuth();
+  
   const handleUserDelete = async (onClose: () => void) => {
     const accessToken = localStorage.getItem('accesstoken');
     if (!accessToken) {
@@ -69,6 +70,7 @@ const DeleteUser: React.FC<DeleteProps> = ({ onClose}) => {
   // };
 
   // handleLogout without requesting
+  // 로그아웃 후 사이트가 로딩 안될 시 -> 아래 window.location.href redirect-uri 변경
   const handleLogout = () => {
     setLoggedIn(false);
     localStorage.removeItem('memberId');
@@ -81,7 +83,7 @@ const DeleteUser: React.FC<DeleteProps> = ({ onClose}) => {
       window.Kakao.Auth.logout(function () {
         console.log('Kakao logout successful');
         // 카카오 서비스도 로그아웃 해주기, redirecturi context사용 추천
-        window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=8a1d4afe50a1c66832ca09bd0eec1c4d&logout_redirect_uri=http://localhost:5173/login`;
+        window.location.href = `https://kauth.kakao.com/oauth/logout?client_id=8a1d4afe50a1c66832ca09bd0eec1c4d&logout_redirect_uri=https://test-epilogue.vercel.app/`;
       });
     }
   };
